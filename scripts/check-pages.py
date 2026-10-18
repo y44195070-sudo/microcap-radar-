@@ -25,7 +25,10 @@ try:
         page.on('console', lambda msg: diagnostics.append(f'console {msg.type}: {msg.text}') if msg.type in ['error', 'warning'] else None)
         page.on('pageerror', lambda error: diagnostics.append(f'JS exception: {error}'))
         page.on('response', lambda r: diagnostics.append(f'JSON response: {r.status} {r.url}') if '/data/' in r.url else None)
-        page.goto(base, wait_until='domcontentloaded')
+        with page.expect_response(lambda r: r.url.endswith('/data/index.json')) as manifest, page.expect_response(lambda r: r.url.endswith('/data/CDT.json')) as analysis:
+            page.goto(base, wait_until='domcontentloaded')
+        assert manifest.value.status == 200
+        assert analysis.value.status == 200
         page.wait_for_function("typeof DB === 'function' && !!DB().CDT", timeout=30000)
         assert page.locator('#meta').inner_text().startswith('28종목'), page.locator('#meta').inner_text()
         page.locator('#q').fill('CDT')
@@ -36,6 +39,11 @@ try:
         page.goto(base + '?ticker=CDT', wait_until='domcontentloaded')
         page.wait_for_selector('#memo-CDT')
         assert page.locator('#meta').inner_text().startswith('28종목')
+        page.route('**/data/**', lambda route: route.abort())
+        page.goto(base + '?ticker=CDT', wait_until='domcontentloaded')
+        assert page.locator('#meta').inner_text().startswith('28종목')
+        assert page.locator('#memo-CDT').count() == 1
+        diagnostics.append('Build snapshot: 28 tickers and CDT even with JSON requests blocked')
         browser.close()
     print('::notice title=Live Pages verified::28 tickers; CDT search, analysis and direct URL passed. ' + ' | '.join(diagnostics))
 except Exception as error:
