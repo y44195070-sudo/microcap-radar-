@@ -1,0 +1,25 @@
+{
+  "asOf": "2026-10-18",
+  "title": "🔎 발굴",
+  "description": "아직 핵심 추적 종목은 아니지만 구조상 급등 후보가 될 수 있는 종목을 미리 모아두는 곳입니다.",
+  "scoreGuide": [
+    "공급 25점 — 당장 시장에 나올 새 주식이 적을수록 유리",
+    "Float 20점 — 실제 유통주식이 작을수록 유리",
+    "재료 15점 — 가까운 일정·계약·임상 등 방아쇠",
+    "대차 15점 — CTB·빌릴 주식 부족 등 숏 압박",
+    "현금 15점 — 급한 자금조달 필요가 낮을수록 유리",
+    "점화 10점 — 거래량·수급이 붙을 조건"
+  ],
+  "candidates": [
+    {"ticker":"MGN","score":70,"grade":"A","status":"우선 확인","note":"기존 발굴 점수 1위. 최신 SEC·Float·희석 통로 재검증 필요."},
+    {"ticker":"GLE","score":58,"grade":"B","status":"관찰","note":"기존 발굴 상위 후보. 최신 구조 재검증 필요."},
+    {"ticker":"KNDI","score":52,"grade":"B","status":"관찰","note":"기존 추정 점수. 최신 공급·대차 확인 필요."},
+    {"ticker":"SFWL","score":50,"grade":"B","status":"관찰","note":"저금통 후보와 겹침. 최신 희석 여부 우선 확인."},
+    {"ticker":"CHOW","score":50,"grade":"B","status":"관찰","note":"기존 추정 점수. 최신 SEC 확인 필요."},
+    {"ticker":"SKIN","score":48,"grade":"C","status":"대기","note":"기존 추정 점수. 구조 업데이트 필요."},
+    {"ticker":"REVB","score":44,"grade":"C","status":"대기","note":"기존 추정 점수. 구조 업데이트 필요."},
+    {"ticker":"IZM","score":41,"grade":"C","status":"대기","note":"기존 천석 프레임 분석 후보. 상장유지·공급 통로 재검증 필요."},
+    {"ticker":"TOPP","score":null,"grade":"확인 필요","status":"대기","note":"발굴 관심 후보. 점수 재산정 필요."},
+    {"ticker":"BTOC","score":null,"grade":"확인 필요","status":"대기","note":"발굴 관심 후보. 점수 재산정 필요."}
+  ]
+}
