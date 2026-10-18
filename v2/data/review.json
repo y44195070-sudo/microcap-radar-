@@ -1,0 +1,27 @@
+{
+  "asOf": "2026-10-18",
+  "title": "📊 급등락 복기",
+  "description": "과거 급등·급락을 짧게 복기하는 데이터베이스. 수치는 당시 기록 기준이며 미검증 값은 그대로 확정하지 않습니다.",
+  "patterns": [
+    {"name":"🚀 RS·초저유통 압축형","rule":"RS + 작은 Float + 공급 제한 + 거래량 폭증","examples":"LNKS · MNDR · YMAT · BKYI · NXGL","lesson":"RS 자체가 호재가 아니라 실제 공급이 잠겨 있을 때만 압축이 강해짐. 과회전 뒤 T+1 급락 주의."},
+    {"name":"🚧 공급 차단형","rule":"ATM 중단/종료 + 신규 공급 감소. Buyback 동반 시 강화","examples":"OLB · WETO","lesson":"OLB의 ATM 중단+Buyback이 WETO의 ATM 일시중단보다 강한 구조. 계약이 살아 있으면 재개 가능성 확인."},
+    {"name":"🔄 재점화·2차 파동형","rule":"1차 급등 후 Float 유지·거래량 건조 → 새 PR/수급으로 재점화","examples":"VEEA · PFAI · FLYE · XHLD","lesson":"새 뉴스가 없어도 기존 재료가 남아 있으면 2차 점화 가능. 공급통로가 새로 열렸는지 먼저 확인."},
+    {"name":"⏱ T+1/T+2 지연반응형","rule":"발표·계약 후 24~48시간 뒤 거래량 재유입","examples":"APUS · SMXT · JZ · ESLA · NCPL","lesson":"계약/발표의 질과 실제 공급구조가 유지되는지 함께 추적."},
+    {"name":"👻 무뉴스·초저유통형","rule":"뚜렷한 신규 뉴스 없이 작은 Float에서 거래량 급증","examples":"MI · IMCC · AEHL · NCPL · FLYE · IZM","lesson":"뉴스를 억지로 연결하지 말고 Float·거래량·공급통로로 판단. 고점 반납 위험이 큼."},
+    {"name":"🌊 Volume Shock형","rule":"당일 거래량이 전일·평균·실제 Float 대비 비정상적으로 확대","examples":"SMXT · MOBX · TGL · TDIC","lesson":"거래량÷Float만으로 추가 상승을 예측하지 않음. 고점 유지와 공급 출현 여부가 핵심."},
+    {"name":"💰 계약·인수·상업화형","rule":"계약금액·고객·기간·매출 인식이 구체적인 재료","examples":"GENK · JBDI · KNDI · NUWE","lesson":"LOI와 Binding 계약을 구분하고 회사 시총 대비 계약규모와 후속 주문을 확인."},
+    {"name":"💥 희석·공급폭탄형","rule":"급등 뒤 전환·워런트·RD·ATM·재판매 물량 출현","examples":"SPRC · WFF · SDST","lesson":"호재는 방아쇠일 수 있지만 상승 뒤 실제 공급 출구가 열리면 급등분을 빠르게 반납할 수 있음."}
+  ],
+  "cases": [
+    {"date":"2026-10-15","ticker":"ESLA","pattern":"T+1 지연반응","intraday":"+123%","close":"+68.4%","highPrice":null,"closePrice":"$0.535","setup":"10/14 장후 임상 사이트 활성화 PR · Float 약 1,722만주","lesson":"약한 PR도 수급이 붙으면 장중 과열 가능. 고점 대비 종가 반납과 현금 고갈/후속 공모를 같이 봄."},
+    {"date":"2026-10-15","ticker":"WETO","pattern":"공급 일시차단","intraday":"약 +76%","close":"+46.9%","highPrice":"$1.46","closePrice":"$1.22","setup":"ATM 일시중단 PR · Float 약 108만주 · 거래량 약 1.11억주","lesson":"Float 약 100배 회전. ATM 계약은 유지돼 OLB보다 공급차단 강도가 약함."},
+    {"date":"2026-10-15","ticker":"DRMA","pattern":"초저유통+약한 PR","intraday":"+79%","close":"+37.2%","highPrice":null,"closePrice":null,"setup":"Float 약 292만주 · 거래량 회전 약 58배 · 재판매 692만주 등록 기록","lesson":"약한 재료도 초저유통이면 폭등 가능하지만 종가 반납과 재판매 공급을 반드시 확인."},
+    {"date":"2026-10-15","ticker":"SPRC","pattern":"급등 후 공급출구","intraday":"+47%","close":"-44.9%","highPrice":"$5.33","closePrice":"$2.00","setup":"AI 전환 PR + 전환사채 관련 공시 · Float 약 58만주","lesson":"테마 PR로 급등해도 전환 물량 출구가 붙으면 같은 날 완전 역전 가능."},
+    {"date":"2026-10-15","ticker":"HAin","pattern":"선행조건 실패","intraday":null,"close":"-51.1%","highPrice":null,"closePrice":"$0.282","setup":"매각 선행조건 미충족 · 신용계약 만기/부채 부담","lesson":"공시에 적힌 선행조건 마감일이 지나고 연장 공시가 없으면 그 자체가 위험 신호."},
+    {"date":"2026-10-14","ticker":"TGL","pattern":"무뉴스·과회전 반등","intraday":"+62%","close":null,"highPrice":null,"closePrice":null,"setup":"Float 약 182만주 · 회전 약 110배 · 전일 -68%","lesson":"급락 직후 초저유통 반등은 강할 수 있지만 지속성보다 공급·고점 유지 확인이 우선."},
+    {"date":"2026-10-14","ticker":"AEHL","pattern":"T+1 추적","intraday":"장중 $14.85","close":"-0.6%","highPrice":"$14.85","closePrice":"$11.42","setup":"전일 복기 사례 · 거래량 약 173만주","lesson":"다음 날 장중 재급등해도 종가 유지 여부를 따로 기록해야 함."},
+    {"date":"2026-10-13","ticker":"WFF","pattern":"무뉴스 멀티데이→붕괴","intraday":"Day3 고가 $15.55","close":"-87.7%","highPrice":"$15.55","closePrice":"$2.12","setup":"Day1 무뉴스 +500% → Day2 장중 +151% 재돌파","lesson":"무뉴스 멀티데이도 지속될 수 있지만 Day3에 상승분 전액 반납. Day4 RD 뒤 $0.175로 추가 붕괴."},
+    {"date":"2026-10-12","ticker":"YMAT","pattern":"RS·초저유통 압축","intraday":"+126%","close":null,"highPrice":null,"closePrice":null,"setup":"1:5 RS · 당시 기록 Float 약 123만주","lesson":"압축 급등 뒤 T+1 -36~-57%. 공모가 없어도 수급 소진만으로 반토막 가능."},
+    {"date":"2026-10-12","ticker":"OLB","pattern":"공급 차단+수요 창출","intraday":null,"close":"+32% 재점화","highPrice":null,"closePrice":null,"setup":"기존 ATM 중단 + Buyback · 거래량이 O/S 약 4배","lesson":"신규 공급 감소와 회사 매수 수요가 동시에 생기는 구조. 단 워런트 재판매 S-1 등 잔여 공급 확인."}
+  ]
+}
