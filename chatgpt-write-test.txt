@@ -1,3 +1,0 @@
-ChatGPT GitHub write access test
-Created: 2026-10-18
-Purpose: verify Microcap Radar repository write access.
