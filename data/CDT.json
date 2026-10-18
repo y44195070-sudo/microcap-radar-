@@ -1,0 +1,78 @@
+{
+  "ticker": "CDT",
+  "company": "CDT Equity Inc.",
+  "asOf": "2026-10-18",
+  "tier": "event-risk",
+  "score": 32,
+  "signal": {
+    "color": "red",
+    "text": "역분할 강제 트리거 + Astor 자금조달",
+    "summary": "주가를 자연 상승시켜 $1/$5를 맞추는 구조라기보다, 대주 계약상 역분할 의무와 추가 자금조달 조건이 주가 경로를 강하게 제약하는 구조."
+  },
+  "verified": {
+    "reverseSplit": "2026-09-29부터 1-for-25 조정 거래",
+    "nasdaqRule": "최근 1년 내 역분할 및 최근 2년 누적 250:1 초과 때문에 $1 미달 시 일반 compliance period를 받을 수 없음을 Astor Note에서 회사가 인정",
+    "belowOneStart": "Astor Note는 2026-10-02부터 closing bid가 $1 미만인 기간을 연속일 계산에 포함",
+    "fiveDayTrigger": "closing bid가 $1 미만 5거래일 연속이면 이사회가 역분할을 승인하고 Nasdaq에 통지해야 함",
+    "splitTarget": "직전 5거래일 최저 closing bid에 적용했을 때 최소 $5가 되도록 Minimum Split Ratio 산정",
+    "hardDeadline": "$1 미만 20연속 business day 전에 split-adjusted 거래를 시작해야 하며, 10/2부터 계속 미달이면 계약상 2026-10-21 이전/당일까지 효력 발생 요구",
+    "existingAuthority": "2026 연례주총 승인분 중 1-for-25 사용 후 추가 누적 1-for-20 역분할 권한 잔존",
+    "newAuthority": "Astor Note는 추가 최대 누적 1-for-1000 권한을 위한 주주승인을 2026-11-13까지 받도록 요구",
+    "astorNote": "$6.75M principal senior secured convertible note; 1차 $3.0M 자금, 순유입 $2.86985M",
+    "secondTranche": "$2.0M 추가 자금은 2026-12-31까지 조건 충족 필요. 조건 중 직전 5거래일 closing bid >= $3.00 포함",
+    "newWarrant": "Astor에 225,000주 warrant @ $0.9177, 즉시 행사 가능, 5년",
+    "resale": "2026-10-13 424B3는 기존 Astor notes/warrants 등 관련 673,023주 resale prospectus를 업데이트"
+  },
+  "correctionToPost": [
+    "게시글의 핵심인 'Astor 계약이 $1 미만 지속 시 역분할을 강제한다'는 방향은 맞음.",
+    "다만 계약서의 정확한 신규 권한 주주승인 기한은 11/13이며, 단순히 '11/13 주총'이라고 단정하면 안 됨.",
+    "계약서상 10/2부터 $1 미만이 계속된 경우 역분할 효력의 명시적 최종선은 10/21임.",
+    "'병합 후 $5'는 회사가 시장에서 주가를 $5까지 펌핑해야 한다는 뜻이 아니라 Minimum Split Ratio 산정 기준임.",
+    "기존 권한은 최대 추가 20:1이므로 당시 저가가 충분히 낮으면 한 번의 기존 권한 병합만으로 $5 계산값을 못 맞출 수 있고, 그 경우 추가 권한 승인 후 후속 병합 조항이 작동할 수 있음."
+  ],
+  "supply": {
+    "status": "high-risk",
+    "items": [
+      "Astor senior secured convertible financing",
+      "225,000 new warrants @ $0.9177",
+      "기존 Astor notes/warrants 관련 resale registration",
+      "추가 $2M tranche는 $3 이상 5거래일 조건과 연결"
+    ]
+  },
+  "events": [
+    {"date":"2026-10-21","event":"10/2 이후 $1 미만 지속 시 Astor 계약상 역분할 효력 최종선"},
+    {"date":"2026-11-13","event":"추가 최대 1-for-1000 역분할 권한 주주승인 계약상 기한"},
+    {"date":"2026-12-31","event":"Astor $2M second tranche 조건 충족 기한; 직전 5거래일 >= $3 조건 포함"},
+    {"date":"2027-03-24","event":"2026-10-06 Astor Note maturity"}
+  ],
+  "scenario": {
+    "bull": [
+      "역분할 전후 초저유통이 형성되고 신규 매수 수요가 집중될 경우 단기 변동성 확대 가능",
+      "$3 이상 5거래일은 second tranche 조건이므로 회사/대주의 이해관계상 중요한 가격 구간"
+    ],
+    "bear": [
+      "역분할 자체는 기업가치 증가가 아니며 이후 전환·워런트·재판매 공급이 이어질 수 있음",
+      "$1 미달 장기화는 일반 Nasdaq cure period가 없다는 회사의 계약상 인정 때문에 상장유지 리스크가 매우 큼",
+      "Astor 자금조달 구조가 주가 상승 재료보다 수금/공급 구조로 작동할 가능성"
+    ]
+  },
+  "framework": {
+    "kkung":"핵심은 호재보다 수금 구조. CDT는 Astor secured convertible note와 warrant/resale rail을 먼저 봐야 함.",
+    "parfait":"가격 조건이 financing과 직접 연결됨. $3 5거래일은 second tranche 조건이고, 역분할 후 공급 증권의 조정 조건을 계속 추적.",
+    "cheonseok":"Nasdaq 데드라인과 대체수단을 분리. '주가를 반드시 올려야 함'이 아니라 역분할이라는 대체수단이 계약에 명시돼 있어 펌핑 확증편향 금지.",
+    "snu":"역분할 직후 실제 O/S/Float 재계산이 핵심. 병합 후 저유통이 만들어지는지와 동시에 resale/전환 공급이 얼마나 열리는지 확인."
+  },
+  "memo": {
+    "structure":"Astor 자금조달 + 계약상 역분할 강제 트리거. 자연상승 의무가 아니라 RS 대체수단 명시.",
+    "catalyst":"10/21 RS 계약 데드라인(조건부), 11/13 추가 RS 권한 승인 기한, $3×5일 second tranche 조건",
+    "dilution":"$6.75M secured convertible note + 신규 225k warrant @$0.9177 + 기존 Astor resale 물량",
+    "risk":"Nasdaq $1 미달 cure period 부재 인정, RS 후 공급 재개/전환 가능성",
+    "watch":"RS 공시·Nasdaq 5250(e)(7) 통지, split ratio, post-RS O/S/Float, Astor conversion/resale, $3 5일 유지 여부"
+  },
+  "sources": [
+    "SEC 8-K filed 2026-10-13 (CDT Equity / Astor Note)",
+    "SEC Exhibit 10.1 to 2026-10-13 8-K",
+    "SEC 424B3 filed 2026-10-13",
+    "SEC 8-K / 424B3 re 1-for-25 reverse split effective 2026-09-28"
+  ]
+}
