@@ -32,3 +32,9 @@ jobs:
           path: /tmp/radar-site
       - uses: actions/deploy-pages@v4
         id: deployment
+      - name: Install browser verification tools
+        run: |
+          python -m pip install playwright==1.55.0
+          python -m playwright install --with-deps chromium
+      - name: Verify published Pages URL
+        run: python scripts/check-pages.py '${{ steps.deployment.outputs.page_url }}'
