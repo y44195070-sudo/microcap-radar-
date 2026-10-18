@@ -1,3 +1,0 @@
-MICROCAP Radar deploy test
-status=ok
-date=2026-10-18
