@@ -14,7 +14,7 @@ python3 -m http.server 8000 --bind 127.0.0.1
 
 ## GitHub Pages
 
-저장소 **Settings → Pages → Source**를 **GitHub Actions**로 설정합니다. `main`에 push하면 `pages.yml`이 `data/*.json`을 스캔하여 `data/index.json`을 생성하고 초기 분석 스냅샷을 HTML에 포함해 사이트를 배포합니다. 첫 화면부터 외부 종목을 표시하고, 이후 JSON을 다시 읽어 갱신하므로 요청 지연이나 실패가 CDT를 미분석 종목으로 바꾸지 않습니다. 따라서 앞으로 종목 JSON만 추가하면 되며 HTML이나 목록을 수동 편집할 필요가 없습니다. `update-status.json` 같은 상태 파일은 종목 목록에서 제외됩니다. 기존 자동 업데이트 워크플로는 유지됩니다.
+저장소 **Settings → Pages → Source**는 **GitHub Actions**를 권장합니다. 기존 브랜치 배포 설정을 유지하는 경우에도 기본 Pages 작업이 끝난 뒤 생성한 사이트를 배포하도록 순서를 보장하며, 기본 Pages 배포 완료 이벤트에서도 자동 배포합니다. `main`에 push하면 `pages.yml`이 `data/*.json`을 스캔하여 `data/index.json`을 생성하고 초기 분석 스냅샷을 HTML에 포함해 사이트를 배포합니다. 첫 화면부터 외부 종목을 표시하고, 이후 JSON을 다시 읽어 갱신하므로 요청 지연이나 실패가 CDT를 미분석 종목으로 바꾸지 않습니다. 따라서 앞으로 종목 JSON만 추가하면 되며 HTML이나 목록을 수동 편집할 필요가 없습니다. `update-status.json` 같은 상태 파일은 종목 목록에서 제외됩니다. 기존 자동 업데이트 워크플로는 유지됩니다.
 
 다른 정적 호스팅을 사용할 경우 배포 전에 다음 명령을 실행하고 `index.html`과 `data/`를 함께 배포합니다.
 

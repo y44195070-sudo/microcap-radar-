@@ -3,8 +3,13 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  workflow_run:
+    workflows: ["pages build and deployment"]
+    types: [completed]
+    branches: [main]
 permissions:
   contents: read
+  actions: read
   pages: write
   id-token: write
 concurrency:
@@ -22,19 +27,11 @@ jobs:
         with:
           python-version: '3.12'
       - run: python3 scripts/build-data-index.py --site-dir /tmp/radar-site
-      - name: Use one Pages deployment source
+      - name: Wait for competing branch Pages deployment
+        timeout-minutes: 10
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          source=$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq '.build_type')
-          echo "::notice title=Pages source::Current build source: $source"
-          if [ "$source" != "workflow" ]; then
-            if result=$(gh api --method PUT "repos/$GITHUB_REPOSITORY/pages" -f build_type=workflow 2>&1); then
-              echo "::notice title=Pages source::Switched Pages to workflow deployments"
-            else
-              echo "::warning title=Pages source requires repository settings::$result"
-            fi
-          fi
+        run: python3 scripts/wait-pages-build.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
