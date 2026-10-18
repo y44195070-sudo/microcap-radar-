@@ -2429,6 +2429,49 @@ chipsBar();
 let init='';try{init=new URLSearchParams(location.search).get('ticker')||''}catch(e){}
 if(!init){try{init=(location.hash||'').slice(1)}catch(e){}}
 nav(init);
+/* External analyses are adapted to the existing Radar model, leaving rendering intact. */
+function radarAnalysis(raw, ticker){
+  if(!raw||typeof raw!=='object'||Array.isArray(raw))throw new Error('Invalid analysis');
+  if(raw.ticker&&raw.ticker!==ticker)throw new Error('Ticker/filename mismatch');
+  const d={...raw};
+  const signal=raw.signal||{},memo=raw.memo||{},verified=raw.verified||{};
+  d.signal={...signal,c:signal.c||({red:'r',yellow:'y',green:'g'}[signal.color])||'y',t:signal.t||signal.text||'확인 필요',why:signal.why||raw.supply?.items||[]};
+  d.conclusion=raw.conclusion||[signal.summary,memo.structure].filter(Boolean);
+  d.structure={reverseSplit:verified.reverseSplit,...raw.structure};
+  d.supply={...raw.supply,immediate:raw.supply?.immediate||raw.supply?.items||[]};
+  d.events=(raw.events||[]).map(e=>({...e,title:e.title||e.event||''}));
+  d.scenarios=raw.scenarios||raw.scenario;
+  d.frames=raw.frames||raw.framework;
+  d.memo={...memo,supply:memo.supply||memo.dilution,next:memo.next||memo.watch};
+  d.risks=raw.risks||[memo.risk].filter(Boolean);
+  d.analyzedAt=raw.analyzedAt||raw.asOf;
+  if(raw.correctionToPost&&!raw.thesis)d.thesis={title:'게시글 해석 검증',old:[],now:raw.correctionToPost,verdict:signal.summary||''};
+  if(Object.keys(verified).length&&!raw.timeline)d.timeline=Object.entries(verified).map(([k,t])=>({d:raw.asOf||'',k:'공시',t}));
+  if(raw.sources?.length&&!raw.opinions)d.opinions=[{author:'분석 출처',points:raw.sources}];
+  if(d.rubric)d.score=RUB.reduce((a,[k])=>a+(Number(d.rubric[k])||0),0);
+  return d;
+}
+async function loadRadarAnalyses(){
+  const valid=name=>/^[A-Z][A-Z0-9.-]*\.json$/.test(name);
+  const get=async url=>{const r=await fetch(url,{cache:'no-store',signal:AbortSignal.timeout(10000)});if(!r.ok)throw new Error(`${url}: ${r.status}`);return r};
+  let files=[];
+  try{
+    // Local HTTP servers expose directory listings; Pages uses the build manifest.
+    if(['localhost','127.0.0.1'].includes(location.hostname)){
+      try{const html=await (await get('data/')).text();const doc=new DOMParser().parseFromString(html,'text/html');files=[...doc.querySelectorAll('a[href]')].map(a=>a.getAttribute('href')).filter(valid)}catch(e){console.warn('Radar directory discovery:',e)}
+    }
+    if(!files.length){files=await (await get('data/index.json')).json();if(!Array.isArray(files))throw new Error('Invalid ticker manifest');files=files.filter(name=>typeof name==='string'&&valid(name))}
+    await Promise.all([...new Set(files)].map(async name=>{
+      try{const ticker=name.slice(0,-5),raw=await (await get('data/'+encodeURIComponent(name))).json();const adapted=radarAnalysis(raw,ticker);DB()[ticker]={...(DB()[ticker]||{}),...adapted}}
+      catch(e){console.warn('Radar analysis skipped:',name,e)}
+    }));
+    chipsBar();
+    // Preserve navigation changes made while requests were in flight.
+    const ticker=new URLSearchParams(location.search).get('ticker');
+    nav(ticker||(location.hash||'').slice(1));
+  }catch(e){console.warn('Radar external data unavailable; embedded analyses retained:',e)}
+}
+loadRadarAnalyses();
 </script>
 
 </body></html>
