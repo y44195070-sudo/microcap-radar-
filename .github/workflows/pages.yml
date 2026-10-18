@@ -22,6 +22,15 @@ jobs:
         with:
           python-version: '3.12'
       - run: python3 scripts/build-data-index.py --site-dir /tmp/radar-site
+      - name: Use one Pages deployment source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          source=$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq '.build_type')
+          echo "Pages build source: $source"
+          if [ "$source" != "workflow" ]; then
+            gh api --method PUT "repos/$GITHUB_REPOSITORY/pages" -f build_type=workflow
+          fi
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
