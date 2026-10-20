@@ -1,12 +1,13 @@
 {
   "asOf":"2026-10-20",
   "anomalies":[
+    {"date":"2026-10-20","ticker":"GPUS","badge":"공급개방 · 이벤트 설계","text":"Ault/SJC 지배력 강화 + Michigan AI 11월 가동 목표 + Patriot BTC/askROI 가치분리 이벤트. ATM 실제 사용량과 최신 O/S 추적."},
     {"date":"2026-10-20","ticker":"NXL","badge":"RS 압축 · 공급대기","text":"1:30 RS 후 O/S 약 82.9만주. Alumni 최대 $15M AMPA와 S-1/A 등록 대상 최대 575.28만주. EFFECT와 실제 발행량 추적."},
     {"date":"2026-10-20","ticker":"GCDT","badge":"RS 압축 · 시장가 공급","text":"1:6 RS 후 Class A O/S 약 280.6만주. Target $100M ELOC + 변동가 Convertible Note가 핵심 공급 위험."},
-    {"date":"2026-10-16","ticker":"DKI","badge":"거래량 ×5 · -14.7%","text":"공모 후 7일 연속 하락, 거래량 급증. 0원 행사 워런트 물량 출회 가능성 점검."},
-    {"date":"2026-10-16","ticker":"CCTG","badge":"거래량 ×8","text":"뉴스 없이 거래량 급증 후 장중 강세가 종가에서 크게 축소. 병합 효력일 대기."}
+    {"date":"2026-10-16","ticker":"DKI","badge":"거래량 ×5 · -14.7%","text":"공모 후 7일 연속 하락, 거래량 급증. 0원 행사 워런트 물량 출회 가능성 점검."}
   ],
   "core":[
+    {"ticker":"GPUS","score":33,"signal":"🟠 공급개방 + 이벤트 설계형"},
     {"ticker":"NXL","score":43,"signal":"🟡 RS 압축 + 공급대기"},
     {"ticker":"GCDT","score":43,"signal":"🔴 RS 압축 + 시장가 공급"},
     {"ticker":"STEX","score":46,"signal":"🟢 새 공급 통로 미확인"},
