@@ -1,11 +1,14 @@
 {
-  "asOf":"2026-10-18",
+  "asOf":"2026-10-20",
   "anomalies":[
+    {"date":"2026-10-20","ticker":"NXL","badge":"RS 압축 · 공급대기","text":"1:30 RS 후 O/S 약 82.9만주. Alumni 최대 $15M AMPA와 S-1/A 등록 대상 최대 575.28만주. EFFECT와 실제 발행량 추적."},
+    {"date":"2026-10-20","ticker":"GCDT","badge":"RS 압축 · 시장가 공급","text":"1:6 RS 후 Class A O/S 약 280.6만주. Target $100M ELOC + 변동가 Convertible Note가 핵심 공급 위험."},
     {"date":"2026-10-16","ticker":"DKI","badge":"거래량 ×5 · -14.7%","text":"공모 후 7일 연속 하락, 거래량 급증. 0원 행사 워런트 물량 출회 가능성 점검."},
-    {"date":"2026-10-16","ticker":"CCTG","badge":"거래량 ×8","text":"뉴스 없이 거래량 급증 후 장중 강세가 종가에서 크게 축소. 병합 효력일 대기."},
-    {"date":"2026-10-15","ticker":"GCDT","badge":"희석 공시","text":"F-1 재판매 등록과 전환사채 관련 공급 위험 재점검 필요."}
+    {"date":"2026-10-16","ticker":"CCTG","badge":"거래량 ×8","text":"뉴스 없이 거래량 급증 후 장중 강세가 종가에서 크게 축소. 병합 효력일 대기."}
   ],
   "core":[
+    {"ticker":"NXL","score":43,"signal":"🟡 RS 압축 + 공급대기"},
+    {"ticker":"GCDT","score":43,"signal":"🔴 RS 압축 + 시장가 공급"},
     {"ticker":"STEX","score":46,"signal":"🟢 새 공급 통로 미확인"},
     {"ticker":"YMAT","score":41,"signal":"🟡 조건부"},
     {"ticker":"QTI","score":40,"signal":"🟡 조건부"},
@@ -17,5 +20,5 @@
     {"ticker":"TRUG","score":29,"signal":"🔴 공급 개방"},
     {"ticker":"NIVF","score":17,"signal":"🔴 공급 개방"}
   ],
-  "note":"핵심 추적 10종목은 기존 Radar 분류를 V2 홈으로 옮긴 값입니다. 각 종목의 최신 상세 데이터는 V2 이전 과정에서 순차 재검증합니다."
+  "note":"직접 분석해 사이트에 반영한 종목은 핵심 추적에 추가합니다. 카드를 누르면 구조·가격 사다리·희석·공매·촉매·위험·다음 확인사항을 포함한 상세 분석으로 이동합니다."
 }
