@@ -1,0 +1,1 @@
+(()=>{function removeMemo(){document.querySelectorAll('.memoCard').forEach(el=>el.remove())}new MutationObserver(removeMemo).observe(document.documentElement,{childList:true,subtree:true});removeMemo();})();
