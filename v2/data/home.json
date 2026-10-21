@@ -1,12 +1,11 @@
 {
-  "asOf":"2026-10-20","anomalies":[
-    {"date":"2026-10-20","ticker":"HUBC","badge":"반복 RS · 희석 재팽창","text":"2026년 1:15→1:50→1:20→1:25 RS. 할인 전환으로 O/S가 한 달 내 3,000%+ 재팽창한 공식 사례와 Evofem PFW 대형 공급 존재. CTB는 높지만 공급위험 우선."},
-    {"date":"2026-10-20","ticker":"SAIQ","badge":"98.6% Redemption · 대차고갈","text":"De-SPAC 공개주식 34,967주 잔존, 지배주주 집중·lock-up + CTB 800~900%대 기록. 단 34,967주를 실제 Float로 단정 금지, PIPE 최대 2M주 추적."},
-    {"date":"2026-10-20","ticker":"CCTG","badge":"1:20 RS 승인 · 초저 O/S 후보","text":"추가 1:20 RS는 승인됐지만 아직 미실행. 현재 Class A 수량 유지 가정 시 약 65.4만주로 압축 가능. Authorized 확대와 S-8은 후속 공급 위험."},
-    {"date":"2026-10-20","ticker":"GPUS","badge":"공급개방 · 이벤트 설계","text":"Ault/SJC 지배력 강화 + Michigan AI 11월 가동 목표 + Patriot BTC/askROI 가치분리 이벤트. ATM 실제 사용량과 최신 O/S 추적."},
-    {"date":"2026-10-20","ticker":"NXL","badge":"RS 압축 · 공급대기","text":"1:30 RS 후 O/S 약 82.9만주. Alumni 최대 $15M AMPA와 S-1/A 등록 대상 최대 575.28만주. EFFECT와 실제 발행량 추적."},
-    {"date":"2026-10-20","ticker":"GCDT","badge":"RS 압축 · 시장가 공급","text":"1:6 RS 후 Class A O/S 약 280.6만주. Target $100M ELOC + 변동가 Convertible Note가 핵심 공급 위험."}
+  "asOf":"2026-10-21","anomalies":[
+    {"date":"2026-10-21","ticker":"SAIQ","badge":"98.6% Redemption · 대차고갈","text":"De-SPAC 공개주식 34,967주 잔존, 지배주주 집중·lock-up + 극단적 CTB 기록. 실제 Tradable Float와 PIPE 최대 2M주 재판매 가능시점이 핵심."},
+    {"date":"2026-10-21","ticker":"HUBC","badge":"반복 RS · 희석 재팽창","text":"2026년 반복 RS 뒤 할인전환·PFW로 O/S 재팽창 이력. 높은 CTB보다 실제 최신 O/S·PFW 행사·전환잔액 확인을 우선."},
+    {"date":"2026-10-21","ticker":"CCTG","badge":"1:20 RS 승인 · 조건부 압축","text":"추가 1:20 RS 승인 상태. 실행 전이므로 현재 초저유통으로 단정 금지. S-8·Authorized 확대가 후속 공급 변수."},
+    {"date":"2026-10-21","ticker":"NXL","badge":"RS 압축 · 공급대기","text":"1:30 RS 후 O/S 약 82.9만 기록. Alumni 최대 $15M AMPA와 등록물량의 EFFECT·실제 발행을 추적."},
+    {"date":"2026-10-21","ticker":"GCDT","badge":"Target Capital · 시장연동 공급","text":"Target Note 20% OID·resale EFFECT + 별도 $100M ELOC. 상승 거래량이 전환·매도의 출구가 되는지 O/S와 실제 전환을 우선 확인."}
   ],"core":[
     {"ticker":"SAIQ","score":81,"signal":"🔥 신규상장 · Redemption 유동성 스퀴즈형"},{"ticker":"CCTG","score":58,"signal":"🟡 RS 압축 이벤트형"},{"ticker":"STEX","score":46,"signal":"🟢 새 공급 통로 미확인"},{"ticker":"NXL","score":43,"signal":"🟡 RS 압축 + 공급대기"},{"ticker":"GCDT","score":43,"signal":"🔴 RS 압축 + 시장가 공급"},{"ticker":"YMAT","score":41,"signal":"🟡 조건부"},{"ticker":"QTI","score":40,"signal":"🟡 조건부"},{"ticker":"BTTC","score":36,"signal":"🟡 조건부"},{"ticker":"DRMA","score":36,"signal":"🟡 조건부"},{"ticker":"WSHP","score":35,"signal":"🔴 공급 개방"},{"ticker":"VEEA","score":34,"signal":"🔴 공급 개방"},{"ticker":"GPUS","score":33,"signal":"🟠 공급개방 + 이벤트 설계형"},{"ticker":"AMSS","score":30,"signal":"🟡 조건부"},{"ticker":"TRUG","score":29,"signal":"🔴 공급 개방"},{"ticker":"HUBC","score":28,"signal":"🔴 반복 RS + 희석 재팽창형"},{"ticker":"NIVF","score":17,"signal":"🔴 공급 개방"}
-  ],"note":"직접 분석해 사이트에 반영한 종목은 핵심 추적과 랭킹을 함께 최신화합니다. 카드를 누르면 구조·가격 사다리·희석·공매·촉매·위험·다음 확인사항을 포함한 상세 분석으로 이동합니다."
+  ],"note":"점수는 상승확률이 아니라 구조 비교점수입니다. 확인되지 않은 Float·실시간 대차·가격연동 공급은 확정치로 계산하지 않습니다."
 }
