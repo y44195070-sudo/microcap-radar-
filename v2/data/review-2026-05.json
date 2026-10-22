@@ -1,0 +1,48 @@
+{
+  "month":"2026-05",
+  "asOf":"2026-10-22",
+  "method":"2026-05 미국 상장주 뉴스 동반 급등 100건 + 급락 100건을 월간 후보군으로 전수 스크리닝한 뒤, Microcap Radar의 마이크로캡 구조 학습에 유효한 대표 사례를 SEC/공식공시 우선으로 심층 검증. 모든 200건을 동일 깊이로 SEC 포렌식한 데이터셋은 아니며, boardScreened=200과 deepReviewed를 구분한다.",
+  "universe":{"gainersScreened":100,"losersScreened":100,"boardScreened":200,"sessions":20,"largestGainer":{"ticker":"SKK","movePct":596.53,"date":"2026-05-04"},"largestLoser":{"ticker":"ENGN","movePct":-80.56,"date":"2026-05-07"}},
+  "deepReviewed":[
+    {"ticker":"SKK","date":"2026-05-04","movePct":596.53,"rvol":603.6,"catalyst":"Rantizo 드론 자산 약 $258.8M 인수 계약","preMoveKnown":"신규 Class A 주식으로 대가 지급, Rantizo의 즉시 지분 확보 구조","postMove":"5/18 ATM 프로그램이 후속 등장. 향후 consideration shares 재판매 등록 의무 존재","pattern":["M&A/역합병·인수 + 동시 자금조달/재평가","급등 직후 공급/희석 붕괴 · Spike-and-Raise"],"lesson":"초소형 회사 대비 거래 규모가 압도적이어도 consideration shares와 후속 ATM을 동시에 추적해야 함."},
+    {"ticker":"ASTC","date":"2026-05-27","movePct":459.11,"rvol":"1000x+","catalyst":"달 자원·양자컴퓨팅 제조 전략 이니셔티브","preMoveKnown":"구체 고객·계약·예산·발사 일정 없는 탐색 단계 전략","postMove":"5일 내 최고 종가 기준 pre-news 대비 +1916%까지 확장","pattern":["무뉴스/약한 PR + 저유통 Volume Shock","멀티데이 지속·재점화형","동일 세션 저유통 클러스터형"],"lesson":"숫자 없는 테마 피벗도 얕은 유동성과 극단 RVOL이 붙으면 뉴스 강도와 무관하게 멀티데이화 가능."},
+    {"ticker":"QUCY","date":"2026-05-13","movePct":315.12,"rvol":"1000x+","catalyst":"자율 드론 플랫폼 독점권/사업 피벗","preMoveKnown":"4월 사명·티커 변경 후 사이버/드론 테마 전환, 5/4 Equity Distribution Agreement 수정 공시 존재","postMove":"D+5 pre-news 대비 +919% 수준 유지, 월중 반복 급등","pattern":["무뉴스/약한 PR + 저유통 Volume Shock","멀티데이 지속·재점화형","동일 세션 저유통 클러스터형"],"lesson":"리브랜딩 직후 사업 피벗 + 살아있는 공급통로가 있어도 극단적 거래량 쇼크가 단기 공급을 압도할 수 있음."},
+    {"ticker":"AKTX","date":"2026-05-22","movePct":255.45,"rvol":166.6,"catalyst":"KRAS 변이 췌장암 전임상 데이터","preMoveKnown":"5/21 $5.5M Private Placement 발표로 신규 공급 이벤트가 먼저 발생","postMove":"D+5에도 pre-news 대비 약 +100%, 월중 3회 급등 보드 등장","pattern":["멀티데이 지속·재점화형"],"lesson":"희석 공시가 항상 모멘텀 종료를 뜻하지 않으며, 다음날 강한 바이오 데이터가 공급 악재를 덮는 예외 표본."},
+    {"ticker":"PIII","date":"2026-05-15","movePct":180.15,"rvol":"1000x+","catalyst":"Q1 실적","preMoveKnown":"Q1 영업손익이 전년 -$38.1M에서 +$8.2M로 전환","postMove":"5/20 Nasdaq continued listing compliance 회복 통지","pattern":["멀티데이 지속·재점화형","내부자 매수 + 상장유지/컴플라이언스형","실적 질 개선형"],"lesson":"매출 성장보다 손익 구조의 급격한 개선과 이후 상장유지 리스크 해소가 재평가를 연장할 수 있음."},
+    {"ticker":"PHOE","date":"2026-05-05","movePct":168.51,"rvol":770.8,"catalyst":"주식 인수계약 + Convertible Promissory Note","preMoveKnown":"M&A와 전환성 자금구조가 동시에 존재","postMove":"D+5 대부분 반납","pattern":["M&A/역합병·인수 + 동시 자금조달/재평가"],"lesson":"M&A 헤드라인이 강해도 전환증권·대가주식 구조가 있으면 지속성은 약해질 수 있음."},
+    {"ticker":"STG","date":"2026-05-29","movePct":125.74,"rvol":10.5,"catalyst":"$50M Share Repurchase Program + 자산 매각","preMoveKnown":"36개월 동안 최대 $50M 자사주매입 승인","postMove":"D+5 기준 상승폭 상당 부분 반납","pattern":["공급 차단 + 수요 창출형"],"lesson":"Buyback 규모가 시총 대비 클수록 강한 수요 신호지만 승인과 실제 집행은 구분해야 함."},
+    {"ticker":"AIIO","date":"2026-05-08~18","movePct":116.09,"rvol":"최대 1000x+","catalyst":"Neurovia 인수 후 연속 AI 데이터 인프라 PR","preMoveKnown":"$100M 인수대가 149,097,957 Class B shares, 8년 lock-up 및 최초 4년 절대 해제 없음","postMove":"월중 4회 급등 보드 등장 후 후반부 모멘텀 둔화","pattern":["M&A/역합병·인수 + 동시 자금조달/재평가","멀티데이 지속·재점화형","동일 세션 저유통 클러스터형"],"lesson":"거대한 인수대가 주식이라도 장기 lock-up이면 당장 Float 공급과 분리해야 하며 연속 PR 재점화가 가능."},
+    {"ticker":"NXXT","date":"2026-05-19","movePct":100.02,"rvol":"확인 필요","catalyst":"4월 매출 +56% YoY 예비치, 앞선 Q1 실적 개선","preMoveKnown":"Q1 매출 +29%, Gross Profit 3배 이상, Gross Margin 3.2%→8.1%, 이자비용 -80%","postMove":"월중 2회 급등 보드 등장","pattern":["실적 질 개선형","멀티데이 지속·재점화형"],"lesson":"단순 매출 증가보다 마진·이자비용·단위경제성 동시 개선이 반복 모멘텀을 만들 수 있음."},
+    {"ticker":"HOTH","date":"2026-05-27","movePct":92.01,"rvol":"1000x+","catalyst":"Rocket One으로 사명/티커 전환 및 우주·AI 칩 사업 피벗","preMoveKnown":"사업전환 PR","postMove":"티커 변경으로 후속 데이터 단절","pattern":["무뉴스/약한 PR + 저유통 Volume Shock","동일 세션 저유통 클러스터형"],"lesson":"ASTC와 같은 날 우주/AI 피벗 저유통 종목이 동시에 점화된 세션 클러스터 표본."},
+    {"ticker":"UONE","date":"2026-05-01","movePct":39.24,"rvol":32.1,"catalyst":"라디오 방송국 인수·매각 계약","preMoveKnown":"실물 M&A 계약","postMove":"D+5 pre-news 대비 +40% 유지","pattern":["M&A/역합병·인수 + 동시 자금조달/재평가"],"lesson":"작은 시총에서 자산 재편 계약이 거래량 재평가를 만들 수 있음."},
+    {"ticker":"YMAT","date":"2026-05-26","movePct":203.16,"rvol":"확인 필요","catalyst":"대만 중앙은행 승인 기반 $60M sovereign-backed financing framework","preMoveKnown":"5/1 미국 고체전지 파트너십, 5/18 관계자 대여금 $4.00/share 전환 2.05M Class A 예정","postMove":"월중 2회 급등 보드 등장","pattern":["멀티데이 지속·재점화형"],"lesson":"계약·정책성 금융 프레임과 내부 지분 재편이 연속 뉴스 모멘텀으로 연결된 사례. $60M은 수주액이 아니라 financing framework이므로 대형계약형에는 넣지 않음."}
+  ],
+  "failureControls":[
+    {"ticker":"ENGN","date":"2026-05-07","movePct":-80.56,"type":"임상 데이터 실패/실망","rvol":92.4,"lesson":"바이오 예정 이벤트는 방향성 비대칭이 매우 커서 사전 이벤트 자체를 상승 신호로 취급하면 안 됨."},
+    {"ticker":"NGEN","date":"2026-05-22","movePct":-43.48,"type":"$60M Public Offering","rvol":94.8,"lesson":"대규모 즉시 공급은 강한 하방 대조군."},
+    {"ticker":"LNZA","date":"2026-05-15","movePct":-43.27,"type":"$20M Registered Direct Offering","rvol":15.9,"lesson":"RD가 시총/Float 대비 클 때 공급충격이 가격을 지배."},
+    {"ticker":"HYPD","date":"2026-05-06","movePct":-22.06,"type":"Common + Pre-Funded Warrants Offering","rvol":4.6,"lesson":"PFW 포함 즉시 공급은 구조적 감점."},
+    {"ticker":"STAK","date":"2026-05-14","movePct":-62.71,"type":"실적 발표 후 붕괴","rvol":61.0,"lesson":"저가·저유동성이라도 실적 질이 나쁘면 Volume Shock가 하방으로도 동일하게 작동."}
+  ],
+  "patternAdds":{
+    "💥 무뉴스/약한 PR + 저유통 Volume Shock":"ASTC · QUCY · HOTH",
+    "💣 급등 직후 공급/희석 붕괴 · Spike-and-Raise":"SKK",
+    "🔁 멀티데이 지속·재점화형":"ASTC · QUCY · AKTX · PIII · AIIO · NXXT · YMAT",
+    "🤝 M&A/역합병·인수 + 동시 자금조달/재평가":"SKK · PHOE · AIIO · UONE",
+    "🔥 RS 후 초저유통 압축형":"해당 사례 없음",
+    "📑 회사 체급 대비 대형 계약·주문형":"해당 사례 없음",
+    "🚧 공급 차단 + 수요 창출형":"STG",
+    "📅 사전 이벤트 2단 점화형":"해당 사례 없음",
+    "👤 내부자 매수 + 상장유지/컴플라이언스형":"PIII",
+    "📈 실적 질 개선형":"PIII · NXXT",
+    "🌊 동일 세션 저유통 클러스터형":"QUCY · AIIO · ASTC · HOTH"
+  },
+  "newPatterns":[],
+  "keyFindings":[
+    "5월의 강한 표본은 뉴스 제목보다 RVOL이 극단적이었다. ASTC·QUCY·PIII 등은 1000x+ 구간이 확인됐다.",
+    "M&A는 거래가치만 보면 안 된다. SKK는 대가주식/재판매 등록 의무와 이후 ATM, AIIO는 대가주식이지만 8년 lock-up이라는 정반대 공급 특성을 보였다.",
+    "공급 이벤트는 방향이 단순하지 않다. NGEN/LNZA/HYPD는 즉시 공급으로 급락했지만 AKTX는 사모 직후 강한 데이터가 공급 악재를 압도했다.",
+    "실적형에서는 PIII처럼 영업손실→영업이익 전환, NXXT처럼 Gross Margin·이자비용까지 동시에 개선되는 질적 변화가 강했다.",
+    "동일 세션 클러스터가 반복됐다. 5/13 QUCY·AIIO, 5/27 ASTC·HOTH처럼 비슷한 테마/저유동성 종목이 같은 날 동시 점화됐다."
+  ]
+}
