@@ -1,47 +1,12 @@
 {
   "asOf":"2026-10-22",
-  "scope":"6-10월 구조별 마스터 패턴의 기존 '확인 필요' 18칸 전수 재검증. 월별 급등 뉴스 보드와 기존 복기 표본을 재검토하고 SEC 원문으로 핵심 구조를 교차검증.",
-  "before":{"needsReviewCells":18},
-  "after":{"actualCaseCells":7,"noCaseCells":11,"unverifiableCells":0},
+  "scope":"6-10월 구조별 마스터 패턴의 기존 '확인 필요' 19칸 전수 재검증. 월별 급등 뉴스 보드와 기존 복기 표본을 재검토하고 SEC 원문으로 핵심 구조를 교차검증.",
+  "before":{"needsReviewCells":19},
+  "after":{"actualCaseCells":7,"noCaseCells":12,"unverifiableCells":0},
   "resolved":{
-    "actualCases":[
-      "9월 Spike-and-Raise: AEHL · LASE",
-      "6월 대형 계약·주문: ATLN",
-      "7월 공급 차단+수요 창출: SRXH",
-      "9월 공급 차단+수요 창출: YQ",
-      "8월 내부자/컴플라이언스: PFSA",
-      "9월 내부자/컴플라이언스: TANH",
-      "9월 실적 질 개선: CHPT"
-    ],
-    "noRepresentativeCase":[
-      "7월 RS 후 초저유통 압축",
-      "8월 대형 계약·주문",
-      "9월 대형 계약·주문",
-      "6월 공급 차단+수요 창출",
-      "8월 공급 차단+수요 창출",
-      "6월 사전 이벤트 2단 점화",
-      "7월 사전 이벤트 2단 점화",
-      "8월 사전 이벤트 2단 점화",
-      "7월 실적 질 개선",
-      "7월 동일 세션 저유통 클러스터",
-      "9월 동일 세션 저유통 클러스터",
-      "10월 동일 세션 저유통 클러스터"
-    ]
+    "actualCases":["9월 Spike-and-Raise: AEHL · LASE","6월 대형 계약·주문: ATLN","7월 공급 차단+수요 창출: SRXH","9월 공급 차단+수요 창출: YQ","8월 내부자/컴플라이언스: PFSA","9월 내부자/컴플라이언스: TANH","9월 실적 질 개선: CHPT"],
+    "noRepresentativeCase":["7월 RS 후 초저유통 압축","8월 대형 계약·주문","9월 대형 계약·주문","6월 공급 차단+수요 창출","8월 공급 차단+수요 창출","6월 사전 이벤트 2단 점화","7월 사전 이벤트 2단 점화","8월 사전 이벤트 2단 점화","7월 실적 질 개선","7월 동일 세션 저유통 클러스터","9월 동일 세션 저유통 클러스터","10월 동일 세션 저유통 클러스터"]
   },
-  "evidenceNotes":[
-    "ATLN: 2026-06-23 Circle8 Dutch Vehicle Authority 4-year framework agreement, minimum ~$52M.",
-    "SRXH: 2026-07-09 repurchase authorization up to 10M shares or 50% of outstanding, max $20M; authorization and actual execution are distinguished.",
-    "PFSA: 2026-08-26 filing disclosed Nasdaq publicly-held-shares determination after 1:4 RS and compliance as of 8/21.",
-    "TANH: 2026-09-04 1:50 RS reduced stated O/S from 33,382,332 to about 667,647; classified as compliance/RS structure, not insider-buy evidence.",
-    "YQ: 2026-09-03 board approved up to $10M share repurchase for 12 months; authorization and execution are distinguished.",
-    "LASE: September public offering closed with 10.5M common plus B-1/B-2 warrants of 10.5M each, supporting Spike-and-Raise classification.",
-    "CHPT: 2026-09-03 earnings move +74.95% with 134.6x relative volume on the reviewed board; treated as a non-pure-microcap auxiliary sample.",
-    "CELU/GLND/KNDI were reviewed but not forced into the 'company-size-relative large contract/order' card because disclosed dollar scale was absent or the event was an extension/partnership rather than a clearly quantified large revenue contract."
-  ],
-  "methodNotes":[
-    "'해당 사례 없음' means no representative case satisfying the card definition was confirmed in the current review universe; it is not a claim that no such security existed anywhere in the market.",
-    "Historical Short Interest/CTB/Borrow snapshots were not used as sole classification evidence when a reliable contemporaneous snapshot could not be reconstructed.",
-    "Information published after the move is separated from pre-move discoverability and used only to verify follow-on dilution/outcome.",
-    "No '확인 필요' remains in the master-pattern UI after this audit."
-  ]
+  "evidenceNotes":["ATLN: 2026-06-23 Circle8 Dutch Vehicle Authority 4-year framework agreement, minimum ~$52M.","SRXH: 2026-07-09 repurchase authorization up to 10M shares or 50% of outstanding, max $20M; authorization and actual execution are distinguished.","PFSA: 2026-08-26 filing disclosed Nasdaq publicly-held-shares determination after 1:4 RS and compliance as of 8/21.","TANH: 2026-09-04 1:50 RS reduced stated O/S from 33,382,332 to about 667,647; classified as compliance/RS structure, not insider-buy evidence.","YQ: 2026-09-03 board approved up to $10M share repurchase for 12 months; authorization and execution are distinguished.","LASE: September public offering closed with 10.5M common plus B-1/B-2 warrants of 10.5M each, supporting Spike-and-Raise classification.","CHPT: 2026-09-03 earnings move +74.95% with 134.6x relative volume on the reviewed board; treated as a non-pure-microcap auxiliary sample.","CELU/GLND/KNDI were reviewed but not forced into the quantified large-contract card because disclosed dollar scale was absent or the event was an extension/partnership rather than a clearly quantified large revenue contract."],
+  "methodNotes":["'해당 사례 없음' means no representative case satisfying the card definition was confirmed in the current review universe; it is not a claim that no such security existed anywhere in the market.","Historical Short Interest/CTB/Borrow snapshots were not used as sole classification evidence when a reliable contemporaneous snapshot could not be reconstructed.","Information published after the move is separated from pre-move discoverability and used only to verify follow-on dilution/outcome.","No '확인 필요' remains in the master-pattern UI after this audit."]
 }
