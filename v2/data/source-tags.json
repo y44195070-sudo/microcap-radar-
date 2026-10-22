@@ -1,17 +1,46 @@
 {
   "asOf": "2026-10-22",
+  "auditVersion": 2,
   "sources": {
     "rabbit": {
-      "label": "까꿍토끼(토끼형)",
+      "label": "까꿍토끼(토끼형/래빗스탁)",
       "emoji": "🐰",
-      "rule": "사용자가 제공한 과거 글·이미지·분석 자료에서 토끼형/까꿍토끼가 실제로 언급하거나 분석한 기록이 확인되는 티커만 포함. 프레임 유사성만으로는 포함하지 않음.",
-      "tickers": ["ASTI","WHLR","VEEE","GYGY","SLXN","BAOS","WYHG","PCLA","BNAI","WNW","XRTX","CLRO","BTTC","AMSS","TDIC","CLIK","MI"],
-      "evidenceNotes": {
-        "BTTC": "사용자 제공 외부 의견에 토끼형 고도화 프로그램 + 토끼형 필터 직접 귀속",
-        "AMSS": "사용자 제공 외부 의견에 토끼형 (2026-10-13) 직접 귀속",
-        "TDIC": "사용자 제공 Microcap Radar 자료 opinions에 토끼형 TDIC·CLIK 비교 직접 귀속",
-        "CLIK": "사용자 제공 Microcap Radar 자료 opinions에 토끼형 TDIC·CLIK 비교 직접 귀속",
-        "MI": "사용자 제공 Microcap Radar 자료에 래빗스탁(토끼형) 관점 및 토끼형(래빗스탁 토론방) 직접 귀속"
+      "rule": "사용자가 제공한 과거 글·캡처·분석·토론·복기 및 이전 Microcap Radar 원본에서 토끼형/까꿍토끼/래빗스탁이 실제로 직접 분석·픽·비교언급·프로그램 언급한 기록이 확인되는 티커만 포함. 단순히 토끼형 프레임과 구조가 비슷한 종목은 제외.",
+      "tickers": ["ASTI","WHLR","VEEE","GYGY","SLXN","BAOS","WYHG","PCLA","BNAI","WNW","XRTX","CLRO","BTTC","AMSS","TDIC","CLIK","MI","WSHP","ZBAO","GPUS","HCAI","DKI","SBFM","NXAT","GCDT","VCIG","YMAT"],
+      "records": {
+        "ASTI":{"confirmed":true,"type":"직접언급/픽","firstEvidence":"사용자 제공 토끼형 자료","evidence":"기존 토끼형 확정 목록에서 재검증 대상으로 보존","lastChecked":"2026-10-22"},
+        "WHLR":{"confirmed":true,"type":"직접언급/픽","firstEvidence":"사용자 제공 토끼형 자료","evidence":"기존 토끼형 확정 목록에서 재검증 대상으로 보존","lastChecked":"2026-10-22"},
+        "VEEE":{"confirmed":true,"type":"직접언급/픽","firstEvidence":"사용자 제공 토끼형 자료","evidence":"기존 토끼형 확정 목록에서 재검증 대상으로 보존","lastChecked":"2026-10-22"},
+        "GYGY":{"confirmed":true,"type":"직접분석","firstEvidence":"사용자 제공 까꿍토끼 분석","evidence":"직상장 후 주가 파괴/반등 구조 관련 토끼형 분석 기록","lastChecked":"2026-10-22"},
+        "SLXN":{"confirmed":true,"type":"직접언급/픽","firstEvidence":"사용자 제공 토끼형 자료","evidence":"기존 토끼형 확정 목록에서 재검증 대상으로 보존","lastChecked":"2026-10-22"},
+        "BAOS":{"confirmed":true,"type":"직접언급/픽","firstEvidence":"사용자 제공 토끼형 자료","evidence":"기존 토끼형 확정 목록에서 재검증 대상으로 보존","lastChecked":"2026-10-22"},
+        "WYHG":{"confirmed":true,"type":"직접언급/픽","firstEvidence":"사용자 제공 토끼형 자료","evidence":"기존 토끼형 확정 목록에서 재검증 대상으로 보존","lastChecked":"2026-10-22"},
+        "PCLA":{"confirmed":true,"type":"직접언급/픽","firstEvidence":"사용자 제공 토끼형 자료","evidence":"기존 토끼형 확정 목록에서 재검증 대상으로 보존","lastChecked":"2026-10-22"},
+        "BNAI":{"confirmed":true,"type":"직접언급/픽","firstEvidence":"사용자 제공 토끼형 자료","evidence":"기존 토끼형 확정 목록에서 재검증 대상으로 보존","lastChecked":"2026-10-22"},
+        "WNW":{"confirmed":true,"type":"직접언급/픽","firstEvidence":"사용자 제공 토끼형 자료","evidence":"기존 토끼형 확정 목록에서 재검증 대상으로 보존","lastChecked":"2026-10-22"},
+        "XRTX":{"confirmed":true,"type":"직접언급/픽","firstEvidence":"사용자 제공 토끼형 자료","evidence":"기존 토끼형 확정 목록에서 재검증 대상으로 보존","lastChecked":"2026-10-22"},
+        "CLRO":{"confirmed":true,"type":"직접언급/픽","firstEvidence":"사용자 제공 토끼형 자료","evidence":"기존 토끼형 확정 목록에서 재검증 대상으로 보존","lastChecked":"2026-10-22"},
+        "BTTC":{"confirmed":true,"type":"프로그램/필터","firstEvidence":"2026-10-12 전달","evidence":"Microcap Radar 원본 opinions: '토끼형 고도화 프로그램 + 토끼형 필터'","lastChecked":"2026-10-22"},
+        "AMSS":{"confirmed":true,"type":"직접분석","firstEvidence":"2026-10-13","evidence":"Microcap Radar 원본 opinions에 author=토끼형","lastChecked":"2026-10-22"},
+        "TDIC":{"confirmed":true,"type":"비교분석","firstEvidence":"2026-10-12 전달","evidence":"토끼형 TDIC·CLIK 비교 분석","lastChecked":"2026-10-22"},
+        "CLIK":{"confirmed":true,"type":"비교분석","firstEvidence":"2026-10-12 전달","evidence":"토끼형 TDIC·CLIK 비교 분석","lastChecked":"2026-10-22"},
+        "MI":{"confirmed":true,"type":"프로그램/직접언급","firstEvidence":"2026-10-11 조회","evidence":"토끼형 장중급등 예측 프로그램 및 래빗스탁 관점 기록","lastChecked":"2026-10-22"},
+        "WSHP":{"confirmed":true,"type":"직접분석","firstEvidence":"사용자 제공 까꿍토끼 WSHP 분석","evidence":"Microcap Radar 원본에 '까꿍토끼·ChatGPT 이전 분석 vs 지금'으로 별도 검증 기록","lastChecked":"2026-10-22"},
+        "ZBAO":{"confirmed":true,"type":"직접언급/분석","firstEvidence":"사용자 제공 토끼형 자료","evidence":"사용자가 누락을 직접 확인한 토끼형 언급 종목","lastChecked":"2026-10-22"},
+        "GPUS":{"confirmed":true,"type":"직접언급/분석","firstEvidence":"사용자 제공 토끼형 자료","evidence":"사용자가 누락을 직접 확인한 Hyperscale Data 토끼형 언급 종목","lastChecked":"2026-10-22"},
+        "HCAI":{"confirmed":true,"type":"직접분석","firstEvidence":"2026-10","evidence":"Microcap Radar 원본 opinions: 토끼형(래빗스탁 토론방) 병합→저가공모→워런트 하향→초저유통 펌핑 분석","lastChecked":"2026-10-22"},
+        "DKI":{"confirmed":true,"type":"직접분석/프로그램","firstEvidence":"2026-10-12 전달","evidence":"토끼형 직접 글 2건 + 토끼형 장중급등 예측 프로그램 기록","lastChecked":"2026-10-22"},
+        "SBFM":{"confirmed":true,"type":"프로그램 언급","firstEvidence":"2026-10-11 조회","evidence":"Microcap Radar 원본 opinions: 토끼형 장중급등 예측 프로그램","lastChecked":"2026-10-22"},
+        "NXAT":{"confirmed":true,"type":"프로그램 언급","firstEvidence":"2026-10-11 조회","evidence":"Microcap Radar 원본 opinions: 토끼형 장중급등 예측 프로그램","lastChecked":"2026-10-22"},
+        "GCDT":{"confirmed":true,"type":"프로그램 언급","firstEvidence":"2026-10-11 조회","evidence":"Microcap Radar 원본 opinions: 토끼형 장중급등 예측 프로그램","lastChecked":"2026-10-22"},
+        "VCIG":{"confirmed":true,"type":"관점/비교언급","firstEvidence":"2026-10-11 전달","evidence":"사용자 제공 VCIG 통합 분석에 토끼형 관점 포함 기록","lastChecked":"2026-10-22"},
+        "YMAT":{"confirmed":true,"type":"래빗스탁 리포트","firstEvidence":"2026-10-12","evidence":"Microcap Radar 원본 opinions: 래빗스탁 자동 뉴스 리포트","lastChecked":"2026-10-22"}
+      },
+      "excluded": {
+        "TRUG":"김곰(래빗스탁 유인 분석) 명의로 저장되어 토끼형 직접 언급으로 볼 근거 부족",
+        "CYAB":"현재 회수 가능한 자료에는 종목 분석 내용은 있으나 발언자가 토끼형이라고 확정할 직접 표지가 부족",
+        "EDUC":"토끼형 핵심 조건을 적용한 종배 스캔 후보일 뿐 토끼형 직접 언급 종목으로 확인되지 않음",
+        "PLUT":"토끼형 핵심 조건을 적용한 종배 스캔 후보일 뿐 토끼형 직접 언급 종목으로 확인되지 않음"
       }
     }
   }
