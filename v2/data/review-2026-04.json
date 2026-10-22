@@ -1,0 +1,44 @@
+{
+  "month":"2026-04",
+  "asOf":"2026-10-22",
+  "method":"4월 전체 월간·일간 급등락 보드를 교차 스크리닝하고, 학습가치가 큰 마이크로캡 사례를 SEC/회사 공시/거래소 자료 우선으로 검증했다. 가격·거래량은 분할조정 데이터의 왜곡 가능성을 별도 점검했다. 모든 월간 상승 종목을 동일 깊이로 포렌식한 것이 아니므로 screened와 deepReviewed를 분리한다.",
+  "universe":{"screened":35,"deepReviewed":14,"adopted":10,"excluded":4},
+  "deepReviewed":[
+    {"ticker":"KRSA/CYCN","date":"2026-04-01","movePct":311.61,"catalyst":"Cyclerion-Korsana 합병 계약과 대규모 사모자금 조달 구조","preMoveKnown":"급등 당일 8-K 전에는 합병 조건을 알 수 없었음","pattern":["M&A/역합병·인수 + 동시 자금조달/재평가"],"detectability":"낮음","lesson":"강한 M&A+PIPE형이지만 당일 신규정보 의존도가 높아 전날 발굴형보다는 이벤트 반응형."},
+    {"ticker":"AIXI","date":"2026-04-06~07","movePct":515,"catalyst":"중국 최고인민법원이 Apple의 핵심 특허 무효화 항소를 기각했다는 4/1 6-K 재료의 지연 재점화","preMoveKnown":"4/1 SEC 6-K로 특허 유효성 판결을 사전에 확인 가능. 4/2부터 거래량 증가 후 주말을 지나 4/6 폭발","pattern":["멀티데이 지속·재점화형","무뉴스/약한 PR + 저유통 Volume Shock"],"detectability":"높음","lesson":"강한 공식재료가 당일 바로 끝나지 않고 저가·저유통에서 거래량이 누적되면 D+3~D+5 지연 점화 가능."},
+    {"ticker":"BBGI","date":"2026-04-08~17","movePct":80.57,"catalyst":"Q4 실적 발표를 기점으로 극단적 거래량 유입 후 멀티데이 지속","preMoveKnown":"4/7 종가 $3.14와 매우 건조한 거래량. 실적 자체는 매출 감소·대규모 GAAP 손실로 질이 강하지 않았음","pattern":["무뉴스/약한 PR + 저유통 Volume Shock","멀티데이 지속·재점화형"],"detectability":"중간","lesson":"뉴스 질이 약해도 건조한 저유동성 종목에 거래량 쇼크가 붙으면 수급이 재료를 압도할 수 있음."},
+    {"ticker":"UCAR","date":"2026-04-08","movePct":331.94,"catalyst":"배터리 스왑/EV 테마 수급 속 급등","preMoveKnown":"4/7 2.9M Class A를 $1.10에 발행하는 $3.19M Regulation S 조달 계약이 존재","pattern":["무뉴스/약한 PR + 저유통 Volume Shock"],"detectability":"낮음","lesson":"급등 직전 신규 주식발행이 있어도 거래량 쇼크가 단기적으로 공급을 압도할 수 있으나 공급 청정형으로 분류하면 안 됨."},
+    {"ticker":"SNAL","date":"2026-04-14","movePct":350.9,"catalyst":"뚜렷한 당일 신규 SEC 촉매 없이 초저거래량 상태에서 1.73억주 거래량 폭발","preMoveKnown":"4/6 ARK 라이선스 월 고정비 $2M→$1.5M 절감 공시는 사전에 존재. 4/13 종가 $1.885, 직전 일평균 거래량 극저조","pattern":["무뉴스/약한 PR + 저유통 Volume Shock","멀티데이 지속·재점화형"],"detectability":"높음","lesson":"비용절감형 기존재료+거래량 건조 후 갑작스러운 Float 과회전은 대표적인 사전 감시 후보 구조."},
+    {"ticker":"BIRD","date":"2026-04-15","movePct":582,"catalyst":"Allbirds→NewBird AI 피벗과 최대 $50M senior secured convertible financing facility","preMoveKnown":"3/30 신발사업 자산매각은 사전 공개됐지만 AI 피벗과 전환시설은 4/15 신규 공개","pattern":["무뉴스/약한 PR + 저유통 Volume Shock","급등 직후 공급/희석 붕괴 · Spike-and-Raise"],"detectability":"낮음","lesson":"AI 리브랜딩은 폭발적 명분이 됐지만 동시에 전환증권 공급통로가 생겼다. 호재와 희석을 분리하면 안 됨."},
+    {"ticker":"MYSE","date":"2026-04-16","movePct":"장중 200%+","catalyst":"Myseum.AI 리브랜딩과 privacy-first AI agents 전략","preMoveKnown":"BIRD가 전날 582% 급등해 동일 AI 피벗 테마 후속주 레짐을 당일 장전 감지 가능","pattern":["무뉴스/약한 PR + 저유통 Volume Shock","동일 세션 저유통 클러스터형"],"detectability":"중간","lesson":"전날 초대형 테마 급등이 발생하면 다음 세션 유사 저유통 리브랜딩 종목으로 수급이 전이될 수 있음."},
+    {"ticker":"PBM","date":"2026-04-17~23","movePct":"월간 +172%","catalyst":"미국 ibogaine 연구 행정조치 환영→공급원 포지셔닝→Phase IIb 환자 투약 개시의 연속 PR","preMoveKnown":"4/17 첫 공식 PR 이후 후속 임상 일정과 사업 포지셔닝을 추적 가능","pattern":["멀티데이 지속·재점화형","사전 이벤트 2단 점화형"],"detectability":"중간~높음","lesson":"정책성 촉매가 단독으로 끝나지 않고 실제 임상 실행 PR로 이어질 때 재점화 가능성이 커짐."},
+    {"ticker":"AKAN","date":"2026-04-22","movePct":214.15,"catalyst":"4/13 1-for-4.5 RS 이후 거래량 약 4,592만주 폭발","preMoveKnown":"4/9 6-K/Nasdaq에서 4/13 RS 일정이 공개됐고 4/14~21 거래량이 극도로 건조","pattern":["RS 후 초저유통 압축형","무뉴스/약한 PR + 저유통 Volume Shock"],"detectability":"높음","lesson":"RS 직후가 아니라 1주 이상 거래량 건조 뒤 점화됐다. RS 효력일+post-RS O/S/Float+재건조를 함께 감시해야 함."},
+    {"ticker":"LPCN","date":"2026-04-02","movePct":-78,"catalyst":"LPCN 1154 산후우울증 Phase 3 primary endpoint 실패","preMoveKnown":"Phase 3 결과 이벤트 리스크는 사전에 알 수 있었지만 결과 방향은 알 수 없었음","pattern":["사전 이벤트 2단 점화형"],"detectability":"위험 감지는 높음/방향 예측 불가","lesson":"바이오 사전 이벤트는 상승 후보가 아니라 양방향 갭 리스크. 결과 발표 전 공급·현금보다 임상 실패 리스크가 우선할 수 있음."}
+  ],
+  "excluded":[
+    {"ticker":"MGRT","reason":"월간 +1,900%대였지만 신규상장/극저유동성·가격데이터 왜곡 가능성이 커 이번 1차 패턴 병합에서는 보류. 추가 IPO/락업/실제 Float 포렌식 필요."},
+    {"ticker":"ONEG","reason":"월간 +327%이나 4월 공식공시는 이사 사임 등으로 급등 구조와 직접 연결이 약함. 실제 Float·락업 추가 확인 필요."},
+    {"ticker":"RPGL","reason":"월간 +265%이나 4/2 40M주@$0.25 발행과 4/7 관계자 Class B 발행 등 공급 이벤트가 복잡해 단순 저유통 성공사례로 병합하지 않음."},
+    {"ticker":"EDSA","reason":"월간 +238%이나 급등 전후 임상/자금조달 시점과 실제 Float를 이번 조사에서 충분히 교차검증하지 못해 확인 불가로 보류."}
+  ],
+  "patternAdds":{
+    "💥 무뉴스/약한 PR + 저유통 Volume Shock":"AIXI · BBGI · UCAR · SNAL · BIRD · MYSE · AKAN",
+    "💣 급등 직후 공급/희석 붕괴 · Spike-and-Raise":"BIRD",
+    "🔁 멀티데이 지속·재점화형":"AIXI · BBGI · SNAL · PBM",
+    "🤝 M&A/역합병·인수 + 동시 자금조달/재평가":"KRSA/CYCN",
+    "🔥 RS 후 초저유통 압축형":"AKAN",
+    "📑 회사 체급 대비 대형 계약·주문형":"해당 사례 없음",
+    "🚧 공급 차단 + 수요 창출형":"해당 사례 없음",
+    "📅 사전 이벤트 2단 점화형":"PBM · LPCN ⚠️ 실패 대조군",
+    "👤 내부자 매수 + 상장유지/컴플라이언스형":"해당 사례 없음",
+    "📈 실적 질 개선형":"해당 사례 없음",
+    "🌊 동일 세션 저유통 클러스터형":"BIRD → MYSE(다음 세션 AI 피벗 확산)"
+  },
+  "newPatterns":[],
+  "keyFindings":[
+    "4월은 강한 공식재료의 지연반응(AIXI), 무뉴스/약한재료 거래량 쇼크(SNAL·BBGI), RS 후 재건조(AKAN)가 모두 확인돼 ‘재료 발생일=급등일’ 가정을 버려야 한다.",
+    "BIRD는 호재와 공급이 같은 사건에 묶인 대표 사례다. AI 피벗이 수요를 만들었지만 최대 $50M 전환시설은 동시에 미래 공급통로였다.",
+    "LPCN은 사전 이벤트 캘린더의 실패 대조군이다. 일정은 예측 가능하지만 결과 방향은 예측 불가하므로 바이오 이벤트를 상승점수로 직접 사용하면 안 된다.",
+    "4월 사전 발굴성이 가장 높았던 구조는 AKAN의 RS→거래량 재건조와 AIXI의 공식재료→며칠 지연 점화, SNAL의 극건조→Volume Shock이다."
+  ]
+}
