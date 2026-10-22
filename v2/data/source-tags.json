@@ -1,0 +1,18 @@
+{
+  "asOf": "2026-10-22",
+  "sources": {
+    "rabbit": {
+      "label": "까꿍토끼(토끼형)",
+      "emoji": "🐰",
+      "rule": "사용자가 제공한 과거 글·이미지·분석 자료에서 토끼형/까꿍토끼가 실제로 언급하거나 분석한 기록이 확인되는 티커만 포함. 프레임 유사성만으로는 포함하지 않음.",
+      "tickers": ["ASTI","WHLR","VEEE","GYGY","SLXN","BAOS","WYHG","PCLA","BNAI","WNW","XRTX","CLRO","BTTC","AMSS","TDIC","CLIK","MI"],
+      "evidenceNotes": {
+        "BTTC": "사용자 제공 외부 의견에 토끼형 고도화 프로그램 + 토끼형 필터 직접 귀속",
+        "AMSS": "사용자 제공 외부 의견에 토끼형 (2026-10-13) 직접 귀속",
+        "TDIC": "사용자 제공 Microcap Radar 자료 opinions에 토끼형 TDIC·CLIK 비교 직접 귀속",
+        "CLIK": "사용자 제공 Microcap Radar 자료 opinions에 토끼형 TDIC·CLIK 비교 직접 귀속",
+        "MI": "사용자 제공 Microcap Radar 자료에 래빗스탁(토끼형) 관점 및 토끼형(래빗스탁 토론방) 직접 귀속"
+      }
+    }
+  }
+}
