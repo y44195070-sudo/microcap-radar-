@@ -1,0 +1,34 @@
+{
+  "asOf":"2026-10-22",
+  "month":"2026-06",
+  "method":"급등 후 이유 맞히기가 아니라 급등 전날까지 공개된 구조와 공급통로를 기준으로 복기. StockTitan June micro-cap gainers/losers board를 월 전체 후보군으로 사용하고 SEC 공시로 대표 구조를 교차검증. 300%+ 단일일 수익률은 split artifact 가능성을 별도 경계.",
+  "coverage":{"gainersBoard":100,"losersBoard":100,"sessions":21,"note":"월 전체 보드를 스캔하되 구조별 UI에는 발굴 학습 가치가 높은 대표 마이크로캡 사례만 중복 허용로 누적"},
+  "cases":[
+    {"ticker":"INHD","date":"2026-06-08","move":"+3660.95%","patterns":["volumeShock","sameSessionCluster"],"facts":"AI 개발서비스 계약 $3.0M은 회사가 지급하는 개발비 성격. RVOL 1000x+ 및 초대형 turnover. 6/8 장후 Nasdaq T12 halt, 회사는 미공개 중요정보를 알지 못한다고 6/12 8-K 공시.","preSpike":"저가/저유통·거래량 건조 구조는 사전 관찰 가능했으나 당일 AI 계약 자체는 사전확정 불가.","supply":"정밀 수량은 확인 필요","result":"success","confidence":"medium"},
+    {"ticker":"SUNE","date":"2026-06-08","move":"+420.35%","patterns":["mnaFinancing","sameSessionCluster"],"facts":"6/5 Suniva와 definitive merger agreement 체결. 동시에 6/7 2.39M common shares @ $1.13, gross $2.7007M financing 계약.","preSpike":"합병 자체는 6/8 공개 전 사전확정 불가. 다만 저유통/자금조달 필요 구조와 공급 리스크는 확인 대상.","supply":"2.39M common shares 신규 공급 계약","result":"success","confidence":"high"},
+    {"ticker":"STI","date":"2026-06-04","move":"+350.60%","patterns":["volumeShock","spikeRaise"],"facts":"극한환경 배터리/우주 AI 데이터센터 PR로 급등. 6/7 $35M private placement: 750K common + PFW 최대 1.583M, 가격 $15/주 수준. 6/8 offering/dilution 뉴스 세션은 하락.","preSpike":"저유통/얇은 공급과 거래량 건조는 사전 관찰 가능. 급등 뒤 financing 가능성을 경계해야 했던 전형적 spike-and-raise.","supply":"750K common + PFW 1.583M","result":"success_then_dilution","confidence":"high"},
+    {"ticker":"RGNT","date":"2026-06-15","move":"largest daily +526.7%","patterns":["volumeShock","spikeRaise"],"facts":"6/15 대형 급등 후 6/17 약 $6.5M private placement 계약. 1,844,543 ordinary + PFW 12,600 + ordinary warrants 1,857,143 @ combined $3.50.","preSpike":"급등 당일 촉매는 확인 필요. 급등 후 이틀 내 financing이 열린 대표 spike-and-raise 사례.","supply":"ordinary 1.844543M + PFW 12.6K + warrants 1.857143M","result":"success_then_dilution","confidence":"high"},
+    {"ticker":"ICCM","date":"2026-06-17","move":"intraday MFE +345.8% reported","patterns":["volumeShock","offeringCatalyst"],"facts":"FDA clearance 이후 active install-base 70% growth 업데이트와 동시에 $5.5M private placement. PFW 1,833,334 + Series D 1,833,334 + Series E 1,833,334, exercise $3.00 (PFW $0.0001).","preSpike":"FDA/상업화 후속 구조는 관찰 가능했지만 placement 공급이 동시에 열려 공급리스크 큼.","supply":"PFW 1.833334M + D warrant 1.833334M + E warrant 1.833334M","result":"success_open_supply","confidence":"high"},
+    {"ticker":"FTHM","date":"2026-06-15~18","move":"4-day +151.5% reported","patterns":["volumeShock","multiDay"],"facts":"주요 공개 PR 촉매가 식별되지 않은 상태에서 4거래일 누적 강세와 높은 거래량이 나타난 저유통 ignition 사례로 보고됨.","preSpike":"뉴스보다 얇은 공급·RVOL·turnover를 보는 negative/technical control 사례.","supply":"확인 필요","result":"success","confidence":"medium"},
+    {"ticker":"MPAA","date":"2026-06-08","move":"+34.56%","patterns":["earningsQuality","multiDay"],"facts":"FY2026 year-end results 발표 후 +34.56%, day+5 기준 pre-news 대비 +40.23%로 후속 지속.","preSpike":"실적 발표 일정은 사전 관찰 가능. 저유통 폭발형과 달리 실적 질/후속 지속형 표본.","supply":"확인 필요","result":"success","confidence":"medium"},
+    {"ticker":"ELTX","date":"2026-06-15","move":"-72.53%","patterns":["clinicalFailureControl"],"facts":"Phase 2 AMPLIFY-7P 결과와 Phase 3 전략 발표 후 급락. day+5에도 -72.32%로 하락 대부분 유지.","preSpike":"임상 이벤트 자체는 예정/예상 가능하지만 결과 방향은 사전확정 불가. 바이오 이벤트의 실패 대조군.","supply":"확인 필요","result":"failure","confidence":"high"},
+    {"ticker":"HKIT","date":"2026-06","move":"June microcap loser board largest -90.58%","patterns":["rsOpenSupplyFailure"],"facts":"5/29 1-for-3 reverse split 이후 6월 $8M registered direct offering이 있었던 post-RS + open-supply 실패 사례.","preSpike":"RS 자체보다 post-RS 공급이 닫혔는지가 핵심이라는 negative control.","supply":"$8M registered direct; 세부 주식수 확인 필요","result":"failure","confidence":"medium"},
+    {"ticker":"YMAT","date":"2026-06","move":"multiple June moves; loser board -37.26% max noted","patterns":["complianceFailureControl"],"facts":"6월 contract/partnership 및 uplisting/compliance 관련 복수 변동. 단순 호재·컴플라이언스만으로 지속 급등을 보장하지 않는 대조군.","preSpike":"공급통로와 실제 Float 확인이 이벤트 제목보다 우선.","supply":"기존 별도 YMAT 구조 데이터 참조","result":"failure_control","confidence":"medium"}
+  ],
+  "patternAdds":{
+    "volumeShock":["INHD","STI","RGNT","ICCM","FTHM"],
+    "spikeRaise":["STI","RGNT"],
+    "multiDay":["FTHM","MPAA"],
+    "mnaFinancing":["SUNE"],
+    "earningsQuality":["MPAA"],
+    "sameSessionCluster":["INHD","SUNE"],
+    "negativeControls":["ELTX","HKIT","YMAT"]
+  },
+  "lessons":[
+    "6월 대표 극단 급등은 저유통+RVOL/turnover 폭발이 반복됐고, 뉴스 강도만으로 설명되지 않는 사례가 존재.",
+    "STI와 RGNT는 급등 직후 신규 financing이 열린 spike-and-raise의 강한 표본.",
+    "SUNE는 M&A 촉매와 신규 common financing이 같은 이벤트 창에 공존해 호재와 공급을 동시에 봐야 함.",
+    "RS는 공급이 닫혀 있을 때만 압축 촉매로 가점. HKIT처럼 post-RS RD가 열리면 반대 구조.",
+    "임상/컴플라이언스 이벤트는 결과 방향을 사전에 확정할 수 없으므로 실패 대조군을 함께 저장해야 함."
+  ]
+}
