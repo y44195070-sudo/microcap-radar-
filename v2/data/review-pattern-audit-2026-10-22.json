@@ -1,0 +1,32 @@
+{
+  "asOf": "2026-10-22",
+  "scope": "6-10월 구조별 마스터 패턴의 기존 '확인 필요' 18칸 전수 재검증. 월별 급등 뉴스 보드와 기존 복기 표본을 재검토하고 SEC 원문으로 핵심 구조를 교차검증. 공개자료로 패턴 귀속을 확정할 수 없는 경우에만 확인 불가 처리.",
+  "before": {"needsReviewCells": 18},
+  "after": {"actualCaseCells": 8, "noCaseCells": 10, "unverifiableCells": 0},
+  "verifiedChanges": [
+    {"pattern":"급등 직후 공급/희석 붕괴 · Spike-and-Raise","month":"9월","result":"AEHL · LASE","basis":"9월 AEHL은 convertible note offering 뉴스 자체가 급등 세션과 결합. LASE는 9/14 public offering 10.5M common + B-1/B-2 warrants 각 10.5M, 9/15 closing."},
+    {"pattern":"RS 후 초저유통 압축형","month":"7월","result":"해당 사례 없음","basis":"검증 표본에서 RS 후 공급제약까지 동시에 충족하는 대표 성공 사례를 확정하지 못함. PFSA는 7/7 1:25 RS였지만 8월 재차 1:4 RS 및 compliance 이슈로 7월 성공표본에서 제외."},
+    {"pattern":"회사 체급 대비 대형 계약·주문형","month":"6월","result":"ATLN","basis":"6/23 Circle8이 Dutch Vehicle Authority 4년 framework agreement, minimum ~$52M 발표."},
+    {"pattern":"회사 체급 대비 대형 계약·주문형","month":"8월","result":"CELU","basis":"8/27 U.S. manufacturing collaboration 발표와 급등 세션 확인. 정확한 계약금액은 공개자료상 확인되지 않아 '체급 대비 대형 금액'보다는 주문/파트너십 사례로 약한 표본."},
+    {"pattern":"회사 체급 대비 대형 계약·주문형","month":"9월","result":"GLND · KNDI","basis":"GLND farm-out agreement extension, KNDI CATL heavy-truck battery-swap follow-on order가 급등 뉴스 보드에 확인됨."},
+    {"pattern":"공급 차단 + 수요 창출형","month":"6월","result":"해당 사례 없음","basis":"검증 표본에서 ATM 종료/자사주매입/공개매수와 급등이 결합한 대표 사례를 확정하지 못함."},
+    {"pattern":"공급 차단 + 수요 창출형","month":"7월","result":"SRXH","basis":"7/9 board authorized repurchase up to 10M shares or 50% of shares outstanding, up to $20M."},
+    {"pattern":"공급 차단 + 수요 창출형","month":"8월","result":"해당 사례 없음","basis":"검증 표본에서 조건을 충족하는 대표 사례를 확정하지 못함."},
+    {"pattern":"공급 차단 + 수요 창출형","month":"9월","result":"YQ","basis":"9/3 board approved up to $10M share repurchase program for 12 months."},
+    {"pattern":"사전 이벤트 2단 점화형","month":"6월","result":"해당 사례 없음","basis":"급등 전 공식 날짜가 명시되고 기대감/실행의 2단 점화까지 확인되는 대표 사례를 확정하지 못함."},
+    {"pattern":"사전 이벤트 2단 점화형","month":"7월","result":"해당 사례 없음","basis":"동일 기준."},
+    {"pattern":"사전 이벤트 2단 점화형","month":"8월","result":"해당 사례 없음","basis":"동일 기준."},
+    {"pattern":"내부자 매수 + 상장유지/컴플라이언스형","month":"8월","result":"PFSA","basis":"8/26 Nasdaq determination disclosed: post-1:4 RS publicly held shares issue, company correspondence showed compliance as of 8/21."},
+    {"pattern":"내부자 매수 + 상장유지/컴플라이언스형","month":"9월","result":"TANH","basis":"9/4 1:50 RS로 O/S 약 33.38M→667,647. 상장유지 목적의 RS 구조로 분류하되 내부자 매수 표본은 아님."},
+    {"pattern":"실적 질 개선형","month":"7월","result":"해당 사례 없음","basis":"검증 표본에서 저유통/RVOL과 이익의 질 개선을 동시에 확정할 대표 사례를 찾지 못함."},
+    {"pattern":"실적 질 개선형","month":"9월","result":"CHPT","basis":"9/2 earnings 이후 9/3 +74.95%, RVOL 134.6x. 마이크로캡 경계보다 큰 종목이므로 보조 표본으로 취급."},
+    {"pattern":"동일 세션 저유통 클러스터형","month":"7월","result":"해당 사례 없음","basis":"동일 세션에 복수 저유통 종목이 동시에 점화됐다는 조건을 기존 자료만으로 확정하지 못해 사례 없음 처리."},
+    {"pattern":"동일 세션 저유통 클러스터형","month":"9월","result":"해당 사례 없음","basis":"동일 기준."},
+    {"pattern":"동일 세션 저유통 클러스터형","month":"10월","result":"해당 사례 없음","basis":"동일 기준."}
+  ],
+  "notes": [
+    "'해당 사례 없음'은 해당 월 시장 전체에 절대 존재하지 않았다는 뜻이 아니라, 현재 복기 검증 universe에서 패턴 조건을 충족하는 대표 사례를 확정하지 못했다는 뜻.",
+    "Short Interest/CTB/Borrow는 과거 시점 스냅샷을 신뢰성 있게 복원할 수 없는 경우 패턴 귀속의 단독 근거로 사용하지 않음.",
+    "과거 급등 후에 나온 자료는 사전발견 근거와 분리해 실패/후속 희석 검증에만 사용." 
+  ]
+}
