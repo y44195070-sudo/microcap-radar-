@@ -1,0 +1,58 @@
+{
+  "step": "7F",
+  "as_of": "2026-10-23",
+  "objective": "Select the minimum-cost provider for Jan-2026 historical universe, later-delisted securities, and raw/unadjusted OHLCV.",
+  "selection": {
+    "option": "OPTION_B_SINGLE_PROVIDER",
+    "provider": "Massive Stocks Basic",
+    "cost_usd_monthly": 0,
+    "status": "SELECTED_PENDING_LIVE_COVERAGE_TEST",
+    "reason": "Official documentation states Stocks Basic includes 2 years of historical aggregate bars and reference data; Jan-2026 is inside that window as of 2026-10-23. All Tickers supports a historical date and includes later-delisted companies; REST aggregate bars can be requested with adjusted=false for raw split-unadjusted OHLCV. Basic is rate-limited to 5 API calls/minute and has no flat files.",
+    "pit_quality": "VENDOR_RECONSTRUCTED_PIT",
+    "important_expiry": "The Basic 2-year history window rolls forward. Jan-2026 data must be acquired and frozen before it ages out of the entitlement window. Store immutable local/repository-safe derived snapshots, not credentials."
+  },
+  "candidates": {
+    "massive": {
+      "minimum_plan": "Stocks Basic",
+      "monthly_usd": 0,
+      "annual_usd": 0,
+      "history": "2 years",
+      "rate_limit": "5 requests/minute",
+      "flat_files": false,
+      "historical_universe": "Historical All Tickers date query; later-delisted companies included according to official documentation",
+      "raw_ohlcv": "REST aggregates adjusted=false",
+      "raw_volume": "Supported through unadjusted aggregate request; live stress test still required",
+      "actual_api_test": "UNVERIFIED_NO_API_KEY"
+    },
+    "eodhd": {
+      "minimum_candidate_plan": "EOD Historical Data - All World",
+      "monthly_usd": 19.99,
+      "annual_usd": 199.00,
+      "history": "30+ years",
+      "rate_limit": "100000 calls/day, 1000 requests/minute on published paid plan",
+      "delisted": "Supported; after-2018 delistings include EOD plus fundamentals/dividends/splits per docs",
+      "historical_universe": "Requires reconstruction by merging active/delisted plus listing/delisting/symbol-change metadata; no direct dated-universe endpoint verified",
+      "raw_ohlc": "Default OHLC documented as raw/unadjusted for splits/dividends",
+      "raw_volume": "Not sufficiently verified for our reverse-split raw-volume requirement",
+      "actual_api_test": "UNVERIFIED_NO_PAID_ACCESS"
+    },
+    "sharadar": {
+      "minimum_plan": "PRICE_UNVERIFIED",
+      "pricing": "Premium; public documentation requires login to view pricing",
+      "history": "1998/December 1997 range depending table documentation",
+      "delisted": "Active and delisted US stocks covered",
+      "historical_universe": "Strong research metadata but direct historical universe snapshot semantics not verified as native PIT",
+      "raw_ohlc": "Primary open/high/low/close fields are split-adjusted; closeunadj is raw close; full raw OHLC requires imputation/reconstruction",
+      "raw_volume": "Primary volume is split-adjusted; raw volume requires reconstruction",
+      "identity": "Strong research reference data; Permaticker supported in Sharadar ecosystem",
+      "actual_api_test": "UNVERIFIED_PREMIUM_ACCESS"
+    }
+  },
+  "quality_grades": {
+    "Massive": {"historical_universe":"A","survivorship":"A","delisted":"A","raw_ohlc":"A","raw_volume":"A-","corporate_actions":"A","entity_identity":"B+","pit":"B+","automation":"B","documentation":"A","cost_efficiency":"A+"},
+    "EODHD": {"historical_universe":"B-","survivorship":"B+","delisted":"A-","raw_ohlc":"A-","raw_volume":"C_UNVERIFIED","corporate_actions":"A-","entity_identity":"B+","pit":"B","automation":"A-","documentation":"A-","cost_efficiency":"A-"},
+    "Sharadar": {"historical_universe":"A-","survivorship":"A","delisted":"A","raw_ohlc":"B","raw_volume":"C","corporate_actions":"A","entity_identity":"A","pit":"B+","automation":"A-","documentation":"A","cost_efficiency":"PRICE_UNVERIFIED"}
+  },
+  "decision": "Do not purchase a provider yet. Create a free Massive Stocks Basic account/API key and execute the previously specified M1-M10 live coverage test. If it passes, freeze Jan-2026 universe and raw OHLCV while inside the rolling two-year entitlement. Upgrade to Starter only if rate limits/flat-file throughput materially block acquisition.",
+  "not_done": ["Rule Engine", "thresholds", "Structure Score", "Jan full universe build", "Replay", "Outcome", "Baseline", "Short Score", "UI", "/v2 changes", "Feb+ data"]
+}
