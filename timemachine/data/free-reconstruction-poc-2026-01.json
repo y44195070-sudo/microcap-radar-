@@ -1,0 +1,53 @@
+{
+  "step": "7E",
+  "period": "2026-01",
+  "sample_dates": ["2026-01-02","2026-01-09","2026-01-16","2026-01-23","2026-01-30"],
+  "verdict": "FREE_FAIL",
+  "scope": "Free/public data only; no Rule Engine, replay, outcomes or v2 changes.",
+  "core_gates": {
+    "historical_universe": "FAIL",
+    "delisted_survivorship": "PARTIAL",
+    "raw_ohlcv": "FAIL"
+  },
+  "coverage": {
+    "universe": "DENOMINATOR_UNVERIFIED",
+    "entity": "DENOMINATOR_UNVERIFIED",
+    "security_type": "DENOMINATOR_UNVERIFIED",
+    "exchange": "DENOMINATOR_UNVERIFIED",
+    "ohlc": "DENOMINATOR_UNVERIFIED",
+    "volume": "DENOMINATOR_UNVERIFIED",
+    "raw_price_verification": "DENOMINATOR_UNVERIFIED",
+    "delisted_sample": "PARTIAL"
+  },
+  "evidence": {
+    "official_free_sources": ["SEC EDGAR", "Nasdaq Trader public pages/files", "FINRA public data"],
+    "historical_universe_issue": "Current public symbol directories do not provide authoritative daily 2026-01 point-in-time snapshots; Nasdaq Daily List has the needed new listing/delisting/symbol-change history but is a subscription product.",
+    "raw_ohlcv_issue": "No free official source tested here supplied complete delisted-inclusive raw OHLCV for the full historical universe. Alpha Vantage documents raw daily OHLCV but requires an API key and full history is premium; it does not solve the authoritative historical-universe denominator.",
+    "nasdaq_monthly_volume": "Nasdaq Trader publicly exposes January 2026 symbol-level volume statistics, useful as validation evidence but not a full OHLCV/universe replacement."
+  },
+  "verified_cases": {
+    "corporate_actions_and_listing_events": [
+      {"case":"AlphaTime Acquisition Corp","event":"Nasdaq delisting/suspension","status":"VERIFIED_OFFICIAL_SEC","detail":"SEC 8-K says securities suspended 2026-01-07 and Nasdaq intended delisting announcement 2026-01-13."},
+      {"case":"Luminar Technologies","event":"delisting","status":"VERIFIED_OFFICIAL_SEC","detail":"SEC 8-K says Nasdaq filed Form 25 on 2026-01-23; stock had moved to OTC in Dec 2025."},
+      {"case":"AstraZeneca","event":"exchange transfer","status":"VERIFIED_OFFICIAL_SEC","detail":"Nasdaq withdrawal / NYSE direct listing effective after 2026-01-30 close."},
+      {"case":"X3 Acquisition Corp Ltd","event":"new listing/IPO","status":"VERIFIED_OFFICIAL_SEC","detail":"IPO consummated 2026-01-22; units/common/warrant are distinct security classes."},
+      {"case":"Space Asset Acquisition Corp","event":"new listing/IPO","status":"VERIFIED_OFFICIAL_SEC","detail":"Units commenced Nasdaq trading 2026-01-28."},
+      {"case":"Art Technology Acquisition Corp","event":"new listing/IPO","status":"VERIFIED_OFFICIAL_SEC","detail":"IPO consummated 2026-01-07; unit contains common share plus warrant."}
+    ],
+    "reverse_split_examples": [
+      {"cik":"1342958","event":"1-for-3 reverse split","effective":"2026-01-08","trading_adjusted":"2026-01-09","status":"CORPORATE_ACTION_VERIFIED_PRICE_UNVERIFIED"},
+      {"cik":"1840563","event":"1-for-4 reverse split","effective":"2026-01-06","status":"CORPORATE_ACTION_VERIFIED_PRICE_UNVERIFIED"},
+      {"cik":"1648087","event":"1-for-20 reverse split","effective":"2026-02-02","status":"CORPORATE_ACTION_VERIFIED_PRICE_UNVERIFIED"},
+      {"ticker":"NAKA","event":"1-for-40 reverse split","effective":"2026-05-22","status":"CORPORATE_ACTION_VERIFIED_PRICE_UNVERIFIED"},
+      {"cik":"1211805","event":"1-for-8 reverse split","effective":"2026-08-12","trading_adjusted":"2026-08-13","status":"CORPORATE_ACTION_VERIFIED_PRICE_UNVERIFIED"}
+    ]
+  },
+  "notes": [
+    "The five requested dates are regular-session trading dates under the 2026 US calendar logic already implemented in STEP 7C.",
+    "Official event evidence is not equivalent to reconstructing a complete daily universe.",
+    "Reverse-split corporate actions were verified, but pre-split raw OHLCV was not marked verified because a free authoritative delisted-inclusive raw-price source was not available without provider access.",
+    "Do not use current survivors as the historical-universe denominator."
+  ],
+  "minimum_paid_gap": ["historical point-in-time universe including later-delisted securities", "delisted-inclusive raw OHLCV"],
+  "next_recommendation": "Buy/use only a market-data layer that fills the two gaps; retain SEC/Nasdaq/FINRA as free authoritative event/PIT sources."
+}
