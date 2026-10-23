@@ -1,0 +1,26 @@
+name: Time Machine STEP 10 Official PIT
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/timemachine-step10.yml'
+permissions:
+  contents: read
+jobs:
+  step10:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run STEP 10 official PIT tests
+        run: python timemachine/src/step10_official_pit.py
+      - name: Upload STEP 10 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step10-official-pit
+          path: timemachine/data/step10/
+          if-no-files-found: error
+          retention-days: 30
