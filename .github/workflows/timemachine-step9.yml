@@ -1,0 +1,34 @@
+name: Time Machine STEP 9 Reconstruction
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/timemachine-step9.yml'
+permissions:
+  contents: read
+jobs:
+  step9:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download STEP 8 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: timemachine-step8-pit
+          github-token: ${{ github.token }}
+          repository: y44195070-sudo/microcap-radar-
+          run-id: 39972665058
+          path: timemachine/data/step8
+      - name: Run STEP 9 reconstruction tests
+        run: python timemachine/src/step9_reconstruct.py
+      - name: Upload STEP 9 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step9-reconstruction
+          path: timemachine/data/step9/
+          if-no-files-found: error
+          retention-days: 30
