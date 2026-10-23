@@ -1,0 +1,20 @@
+{
+  "provider": "Massive",
+  "period": "2026-01",
+  "verdict": "CONDITIONAL",
+  "reason": "Official documentation supports point-in-time tickers, delisted history and unadjusted flat-file OHLCV, but no MASSIVE_API_KEY was available in this execution environment. No live January 2026 Massive call was falsely marked PASS.",
+  "tests": [
+    "historical_universe",
+    "delisted_survivors",
+    "pre_ipo_exclusion",
+    "ticker_changes",
+    "reverse_split_raw_price",
+    "unadjusted_ohlc",
+    "unadjusted_volume",
+    "halt_vs_missing",
+    "exchange_classification",
+    "security_type_classification"
+  ],
+  "status": "UNVERIFIED — API ACCESS REQUIRED",
+  "pass_rule": "PASS only when every required test is executed against January 2026 data and verified with full required coverage; otherwise CONDITIONAL or FAIL."
+}
