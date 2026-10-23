@@ -1,0 +1,29 @@
+name: Time Machine STEP 11 Historical SEC Backfill
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'timemachine/src/step11_sec_backfill.py'
+      - '.github/workflows/timemachine-step11.yml'
+permissions:
+  contents: read
+jobs:
+  step11:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run STEP 11 historical SEC backfill
+        env:
+          SEC_USER_AGENT: 'MicrocapRadar-TimeMachine/1.0 research y44195070@gmail.com'
+        run: python timemachine/src/step11_sec_backfill.py
+      - name: Upload STEP 11 artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step11-sec-backfill
+          path: timemachine/data/step11/
+          if-no-files-found: error
