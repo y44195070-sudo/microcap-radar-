@@ -12,7 +12,7 @@ permissions:
 jobs:
   step7g:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     env:
       MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
     steps:
@@ -37,4 +37,4 @@ jobs:
           path: timemachine/data/massive-live-coverage-2026-01.json
           if-no-files-found: error
           retention-days: 30
-# trigger: step7g-live-1
+# trigger: step7g-retest-rate-safe-1
