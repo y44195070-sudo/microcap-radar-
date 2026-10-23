@@ -1,0 +1,8 @@
+(()=>{const add={
+'🔁 멀티데이 지속·재점화형':['SHFS','NCPL','PFSA'],
+'👤 내부자 매수 + 상장유지/컴플라이언스형':['NCPL'],
+'📈 실적 질 개선형':['STAK']
+};
+function recalc(d){const s=d.querySelector('summary');if(!s)return;let n=0;d.querySelectorAll('.items>.item').forEach(row=>{const b=row.querySelector('b');if(!b||!b.textContent.trim().startsWith('→'))return;const text=row.textContent.split(':').slice(1).join(':').trim();if(!text||text==='해당 사례 없음'||text.startsWith('확인 불가'))return;n+=text.split('·').map(x=>x.trim()).filter(Boolean).length;});s.textContent=s.textContent.replace(/확인 사례\s*\d+개/,`확인 사례 ${n}개`)}
+function apply(){const root=document.querySelector('[data-pattern-master-v55]');if(!root)return;root.querySelectorAll('details.pattern').forEach(d=>{const s=d.querySelector('summary');if(!s)return;const key=Object.keys(add).find(k=>s.textContent.includes(k));if(!key)return;const rows=[...d.querySelectorAll('.items>.item')];const oct=rows.find(r=>r.querySelector('b')?.textContent.trim()==='→ 10월');if(!oct)return;const b=oct.querySelector('b');let text=oct.textContent.split(':').slice(1).join(':').trim();let vals=text==='해당 사례 없음'?[]:text.split('·').map(x=>x.trim()).filter(Boolean);add[key].forEach(t=>{if(!vals.some(v=>v.replace(/\s.*$/,'')===t))vals.push(t)});oct.innerHTML=`<b>→ 10월</b>: ${esc(vals.join(' · '))}`;recalc(d)});}
+const old=window.openReview;if(typeof old==='function'){window.openReview=async function(...args){const r=await old.apply(this,args);apply();requestAnimationFrame(apply);setTimeout(apply,100);setTimeout(apply,220);return r;};}document.addEventListener('click',e=>{if(e.target.closest('#tabs button[data-tab="review"]'))setTimeout(apply,220);});})();
