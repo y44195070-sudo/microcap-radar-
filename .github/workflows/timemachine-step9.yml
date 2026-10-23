@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/timemachine-step9.yml'
+      - 'timemachine/src/step9_reconstruct.py'
 permissions:
   contents: read
 jobs:
@@ -26,6 +27,7 @@ jobs:
       - name: Run STEP 9 reconstruction tests
         run: python timemachine/src/step9_reconstruct.py
       - name: Upload STEP 9 artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: timemachine-step9-reconstruction
