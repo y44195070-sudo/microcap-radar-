@@ -1,0 +1,39 @@
+name: Time Machine STEP 7G Massive Live Test
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/timemachine-step7g.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  step7g:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify secret is connected without printing it
+        shell: bash
+        run: |
+          if [ -z "$MASSIVE_API_KEY" ]; then
+            echo 'BLOCKED_API_KEY_NOT_CONNECTED'
+            exit 2
+          fi
+          echo 'MASSIVE_API_KEY is connected (value masked/not printed).'
+      - name: Run STEP 7G live coverage probe
+        run: python timemachine/src/step7g_live.py
+      - name: Upload sanitized coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: massive-live-coverage-2026-01
+          path: timemachine/data/massive-live-coverage-2026-01.json
+          if-no-files-found: error
+          retention-days: 30
