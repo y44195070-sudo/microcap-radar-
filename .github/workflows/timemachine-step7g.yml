@@ -37,3 +37,4 @@ jobs:
           path: timemachine/data/massive-live-coverage-2026-01.json
           if-no-files-found: error
           retention-days: 30
+# trigger: step7g-live-1
