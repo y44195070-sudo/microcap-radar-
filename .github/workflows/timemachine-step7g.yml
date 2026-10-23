@@ -28,7 +28,7 @@ jobs:
             exit 2
           fi
           echo 'MASSIVE_API_KEY is connected (value masked/not printed).'
-      - name: Run STEP 7G live coverage probe
+      - name: Run STEP 7G-RS focused reverse-split probe
         run: python timemachine/src/step7g_live.py
       - name: Upload sanitized coverage report
         uses: actions/upload-artifact@v4
@@ -37,4 +37,4 @@ jobs:
           path: timemachine/data/massive-live-coverage-2026-01.json
           if-no-files-found: error
           retention-days: 30
-# trigger: step7g-retest-rate-safe-1
+# trigger: step7g-rs-focused-1
