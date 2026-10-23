@@ -1,0 +1,41 @@
+name: Time Machine STEP 11 RETEST
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'timemachine/src/step11_retest.py'
+      - '.github/workflows/timemachine-step11-retest.yml'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  step11-retest:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download immutable STEP 11 base artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: timemachine-step11-sec-backfill
+          path: /tmp/step11-base
+          github-token: ${{ github.token }}
+          repository: y44195070-sudo/microcap-radar-
+          run-id: '39978977002'
+      - name: Run STEP 11 RETEST
+        env:
+          SEC_USER_AGENT: MicrocapRadar-TimeMachine/1.1 research y44195070@gmail.com
+          STEP11_BASE: /tmp/step11-base
+        run: python timemachine/src/step11_retest.py
+      - name: Upload STEP 11 RETEST artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step11-retest
+          path: timemachine/data/step11-retest/
+          if-no-files-found: error
+          retention-days: 90
