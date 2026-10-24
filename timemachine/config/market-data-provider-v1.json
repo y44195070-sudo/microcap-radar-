@@ -1,0 +1,29 @@
+{
+  "version": "market-data-provider-v1",
+  "status": "FROZEN",
+  "provider": "Massive",
+  "plan": "Stocks Basic",
+  "historical_universe_source": "Massive /v3/reference/tickers with date=YYYY-MM-DD and full pagination",
+  "ohlcv_source": "Massive /v2/aggs/ticker/{ticker}/range/1/day/{from}/{to}",
+  "adjustment_policy": "Use adjusted=false for point-in-time raw/as-traded historical OHLCV. Never substitute adjusted=true. Preserve corporate actions separately.",
+  "source_quality": "VENDOR_RECONSTRUCTED_PIT",
+  "auxiliary_sources": {
+    "SEC_EDGAR": ["filings", "capital structure", "issuer/corporate-event evidence"],
+    "Nasdaq_Trader": ["trading halts", "Reg SHO"],
+    "FINRA": ["short volume"],
+    "SEC_FTD": ["failure-to-deliver"]
+  },
+  "known_limitations": [
+    "Massive reference history is vendor-reconstructed PIT; known_at for SEC facts must come from official filing acceptance timestamps, never Massive reference dates.",
+    "Missing OHLCV cannot by itself identify a trading halt; Nasdaq Trader auxiliary evidence is required.",
+    "Security-type classifications require explicit UNKNOWN/AMBIGUOUS handling.",
+    "STEP 7G-R M2/M3 issuer/listing sample audits remain incomplete and are mandatory ingestion-QA checks.",
+    "STEP 7G-R reverse-split runner used a weekday-only prior-day helper and hit the 2026-01-01 holiday for three samples; official Massive documentation plus BVC/CANF empirical samples support adjusted=false semantics, but the defect must not be reused in production calendar logic.",
+    "Stocks Basic 5 calls/min is operationally slow; paid tier is optional speed improvement, not required entitlement for January 2026 core reconstruction."
+  ],
+  "validated_at": "2026-10-24",
+  "validation_artifact": "timemachine/data/massive-provider-final-validation-2026-01.json",
+  "validation_basis_artifact_digest": "sha256:36a96909eb3146d1aa3b2d86c5592491188ac6825e22131d777b42b2b63be837",
+  "provider_verdict": "MASSIVE_PASS_WITH_AUXILIARY_SOURCES",
+  "next_gate": "January Historical Data Build may begin only with these frozen roles and limitations; Rule Engine/Outcome/Baseline remain out of scope until their own steps."
+}
