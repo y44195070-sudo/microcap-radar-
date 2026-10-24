@@ -1,0 +1,54 @@
+name: Time Machine STEP 8-R4-R Authorized Shares PIT Closure
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'timemachine/step8-r4-r-trigger.txt'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  authorized-shares-pit-closure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download frozen STEP 8-R2 repaired Context
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12559529678/zip > /tmp/r2.zip
+      - name: Download frozen STEP 7I-R2 SEC evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12557232809/zip > /tmp/sec.zip
+      - name: Download frozen original STEP 8 Context
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12557999767/zip > /tmp/s8.zip
+      - name: Inspect frozen SEC artifact layout
+        run: python - <<'PY'
+          import zipfile
+          z=zipfile.ZipFile('/tmp/sec.zip')
+          print('\n'.join(z.namelist()))
+          PY
+      - name: Run read-only STEP 8-R4-R PIT closure
+        run: |
+          rm -rf /tmp/r4r-out
+          python timemachine/src/step8_r4_r_authorized_shares_pit_closure.py --r2 /tmp/r2.zip --i /tmp/sec.zip --s8 /tmp/s8.zip --out /tmp/r4r-out
+      - name: Verify required evidence files
+        run: |
+          set -e
+          for f in raw-corpus-layout.json raw-corpus-read-audit.json authorized-shares-raw-search.json authorized-shares-hit-classification.json authorized-shares-candidates.json authorized-shares-derived-facts.json authorized-shares-pit-eligibility.json spwrw-pit-trace.json authorized-shares-lineage.json authorized-shares-negative-controls.json authorized-shares-positive-control.json authorized-shares-semantic-audit.json root-cause.json step8-gate-reassessment.json context-integrity.json v2-integrity.json qa-report.json manifest.json step8-r4-r-verdict.json; do test -s /tmp/r4r-out/$f; done
+      - name: Verify R4-R did not modify v2
+        run: test -z "$(git status --porcelain -- v2/)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step8-r4-r-authorized-shares-pit-closure
+          path: /tmp/r4r-out/
+          if-no-files-found: error
+          retention-days: 90
