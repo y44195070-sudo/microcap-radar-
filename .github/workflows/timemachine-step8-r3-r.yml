@@ -1,0 +1,52 @@
+name: Time Machine STEP 8-R3-R Final Evaluator Repair
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'timemachine/step8-r3-r-trigger.txt'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  final-evaluator-repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download frozen STEP 8-R2 repaired candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12559529678/zip > /tmp/r2ctx.zip
+      - name: Download frozen STEP 8-R definitions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12557704696/zip > /tmp/step8r.zip
+      - name: Download frozen STEP 7I-R2 SEC evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12557232809/zip > /tmp/sec.zip
+      - name: Download frozen original STEP 8 context
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12557999767/zip > /tmp/step8.zip
+      - name: Run STEP 8-R3-R final evaluator repair
+        run: |
+          rm -rf /tmp/step8-r3-r-out
+          python timemachine/src/step8_r3_r_final_evaluator.py --r2 /tmp/r2ctx.zip --r /tmp/step8r.zip --i /tmp/sec.zip --s8 /tmp/step8.zip --out /tmp/step8-r3-r-out
+      - name: Verify required evidence
+        run: |
+          set -e
+          for f in corporate-action-regression.json authorized-shares-regression.json supply-semantics-regression.json vacuous-pass-audit.json real-sample-regression.json leakage-regression.json after-close-regression.json os-retroactive-regression.json float-regression.json identity-regression.json financing-lineage-regression.json missing-semantics-regression.json four-state-full-scan.json context-integrity.json previous-result-reuse-audit.json v2-integrity.json qa-report.json manifest.json step8-r3-r-verdict.json; do test -s /tmp/step8-r3-r-out/$f; done
+      - name: Verify R3-R did not modify v2
+        run: test -z "$(git status --porcelain -- v2/)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step8-r3-r-final-evaluator-repair
+          path: /tmp/step8-r3-r-out/
+          if-no-files-found: error
+          retention-days: 90
