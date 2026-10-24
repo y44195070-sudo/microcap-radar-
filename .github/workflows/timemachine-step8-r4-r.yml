@@ -31,9 +31,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: gh api repos/${{ github.repository }}/actions/artifacts/12557999767/zip > /tmp/s8.zip
       - name: Inspect frozen SEC artifact layout
-        run: python - <<'PY'
+        run: |
+          python - <<'PY'
           import zipfile
-          z=zipfile.ZipFile('/tmp/sec.zip')
+          z = zipfile.ZipFile('/tmp/sec.zip')
           print('\n'.join(z.namelist()))
           PY
       - name: Run read-only STEP 8-R4-R PIT closure
