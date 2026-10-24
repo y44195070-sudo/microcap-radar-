@@ -1,0 +1,49 @@
+name: Time Machine STEP 8-R2 After-Close Repair
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'timemachine/step8-r2-trigger.txt'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  audit-repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download frozen STEP 8 artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12557999767/zip > /tmp/step8.zip
+      - name: Download frozen STEP 8-R artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12557704696/zip > /tmp/step8r.zip
+      - name: Download frozen STEP 7I-R2 artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12557232809/zip > /tmp/r2.zip
+      - name: Download STEP 7I raw metadata evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12554922181/zip > /tmp/rbase.zip
+      - name: Run STEP 8-R2 root cause and minimal repair
+        run: |
+          rm -rf /tmp/step8-r2-out
+          python timemachine/src/step8_r2_after_close_repair.py --step8 /tmp/step8.zip --step8r /tmp/step8r.zip --r2 /tmp/r2.zip --rbase /tmp/rbase.zip --out /tmp/step8-r2-out
+      - name: Verify required evidence
+        run: |
+          set -e
+          for f in root-cause-analysis.json krus-trace.json after-close-multi-case-audit.json real-sample-regression.json leakage-regression.json four-state-semantics-audit.json context-integrity.json context-diff.json qa-report.json manifest.json step8-r2-verdict.json; do test -s /tmp/step8-r2-out/$f; done
+          test $(find /tmp/step8-r2-out/repaired-daily-context -name '*.jsonl.gz' | wc -l) -eq 20
+      - uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step8-r2-after-close-repair
+          path: /tmp/step8-r2-out/
+          if-no-files-found: error
+          retention-days: 90
