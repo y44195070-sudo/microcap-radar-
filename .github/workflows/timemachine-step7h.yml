@@ -1,0 +1,33 @@
+name: Time Machine STEP 7H January Build
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/timemachine-step7h.yml'
+      - 'timemachine/src/step7h_january_build.py'
+
+permissions:
+  contents: read
+
+jobs:
+  step7h:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run STEP 7H
+        run: python -m timemachine.src.step7h_january_build
+      - name: Upload STEP 7H artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step7h-january-2026
+          path: timemachine/data/january-2026/
+          if-no-files-found: error
+          retention-days: 30
