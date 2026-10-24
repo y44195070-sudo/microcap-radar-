@@ -1,0 +1,44 @@
+name: Time Machine STEP 8-R Adversarial PIT Audit
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'timemachine/step8-r-trigger.txt'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download frozen STEP 8 context artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12557999767/zip > /tmp/step8.zip
+      - name: Download frozen STEP 7I-R2 artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12557232809/zip > /tmp/r2.zip
+      - name: Download STEP 7I raw metadata evidence artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12554922181/zip > /tmp/rbase.zip
+      - name: Run real historical adversarial audit
+        run: |
+          rm -rf /tmp/step8-r-out
+          python timemachine/src/step8_r_adversarial_audit.py --step8 /tmp/step8.zip --r2 /tmp/r2.zip --rbase /tmp/rbase.zip --out /tmp/step8-r-out
+      - name: Verify required outputs
+        run: |
+          set -e
+          for f in real-sample-audit.json real-leakage-tests.json financing-lineage-audit.json after-close-audit.json os-retroactive-audit.json float-backfill-audit.json missing-semantics-audit.json cross-day-audit.json context-integrity.json qa-report.json manifest.json step8-r-verdict.json; do test -s /tmp/step8-r-out/$f; done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step8-r-adversarial-pit-audit
+          path: /tmp/step8-r-out/
+          if-no-files-found: error
+          retention-days: 90
