@@ -1,0 +1,40 @@
+name: Time Machine STEP 7I SEC PIT Foundation
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/timemachine-step7i.yml'
+      - 'timemachine/src/step7i_sec_foundation.py'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  step7i:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore fixed STEP 7H market artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/step7h
+          gh run download 40044903348 -n timemachine-step7h-january-2026 -D /tmp/step7h
+          rm -rf timemachine/data/january-2026
+          mkdir -p timemachine/data/january-2026
+          if [ -d /tmp/step7h/january-2026 ]; then cp -R /tmp/step7h/january-2026/* timemachine/data/january-2026/; else cp -R /tmp/step7h/* timemachine/data/january-2026/; fi
+      - name: Run STEP 7I
+        env:
+          SEC_USER_AGENT: 'MicrocapRadar-TimeMachine research contact y44195070@gmail.com'
+        run: python -m timemachine.src.step7i_sec_foundation
+      - name: Upload STEP 7I artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step7i-january-2026-sec
+          path: timemachine/data/january-2026-sec/
+          if-no-files-found: warn
+          retention-days: 30
