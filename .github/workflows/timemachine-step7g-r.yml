@@ -1,0 +1,40 @@
+name: Time Machine STEP 7G-R Massive Retest
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/timemachine-step7g-r.yml'
+      - 'timemachine/src/step7g_r_live.py'
+
+permissions:
+  contents: read
+
+jobs:
+  step7g-r:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify secret without printing value
+        shell: bash
+        run: |
+          if [ -z "$MASSIVE_API_KEY" ]; then
+            echo 'BLOCKED_API_KEY_NOT_CONNECTED'
+            exit 2
+          fi
+          echo 'MASSIVE_API_KEY connected (masked).'
+      - name: Run STEP 7G-R
+        run: python timemachine/src/step7g_r_live.py
+      - name: Upload sanitized STEP 7G-R report
+        uses: actions/upload-artifact@v4
+        with:
+          name: massive-live-coverage-step7g-r-2026-01
+          path: timemachine/data/massive-live-coverage-step7g-r-2026-01.json
+          if-no-files-found: error
+          retention-days: 30
