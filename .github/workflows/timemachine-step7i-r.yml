@@ -1,0 +1,104 @@
+name: Time Machine STEP 7I-R Batched SEC Build
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/timemachine-step7i-r.yml'
+      - 'timemachine/src/step7i_r_batch.py'
+      - 'timemachine/src/step7i_r_finalize.py'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      count: ${{ steps.plan.outputs.count }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore STEP 7H artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/step7h timemachine/data/january-2026
+          gh run download 40044903348 -n timemachine-step7h-january-2026 -D /tmp/step7h
+          if [ -d /tmp/step7h/january-2026 ]; then cp -R /tmp/step7h/january-2026/* timemachine/data/january-2026/; else cp -R /tmp/step7h/* timemachine/data/january-2026/; fi
+      - id: plan
+        name: Freeze CIK universe and batch plan
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import gzip,json,math
+          from pathlib import Path
+          ids=set()
+          for p in Path('timemachine/data/january-2026/investable').glob('*.jsonl.gz'):
+            with gzip.open(p,'rt') as f:
+              for l in f:
+                r=json.loads(l); c=str(r.get('cik') or '').lstrip('0')
+                if c: ids.add(c)
+          n=math.ceil(len(ids)/400)
+          print('count='+str(n))
+          print('matrix='+json.dumps({'batch':list(range(n))},separators=(',',':')))
+          PY
+
+  collect:
+    needs: prepare
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore STEP 7H artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/step7h timemachine/data/january-2026
+          gh run download 40044903348 -n timemachine-step7h-january-2026 -D /tmp/step7h
+          if [ -d /tmp/step7h/january-2026 ]; then cp -R /tmp/step7h/january-2026/* timemachine/data/january-2026/; else cp -R /tmp/step7h/* timemachine/data/january-2026/; fi
+      - name: Collect SEC batch
+        env:
+          SEC_USER_AGENT: MicrocapRadar-TimeMachine research contact y44195070@gmail.com
+        run: python -m timemachine.src.step7i_r_batch --batch ${{ matrix.batch }} --size 400
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: step7i-sec-batch-${{ matrix.batch }}
+          path: timemachine/data/step7i-r/batch-*/
+          if-no-files-found: error
+          retention-days: 30
+
+  finalize:
+    needs: [prepare, collect]
+    if: always() && needs.prepare.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: step7i-sec-batch-*
+          path: /tmp/batches
+      - name: Normalize batch artifacts
+        run: |
+          mkdir -p timemachine/data/step7i-r-merged
+          find /tmp/batches -type d -name 'batch-*' -maxdepth 3 -exec cp -R {} timemachine/data/step7i-r-merged/ \;
+      - name: Merge and validate
+        run: python -m timemachine.src.step7i_r_finalize --expected-batches ${{ needs.prepare.outputs.count }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: timemachine-step7i-r-january-2026-sec
+          path: timemachine/data/january-2026-sec-r/
+          if-no-files-found: warn
+          retention-days: 30
