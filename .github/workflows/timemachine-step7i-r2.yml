@@ -1,0 +1,55 @@
+name: Time Machine STEP 7I-R2 Derived Capital PIT Repair
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'timemachine/src/step7i_r2_trigger.txt'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download fixed STEP 7I-R base artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api repos/${{ github.repository }}/actions/artifacts/12554922181/zip > step7i-r-base.zip
+          python - <<'PY'
+          import hashlib
+          p='step7i-r-base.zip'
+          print('base_zip_sha256',hashlib.sha256(open(p,'rb').read()).hexdigest())
+          PY
+      - name: Build STEP 7I-R2
+        env:
+          SEC_USER_AGENT: 'MicrocapRadar TimeMachine research contact@example.com'
+        run: |
+          python timemachine/src/step7i_r2.py --base-zip step7i-r-base.zip --out timemachine/data/january-2026-sec-r2
+      - name: Remove network cache from final artifact
+        run: rm -rf timemachine/data/january-2026-sec-r2/cache
+      - name: Verify required outputs
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          root=pathlib.Path('timemachine/data/january-2026-sec-r2')
+          req=['manifest.json','coverage-report.json','leakage-report.json','qa-report.json','sample-audit.json','transaction-lineage.json','capital-facts.json','capital-events.json','sec-document-index.json','step7i-r2-verdict.json','diagnosis.json']
+          missing=[x for x in req if not (root/x).exists()]
+          assert not missing, missing
+          assert len(list((root/'daily-snapshots').glob('*.json')))==20
+          print(json.dumps(json.load(open(root/'step7i-r2-verdict.json')),indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step7i-r2-january-2026-sec
+          path: timemachine/data/january-2026-sec-r2/
+          if-no-files-found: error
+          retention-days: 30
