@@ -1,0 +1,56 @@
+name: Time Machine STEP 8-R5 Raw SEC Evidence Closure
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'timemachine/step8-r5-trigger.txt'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  raw-sec-evidence-closure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download frozen STEP7I-R filing index
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12554922181/zip > /tmp/base.zip
+      - name: Download frozen STEP7I-R2 SEC evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12557232809/zip > /tmp/sec.zip
+      - name: Download frozen STEP8-R2 repaired Context
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12559529678/zip > /tmp/r2.zip
+      - name: Download frozen original STEP8 Context
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12557999767/zip > /tmp/s8.zip
+      - name: Run STEP 8-R5 raw SEC evidence reconstruction
+        run: |
+          rm -rf /tmp/r5-out
+          python timemachine/src/step8_r5_raw_sec_evidence_closure.py --base /tmp/base.zip --sec /tmp/sec.zip --r2 /tmp/r2.zip --s8 /tmp/s8.zip --out /tmp/r5-out
+      - name: Bind Context integrity to frozen R2 manifest
+        run: python timemachine/src/step8_r5_context_integrity_patch.py --r2 /tmp/r2.zip --out /tmp/r5-out
+      - name: Verify required evidence files
+        run: |
+          set -e
+          for f in raw-corpus-manifest.json raw-corpus-coverage.json raw-corpus-errors.json raw-sec-document-index.json authorized-shares-keyword-hits.json authorized-shares-hit-classification.json authorized-shares-actual-disclosures.json authorized-shares-pit-eligibility.json spwrw-raw-positive-control.json authorized-shares-negative-controls.json authorized-shares-semantic-audit.json authorized-shares-lineage.json step8-gate-reassessment.json context-integrity.json v2-integrity.json qa-report.json manifest.json step8-r5-verdict.json; do test -s /tmp/r5-out/$f; done
+      - name: Verify R5 did not modify protected outputs
+        run: |
+          test -z "$(git status --porcelain -- v2/)"
+          test -z "$(git status --porcelain -- timemachine/data/)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step8-r5-raw-sec-evidence-closure
+          path: /tmp/r5-out/
+          if-no-files-found: error
+          retention-days: 90
