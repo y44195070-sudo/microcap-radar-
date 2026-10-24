@@ -18,30 +18,32 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Download frozen STEP 8 artifact
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh api repos/${{ github.repository }}/actions/artifacts/12557999767/zip > /tmp/step8.zip
-      - name: Download frozen STEP 8-R artifact
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh api repos/${{ github.repository }}/actions/artifacts/12557704696/zip > /tmp/step8r.zip
       - name: Download frozen STEP 8-R2 repaired candidate
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api repos/${{ github.repository }}/actions/artifacts/12559529678/zip > /tmp/step8r2.zip
-      - name: Download frozen STEP 7I-R2 evidence
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12559529678/zip > /tmp/r2ctx.zip
+      - name: Download frozen STEP 8-R definitions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12557704696/zip > /tmp/step8r.zip
+      - name: Download frozen STEP 7I-R2 SEC evidence
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh api repos/${{ github.repository }}/actions/artifacts/12557232809/zip > /tmp/sec.zip
+      - name: Download frozen raw SEC metadata
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12554922181/zip > /tmp/raw.zip
       - name: Run STEP 8-R3 full regression closure
         run: |
           rm -rf /tmp/step8-r3-out
-          python timemachine/src/step8_r3_full_regression_closure.py --r2 /tmp/step8r2.zip --step8r /tmp/step8r.zip --sec /tmp/sec.zip --step8 /tmp/step8.zip --out /tmp/step8-r3-out
+          python timemachine/src/step8_r3_full_regression.py --r2ctx /tmp/r2ctx.zip --step8r /tmp/step8r.zip --sec /tmp/sec.zip --raw /tmp/raw.zip --out /tmp/step8-r3-out
       - name: Verify required evidence
         run: |
           set -e
           for f in real-sample-regression.json leakage-regression.json after-close-regression.json os-retroactive-regression.json float-regression.json identity-regression.json corporate-action-regression.json supply-semantics-regression.json financing-lineage-regression.json missing-semantics-regression.json four-state-full-scan.json context-integrity.json previous-result-reuse-audit.json v2-provenance-audit.json qa-report.json manifest.json step8-r3-verdict.json; do test -s /tmp/step8-r3-out/$f; done
+      - name: Verify R3 did not modify v2
+        run: test -z "$(git status --porcelain -- v2/)"
       - uses: actions/upload-artifact@v4
         with:
           name: timemachine-step8-r3-full-regression-closure
