@@ -1,4 +1,4 @@
 STEP 8-R3 Full Regression Closure execution trigger.
 Audit-only against frozen STEP 8-R2 repaired Context.
 No STEP 9, no /v2/ modifications.
-Rerun after workflow/input repair: 2026-10-24.
+Rerun after streaming regression repair: 2026-10-24T13:25Z.
