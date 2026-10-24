@@ -1,0 +1,69 @@
+{
+  "step": "7G-FINAL",
+  "validated_at": "2026-10-24",
+  "provider": "Massive",
+  "plan": "Stocks Basic",
+  "source_quality": "VENDOR_RECONSTRUCTED_PIT",
+  "basis": {
+    "step7g_r_run_id": 40043003314,
+    "step7g_r_commit": "732f2cb62f7d88710d3599e1c799c9eb9d955cac",
+    "step7g_r_artifact_digest": "sha256:36a96909eb3146d1aa3b2d86c5592491188ac6825e22131d777b42b2b63be837",
+    "actual_http_requests": 74,
+    "http_429": 0
+  },
+  "official_source_checks": [
+    {
+      "source": "Massive Custom Bars documentation",
+      "finding": "adjusted=false returns results NOT adjusted for splits",
+      "url": "https://massive.com/docs/rest/stocks/aggregates/custom-bars"
+    },
+    {
+      "source": "Massive split-adjustment FAQ",
+      "finding": "historical market data is split-adjusted by default; adjusted=false requests unadjusted data",
+      "url": "https://massive.com/knowledge-base/article/is-massives-stock-data-adjusted-for-splits-or-dividends"
+    },
+    {
+      "source": "Massive Flat Files documentation",
+      "finding": "stock flat-file prices and volumes are unadjusted for splits, dividends and other corporate actions",
+      "url": "https://massive.com/docs/flat-files/stocks/overview"
+    },
+    {
+      "source": "Massive All Tickers documentation",
+      "finding": "reference records expose primary_exchange, type, CIK/FIGI where available, and delisted_utc where available",
+      "url": "https://massive.com/docs/rest/stocks/tickers/all-tickers"
+    },
+    {
+      "source": "Nasdaq Trader Trading Halt Search/RSS documentation",
+      "finding": "official historical halt records are available and include halt/resumption fields; this is the auxiliary authority for halt-vs-missing classification",
+      "url": "https://www.nasdaqtrader.com/Trader.aspx?id=TradeHaltRSS"
+    }
+  ],
+  "m_tests": {
+    "M1": {"status":"PASS","sample_size":3,"conclusion":"2026-01-02/16/30 historical universes fully paginated; 12,127 / 12,164 / 12,227 records."},
+    "M2": {"status":"PARTIAL","sample_size":5,"conclusion":"Five January securities absent from current active universe were identified, but the 7G-R artifact did not contain five issuer-level official delisting records. Do not upgrade this to PASS by inference."},
+    "M3": {"status":"PARTIAL","sample_size":0,"conclusion":"7G-R did not produce the required three listing-boundary samples. Provider reference capability is adequate but this specific sample test remains incomplete."},
+    "M4": {"status":"PASS","sample_size":3,"conclusion":"Three stable CIK/FIGI identity changes were observed across dated universes; exact event-date evidence remains a separate SEC/reference concern."},
+    "M5": {"status":"PARTIAL","sample_size":5,"conclusion":"Five reverse-split records were sampled. BVC and CANF directly demonstrated raw pre-split prices with adjusted=false versus split-adjusted historical prices with adjusted=true. Three 2026-01-02 cases used 2026-01-01 as the prior business day, which was a market holiday, so the original runner cannot support a five-of-five empirical PASS. Massive official documentation independently confirms adjusted=false semantics."},
+    "M6": {"status":"PARTIAL","sample_size":5,"conclusion":"BVC and CANF empirically show raw integer pre-split volume under adjusted=false while adjusted=true rescales volume (BVC 17,566,372 raw vs 1,756,637.2 adjusted; CANF 2,776,818 raw vs 138,840.9 adjusted). Massive flat-file documentation explicitly states prices and volumes are unadjusted. Five-of-five independent tape cross-check was not completed, so status remains PARTIAL."},
+    "M7": {"status":"PASS","sample_size":5,"conclusion":"AAPL/MSFT/NVDA/AMZN/META historical adjusted=false OHLCV succeeded."},
+    "M8": {"status":"PARTIAL","sample_size":3,"conclusion":"Historical records consistently expose primary_exchange and type, including XNAS/XNYS/XASE and CS/ETF/ADRC/WARRANT/PFD/UNIT. These fields are suitable as provider classification inputs, but exclusion logic must retain an UNKNOWN/AMBIGUOUS path and should not treat provider type as an SEC fact."},
+    "M9": {"status":"PASS","sample_size":0,"conclusion":"Architecture validation PASS, not a Massive-only data PASS: Nasdaq Trader is frozen as the authoritative auxiliary source for halt-vs-missing classification. Massive OHLCV absence alone must never be classified as a halt. Historical halt search/RSS supports halt date, reason and resumption fields."},
+    "M10": {"status":"PASS","sample_size":74,"conclusion":"Core Basic functionality required from the market-data provider is operational: dated universe pagination and adjusted=false OHLCV. At approximately 13 universe pages per trading day, 21 January sessions imply about 273 universe calls or 54.6 minutes at 5 calls/min. This is slow but viable for month-by-month offline reconstruction; a paid tier is an optimization, not a current data entitlement requirement."}
+  },
+  "provider_roles": {
+    "Massive": ["historical dated universe", "raw/unadjusted OHLCV", "corporate-action reference"],
+    "SEC": ["filings", "capital structure", "issuer identity and official corporate-event evidence", "FTD publication"],
+    "Nasdaq Trader": ["trading halts", "Reg SHO"],
+    "FINRA": ["short volume"]
+  },
+  "limitations": [
+    "Massive historical reference is treated as VENDOR_RECONSTRUCTED_PIT, not native publication-time PIT.",
+    "M2 and M3 sample-level official cross-checks remain incomplete and must be audited during January ingestion QA rather than silently promoted to PASS.",
+    "M5/M6 runner had a holiday-calendar defect for 2026-01-02 reverse splits; this does not invalidate Massive adjusted=false semantics but prevents a five-of-five empirical PASS from that artifact.",
+    "A missing Massive daily bar is not sufficient evidence of a trading halt.",
+    "Provider security type is a classification input; UNKNOWN/AMBIGUOUS must remain explicit."
+  ],
+  "paid_plan_required": false,
+  "final_provider_verdict": "MASSIVE_PASS_WITH_AUXILIARY_SOURCES",
+  "freeze_allowed": true
+}
