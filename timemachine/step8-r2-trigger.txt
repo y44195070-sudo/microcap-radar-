@@ -1,0 +1,4 @@
+STEP 8-R2 after-close transition root cause and repair
+Frozen STEP 8: 12557999767
+Frozen STEP 8-R: 12557704696
+Frozen STEP 7I-R2: 12557232809
