@@ -1,0 +1,3 @@
+STEP 8-R adversarial PIT audit trigger
+Frozen STEP 8 artifact: 12557999767
+Frozen STEP 7I-R2 artifact: 12557232809
