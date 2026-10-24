@@ -1,0 +1,43 @@
+name: Time Machine STEP 7H-R Repair Validation
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/timemachine-step7h-r.yml'
+      - 'timemachine/src/step7h_r_validate.py'
+
+permissions:
+  contents: read
+
+jobs:
+  step7h-r:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore STEP 7H artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/step7h
+          gh run download 40044903348 -n timemachine-step7h-january-2026 -D /tmp/step7h
+          rm -rf timemachine/data/january-2026
+          if [ -d /tmp/step7h/january-2026 ]; then
+            cp -R /tmp/step7h/january-2026 timemachine/data/january-2026
+          else
+            mkdir -p timemachine/data/january-2026
+            cp -R /tmp/step7h/* timemachine/data/january-2026/
+          fi
+      - name: Run STEP 7H-R
+        run: python -m timemachine.src.step7h_r_validate
+      - name: Upload STEP 7H-R artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step7h-r-january-2026
+          path: timemachine/data/january-2026-r/
+          if-no-files-found: error
+          retention-days: 30
