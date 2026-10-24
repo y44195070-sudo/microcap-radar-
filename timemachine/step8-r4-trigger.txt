@@ -1,0 +1,4 @@
+STEP 8-R4 Authorized Shares Evidence Closure trigger.
+Read-only forensic audit against frozen STEP7I-R2, STEP8, and STEP8-R2 artifacts.
+No parser/context repair. No STEP 9. No /v2/ changes.
+Run date: 2026-10-24.
