@@ -1,0 +1,43 @@
+name: Time Machine STEP 7G-FINAL Provider Freeze
+on:
+  push:
+    paths:
+      - 'timemachine/data/massive-provider-final-validation-2026-01.json'
+      - 'timemachine/config/market-data-provider-v1.json'
+      - '.github/workflows/timemachine-step7g-final.yml'
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate final report and freeze
+        run: |
+          python - <<'PY'
+          import json, hashlib
+          from pathlib import Path
+          r=Path('timemachine/data/massive-provider-final-validation-2026-01.json')
+          c=Path('timemachine/config/market-data-provider-v1.json')
+          report=json.loads(r.read_text())
+          cfg=json.loads(c.read_text())
+          assert report['final_provider_verdict']=='MASSIVE_PASS_WITH_AUXILIARY_SOURCES'
+          assert report['freeze_allowed'] is True
+          assert cfg['status']=='FROZEN'
+          assert cfg['provider']=='Massive'
+          assert cfg['plan']=='Stocks Basic'
+          assert cfg['provider_verdict']==report['final_provider_verdict']
+          assert report['m_tests']['M1']['status']=='PASS'
+          assert report['m_tests']['M7']['status']=='PASS'
+          assert 'Nasdaq_Trader' in cfg['auxiliary_sources']
+          print(json.dumps({'step':'7G-FINAL','verdict':report['final_provider_verdict'],'provider_freeze':cfg['status'],'report_sha256':hashlib.sha256(r.read_bytes()).hexdigest(),'config_sha256':hashlib.sha256(c.read_bytes()).hexdigest()}))
+          PY
+      - name: Upload final validation artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step7g-final
+          path: |
+            timemachine/data/massive-provider-final-validation-2026-01.json
+            timemachine/config/market-data-provider-v1.json
