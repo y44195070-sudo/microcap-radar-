@@ -1,0 +1,61 @@
+name: Time Machine STEP 8 PIT Context Rebuild
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'timemachine/trigger-step8-rebuild.txt'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download frozen STEP 7H market artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/step7h
+          gh api repos/${{ github.repository }}/actions/artifacts/12542583157/zip > /tmp/step7h.zip
+          unzip -q /tmp/step7h.zip -d /tmp/step7h
+      - name: Download frozen STEP 7H-R validation artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/step7hr
+          gh api repos/${{ github.repository }}/actions/artifacts/12543955257/zip > /tmp/step7hr.zip
+          unzip -q /tmp/step7hr.zip -d /tmp/step7hr
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/step7hr/step7h-r-verdict.json'))
+          assert x.get('verdict')=='STEP7H_PASS', x
+          PY
+      - name: Download frozen STEP 7I-R2 SEC artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/step7i
+          gh api repos/${{ github.repository }}/actions/artifacts/12557232809/zip > /tmp/step7i.zip
+          unzip -q /tmp/step7i.zip -d /tmp/step7i
+      - name: Build STEP 8 context
+        run: python timemachine/src/step8_pit_context.py
+      - name: Verify required outputs and gates
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('timemachine/data/step8')
+          req=['manifest.json','eligibility.json','coverage-matrix.json','leakage-report.json','determinism-report.json','sample-audit.json','qa-report.json','step8-verdict.json']
+          for f in req: assert (p/f).exists(), f
+          assert len(list((p/'daily-context').glob('*.jsonl.gz')))==20
+          v=json.load(open(p/'step8-verdict.json'))
+          assert v['verdict'] in ['STEP8_PASS','STEP8_CONDITIONAL','STEP8_FAIL','STEP8_BUILD_INCOMPLETE']
+          print(v)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step8-january-2026-pit-context
+          path: timemachine/data/step8/
+          if-no-files-found: error
+          compression-level: 6
