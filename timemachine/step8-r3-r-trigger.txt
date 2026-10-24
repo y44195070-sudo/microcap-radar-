@@ -2,4 +2,4 @@ STEP 8-R3-R Final Evaluator Repair execution trigger.
 Audit-only against frozen STEP 8-R2 repaired Context.
 Fix generalized corporate-action schema validation and require non-vacuous actual supply evidence.
 No STEP 9, no /v2/ modifications.
-Run: 2026-10-24.
+Rerun after frozen SEC artifact layout compatibility fix: 2026-10-24.
