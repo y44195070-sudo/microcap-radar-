@@ -1,4 +1,4 @@
-name: Time Machine STEP 7I-R Batched SEC Build
+name: Time Machine STEP 7I-R Repair SEC Build
 
 on:
   workflow_dispatch:
@@ -7,6 +7,7 @@ on:
       - '.github/workflows/timemachine-step7i-r.yml'
       - 'timemachine/src/step7i_r_batch.py'
       - 'timemachine/src/step7i_r_finalize.py'
+      - 'timemachine/src/step7i_r_failure_analysis.py'
 
 permissions:
   contents: read
@@ -27,8 +28,20 @@ jobs:
           mkdir -p /tmp/step7h timemachine/data/january-2026
           gh run download 40044903348 -n timemachine-step7h-january-2026 -D /tmp/step7h
           if [ -d /tmp/step7h/january-2026 ]; then cp -R /tmp/step7h/january-2026/* timemachine/data/january-2026/; else cp -R /tmp/step7h/* timemachine/data/january-2026/; fi
+      - name: Download original STEP 7I-R batches for failure classification
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/original-batches
+          gh run download 40077670478 -p 'step7i-sec-batch-*' -D /tmp/original-batches
+          python -m timemachine.src.step7i_r_failure_analysis --root /tmp/original-batches --out timemachine/data/step7i-r-repair-analysis
+      - uses: actions/upload-artifact@v4
+        with:
+          name: step7i-r-failure-classification
+          path: timemachine/data/step7i-r-repair-analysis/
+          retention-days: 30
       - id: plan
-        name: Freeze CIK universe and batch plan
+        name: Freeze CIK universe and retry batch plan
         run: |
           python - <<'PY' >> "$GITHUB_OUTPUT"
           import gzip,json,math
@@ -39,6 +52,8 @@ jobs:
               for l in f:
                 r=json.loads(l); c=str(r.get('cik') or '').lstrip('0')
                 if c: ids.add(c)
+          # Original run classified all 6,046 CIKs RETRYABLE_ERROR due gzip decode failure,
+          # so every CIK genuinely requires one corrected retry; no successful CIK is recollected.
           n=math.ceil(len(ids)/400)
           print('count='+str(n))
           print('matrix='+json.dumps({'batch':list(range(n))},separators=(',',':')))
@@ -64,15 +79,15 @@ jobs:
           mkdir -p /tmp/step7h timemachine/data/january-2026
           gh run download 40044903348 -n timemachine-step7h-january-2026 -D /tmp/step7h
           if [ -d /tmp/step7h/january-2026 ]; then cp -R /tmp/step7h/january-2026/* timemachine/data/january-2026/; else cp -R /tmp/step7h/* timemachine/data/january-2026/; fi
-      - name: Collect SEC batch
+      - name: Collect corrected SEC batch
         env:
           SEC_USER_AGENT: MicrocapRadar-TimeMachine research contact y44195070@gmail.com
         run: python -m timemachine.src.step7i_r_batch --batch ${{ matrix.batch }} --size 400
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: step7i-sec-batch-${{ matrix.batch }}
-          path: timemachine/data/step7i-r/batch-*/
+          name: step7i-r-repair-batch-${{ matrix.batch }}
+          path: timemachine/data/step7i-r-repair/batch-*/
           if-no-files-found: error
           retention-days: 30
 
@@ -87,14 +102,24 @@ jobs:
           python-version: '3.12'
       - uses: actions/download-artifact@v4
         with:
-          pattern: step7i-sec-batch-*
+          pattern: step7i-r-repair-batch-*
           path: /tmp/batches
-      - name: Normalize batch artifacts
+      - uses: actions/download-artifact@v4
+        with:
+          name: step7i-r-failure-classification
+          path: /tmp/failure
+      - name: Normalize repair batch artifacts
         run: |
           mkdir -p timemachine/data/step7i-r-merged
-          find /tmp/batches -type d -name 'batch-*' -maxdepth 3 -exec cp -R {} timemachine/data/step7i-r-merged/ \;
-      - name: Merge and validate
+          find /tmp/batches -maxdepth 3 -type d -name 'batch-*' -exec cp -R {} timemachine/data/step7i-r-merged/ \;
+      - name: Merge and validate raw SEC foundation
         run: python -m timemachine.src.step7i_r_finalize --expected-batches ${{ needs.prepare.outputs.count }}
+      - name: Preserve failure classification in final artifact
+        if: always()
+        run: |
+          mkdir -p timemachine/data/january-2026-sec-r
+          cp /tmp/failure/failure-classification.json timemachine/data/january-2026-sec-r/failure-classification.json || true
+          cp /tmp/failure/retry-ciks.json timemachine/data/january-2026-sec-r/retry-ciks.json || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -102,5 +127,3 @@ jobs:
           path: timemachine/data/january-2026-sec-r/
           if-no-files-found: warn
           retention-days: 30
-
-# execution trigger: 2026-10-24 STEP 7I-R validation
