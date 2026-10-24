@@ -1,0 +1,30 @@
+name: Time Machine STEP 7J Downstream Compatibility
+on:
+  push:
+    paths:
+      - 'timemachine/step7j-trigger.txt'
+  workflow_dispatch:
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download frozen STEP 7I-R2 artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/step7i-r2
+          gh api repos/${{ github.repository }}/actions/artifacts/12557232809/zip > /tmp/r2.zip
+          unzip -q /tmp/r2.zip -d /tmp/step7i-r2
+      - name: Run compatibility audit
+        run: python timemachine/src/step7j_compatibility.py
+      - name: Verify outputs
+        run: |
+          for f in downstream-inventory.json dependency-audit.json schema-compatibility.json semantic-compatibility.json pit-compatibility.json coverage-dependency.json revalidation-plan.json qa-report.json manifest.json step7j-verdict.json; do test -s timemachine/data/step7j/$f; done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step7j-downstream-compatibility
+          path: timemachine/data/step7j/
