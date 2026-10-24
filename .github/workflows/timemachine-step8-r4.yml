@@ -29,15 +29,17 @@ jobs:
       - name: Normalize frozen SEC artifact layout
         run: |
           python - <<'PY'
-          import json,zipfile
+          import gzip,zipfile
           p='/tmp/sec.zip'
           with zipfile.ZipFile(p,'a') as z:
             names=z.namelist()
             if 'derived-capital-facts.json' not in names:
-              src=next((n for n in names if n.endswith('derived-capital-facts.json.gz')),None)
-              if src:
-                import gzip
-                z.writestr('derived-capital-facts.json',gzip.decompress(z.read(src)))
+              if 'capital-facts.json' in names:
+                z.writestr('derived-capital-facts.json', z.read('capital-facts.json'))
+              else:
+                src=next((n for n in names if n.endswith('derived-capital-facts.json.gz')),None)
+                if src:
+                  z.writestr('derived-capital-facts.json',gzip.decompress(z.read(src)))
             if 'capital-events.json' not in names:
               src=next((n for n in names if n.endswith('capital-events.json')),None)
               if src and src!='capital-events.json': z.writestr('capital-events.json',z.read(src))
