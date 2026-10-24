@@ -1,0 +1,67 @@
+name: Time Machine STEP 8-R4 Authorized Shares Evidence Closure
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'timemachine/step8-r4-trigger.txt'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  authorized-shares-forensic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download frozen STEP 8-R2 repaired Context
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12559529678/zip > /tmp/r2.zip
+      - name: Download frozen STEP 7I-R2 SEC evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12557232809/zip > /tmp/sec.zip
+      - name: Normalize frozen SEC artifact layout
+        run: |
+          python - <<'PY'
+          import json,zipfile
+          p='/tmp/sec.zip'
+          with zipfile.ZipFile(p,'a') as z:
+            names=z.namelist()
+            if 'derived-capital-facts.json' not in names:
+              src=next((n for n in names if n.endswith('derived-capital-facts.json.gz')),None)
+              if src:
+                import gzip
+                z.writestr('derived-capital-facts.json',gzip.decompress(z.read(src)))
+            if 'capital-events.json' not in names:
+              src=next((n for n in names if n.endswith('capital-events.json')),None)
+              if src and src!='capital-events.json': z.writestr('capital-events.json',z.read(src))
+            if 'transaction-lineage.json' not in names:
+              src=next((n for n in names if n.endswith('transaction-lineage.json')),None)
+              if src and src!='transaction-lineage.json': z.writestr('transaction-lineage.json',z.read(src))
+          PY
+      - name: Download frozen original STEP 8 Context
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12557999767/zip > /tmp/s8.zip
+      - name: Run read-only STEP 8-R4 forensic audit
+        run: |
+          rm -rf /tmp/r4-out
+          python timemachine/src/step8_r4_authorized_shares_forensic.py --r2 /tmp/r2.zip --i /tmp/sec.zip --s8 /tmp/s8.zip --out /tmp/r4-out
+      - name: Verify required evidence files
+        run: |
+          set -e
+          for f in authorized-shares-source-search.json authorized-shares-candidates.json authorized-shares-pit-eligibility.json authorized-shares-lineage-audit.json authorized-shares-parser-audit.json authorized-shares-negative-controls.json authorized-shares-positive-control.json authorized-shares-root-cause.json authorized-shares-semantic-audit.json context-integrity.json v2-integrity.json qa-report.json manifest.json step8-r4-verdict.json; do test -s /tmp/r4-out/$f; done
+      - name: Verify R4 did not modify v2
+        run: test -z "$(git status --porcelain -- v2/)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step8-r4-authorized-shares-evidence-closure
+          path: /tmp/r4-out/
+          if-no-files-found: error
+          retention-days: 90
