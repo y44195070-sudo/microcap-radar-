@@ -1,0 +1,24 @@
+name: Time Machine STEP9-R6F-R2E-REPAIR-RECOVERY-V5.2
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'timemachine/triggers/step9-r6f-r2e-recovery-v5-2.txt'
+      - '.github/workflows/timemachine-step9-r6f-r2e-repair-recovery-v5-2.yml'
+      - 'timemachine/src/step9_r6f_r2e_recovery_v5_2_finalize.py'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  recovery-v5-2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Git history preflight
+        run: |
+          git cat-file -e '3a6442733624e74d6a2939fd7c8dff5604412ce8^{commit}'
+          git merge-base --is-ancestor 3a6442733624e74d6a2939fd7c8dff5604412ce8 HEAD
+      - name: Compile
+        run: python -m py_compile timemachine/src/step9_r6f_r2e_repair_recovery_v5.py timemachine/src/step9_r6f_r2e_recovery_v5_2_finalize.py
