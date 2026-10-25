@@ -1,0 +1,3 @@
+STEP9_IDENTITY_V2_DESIGN_REVIEW
+Audited base: a44c7c74675253e492a9bf91af97e65e14cb019d
+Design-only certification. No Prediction Identity V2 implementation, no /v2/ mutation, no R6F-R3, STEP10, or STEP11 execution.
