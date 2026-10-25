@@ -1,0 +1,54 @@
+name: Time Machine STEP9-R2 Root Cause Closure
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'timemachine/step9-r2-trigger.txt'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  step9-r2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Download frozen artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api repos/${{ github.repository }}/actions/artifacts/12584852321/zip > /tmp/cert.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12583614872/zip > /tmp/context.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12584928489/zip > /tmp/rdiag.zip
+      - name: Verify frozen digests
+        run: |
+          echo '2ec1f79a97ba4037da91e31a8b71bf1ae53bad14de4c803432dc1c9673dc500b  /tmp/cert.zip' | sha256sum -c -
+          echo '4a4b15c85c50f7034a692e92b77f8665af77ee40c22e2997b06981b8cd52dc51  /tmp/context.zip' | sha256sum -c -
+          echo '1f27acc08fc86020195886e12a594be7593310916743221b6819632a70cdd208  /tmp/rdiag.zip' | sha256sum -c -
+      - name: Run STEP9-R2 diagnosis and repair
+        run: |
+          python timemachine/src/step9_r2_root_cause_closure.py --cert /tmp/cert.zip --context /tmp/context.zip --rdiag /tmp/rdiag.zip --out /tmp/step9-r2 --repo .
+      - name: Verify protected repository outputs
+        run: |
+          test -z "$(git status --porcelain -- v2/ timemachine/data/)"
+          test -z "$(git diff HEAD^ HEAD -- v2/)"
+          test -z "$(git diff HEAD^ HEAD -- timemachine/src/step10* timemachine/src/step11* .github/workflows/*step10* .github/workflows/*step11*)"
+      - name: Upload diagnostic artifact regardless of verdict
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step9-r2-root-cause-closure
+          path: /tmp/step9-r2
+          if-no-files-found: warn
+      - name: Enforce STEP9-R2 technical verdict
+        run: |
+          python - <<'PY'
+          import json
+          p='/tmp/step9-r2/step9-r2-verdict.json'
+          d=json.load(open(p))
+          print(json.dumps(d,indent=2))
+          assert d.get('verdict')=='STEP9_R2_PASS', d
+          assert d.get('Final_STEP9')=='STEP9_PASS', d
+          assert d.get('STEP10_GATE')=='OPEN', d
+          PY
