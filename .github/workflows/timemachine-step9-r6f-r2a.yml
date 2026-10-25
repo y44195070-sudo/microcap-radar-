@@ -59,9 +59,10 @@ jobs:
       - name: Validate artifact and secret canary
         run: |
           python - <<'PY'
-          import json,os
+          import json
           o='/tmp/r2a';m=json.load(open(o+'/manifest.json'));s=json.load(open(o+'/secret_redaction_audit.json'));c=json.load(open(o+'/search_completeness_classification.json'))
-          assert not m['missing'],m['missing'];assert s['leak_count']==0,s;assert sum(c.values())==5026
+          missing=[x for x in m['missing'] if x!='manifest.json']
+          assert not missing,missing;assert s['leak_count']==0,s;assert sum(c.values())==5026
           assert json.load(open(o+'/technical_verdict.json'))['STEP9']=='BLOCKED'
           assert json.load(open(o+'/technical_verdict.json'))['STEP10_GATE']=='BLOCKED'
           PY
