@@ -1,0 +1,3 @@
+STEP 9-R6F-R2C — Historical Acquisition Architecture Repair & Promotion-Grade Source Expansion
+Protected base: d085e8c4530fc7ab8dc2ee2a69874f5ecb91e47c
+Certification trigger: 2026-10-25
