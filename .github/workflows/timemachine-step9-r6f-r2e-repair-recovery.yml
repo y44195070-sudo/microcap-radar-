@@ -1,0 +1,59 @@
+name: Time Machine STEP9-R6F-R2E-REPAIR-RECOVERY
+on:
+  push:
+    branches: [main]
+    paths: ['timemachine/triggers/step9-r6f-r2e-repair-recovery.txt']
+  workflow_dispatch:
+permissions: {contents: read, actions: read}
+jobs:
+  recovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile preflight
+        run: python -m py_compile timemachine/src/step9_r6f_r2e_repair_recovery.py
+      - name: Download and independently verify frozen R2E-REPAIR originals
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          set -euo pipefail; mkdir -p /tmp/frozen
+          gh api repos/${{ github.repository }}/actions/artifacts/12600248321/zip > /tmp/frozen/repair-cert.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12600776981/zip > /tmp/frozen/repair-checkpoint.zip
+          echo 'c7b23765b80ad5eb690846590cf8a10370c86f16072a8810a94adc67524e49b2  /tmp/frozen/repair-cert.zip' | sha256sum -c -
+          echo '4938611b0b249982267a61d641392336ab8141899c292d31a8b795052ec7d00c  /tmp/frozen/repair-checkpoint.zip' | sha256sum -c -
+      - name: Run capability evidence recovery
+        run: |
+          rm -rf /tmp/recovery && mkdir -p /tmp/recovery
+          python timemachine/src/step9_r6f_r2e_repair_recovery.py --repair-cert /tmp/frozen/repair-cert.zip --repair-checkpoint /tmp/frozen/repair-checkpoint.zip --out /tmp/recovery --head-sha '${{ github.sha }}'
+      - name: Strict recovery certification validation
+        run: |
+          python - <<'PY'
+          import json,hashlib,os
+          o='/tmp/recovery';m=json.load(open(o+'/manifest.json'));assert m['missing']==[]
+          for p,h in json.load(open(o+'/hashes.json')).items():assert hashlib.sha256(open(os.path.join(o,p),'rb').read()).hexdigest()==h,p
+          for p,h in json.load(open(o+'/raw_evidence_hashes.json')).items():assert hashlib.sha256(open(os.path.join(o,p),'rb').read()).hexdigest()==h,p
+          f=json.load(open(o+'/frozen_r2e_repair_audit.json'));assert f['Legacy_complete']==638 and f['Residual']==4388 and f['PASS']
+          assert len(json.load(open(o+'/residual_occurrences.json')))==4388
+          u=json.load(open(o+'/unsupported_claim_audit.json'));assert u['unsupported_yes_claims']==0 and u['PASS']
+          c=json.load(open(o+'/crsp_documentation_audit.json'));assert c['official_document_acquisition']=='PASS' and c['documentation_content_validation']=='PASS'
+          d=json.load(open(o+'/determinism_audit.json'));assert d['classification_disagreements']==0 and d['capability_certification_disagreements']==0
+          s=json.load(open(o+'/secret_redaction_audit.json'));assert s['files_scanned']>0 and s['confirmed_secrets']==0
+          assert all(v==0 for v in json.load(open(o+'/nonmutation_audit.json')).values())
+          t=json.load(open(o+'/technical_verdict.json'));assert t['STEP9']=='BLOCKED' and t['STEP10_GATE']=='BLOCKED' and t['R6F_R3']=='NOT_ALLOWED';print(t)
+          PY
+      - name: Verify protected diff
+        run: |
+          git fetch --no-tags --depth=1 origin ffda9f4f6282a0c1cfd5bcb37cffc18aef3bf5a6
+          python - <<'PY'
+          import subprocess
+          base='ffda9f4f6282a0c1cfd5bcb37cffc18aef3bf5a6';files=subprocess.check_output(['git','diff','--name-only',base,'HEAD'],text=True).splitlines();print(files)
+          allowed={'.github/workflows/timemachine-step9-r6f-r2e-repair-recovery.yml','timemachine/src/step9_r6f_r2e_repair_recovery.py','timemachine/triggers/step9-r6f-r2e-repair-recovery.txt'}
+          assert set(files)<=allowed
+          assert not any(f.startswith('v2/') for f in files)
+          PY
+      - name: Upload recovery checkpoint
+        uses: actions/upload-artifact@v4
+        with: {name: timemachine-step9-r6f-r2e-repair-recovery-checkpoint, path: /tmp/recovery/checkpoint.json, if-no-files-found: error}
+      - name: Upload recovery certification
+        uses: actions/upload-artifact@v4
+        with: {name: timemachine-step9-r6f-r2e-repair-recovery-certification, path: /tmp/recovery/, if-no-files-found: error}
