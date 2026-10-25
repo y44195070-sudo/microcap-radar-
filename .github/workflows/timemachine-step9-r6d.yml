@@ -1,0 +1,47 @@
+name: Time Machine STEP9-R6D Unresolved Identity Frozen Recovery Gate
+on:
+  workflow_dispatch:
+  push:
+    paths: ['timemachine/triggers/step9-r6d.txt']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  step9-r6d:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Download frozen evidence
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          set -euo pipefail
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/12593164641/zip > /tmp/r6c.zip
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/12591321235/zip > /tmp/r6br.zip
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/12592433720/zip > /tmp/r3.zip
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/12583614872/zip > /tmp/context.zip
+      - name: Verify frozen digests
+        run: |
+          echo '26dbf2d98256fc837f92a5520431b8f1e05ca0e4fe74dbfbddce98f9b7e96b5e  /tmp/r6c.zip' | sha256sum -c -
+          echo 'e21d081cc4d97ecd16835c36f56631ac1d43b60f3d86c78ff57ccfe9e2980a8e  /tmp/r6br.zip' | sha256sum -c -
+          echo '27d1501f5d46883574c0f546a21e276953f797ef1531f6080754fe13582b80ce  /tmp/r3.zip' | sha256sum -c -
+          echo '4a4b15c85c50f7034a692e92b77f8665af77ee40c22e2997b06981b8cd52dc51  /tmp/context.zip' | sha256sum -c -
+      - name: Run R6D gate
+        run: python timemachine/src/step9_r6d_unresolved_identity_recovery.py --r6c /tmp/r6c.zip --r6br /tmp/r6br.zip --r3 /tmp/r3.zip --context /tmp/context.zip --out /tmp/r6d --head-sha ${{ github.sha }}
+      - name: Upload evidence artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step9-r6d-unresolved-identity-frozen-recovery-gate
+          path: /tmp/r6d/
+          if-no-files-found: error
+          retention-days: 90
+      - name: Enforce gate semantics
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/r6d/technical_verdict.json'))
+          assert x['STEP9']=='STEP9_BLOCKED' and x['STEP10_GATE']=='BLOCKED'
+          assert x['technical_verdict'] in ['STEP9_R6D_FROZEN_IDENTITY_RECOVERY_READY','STEP9_R6D_BLOCKED_NO_FROZEN_IDENTITY_EVIDENCE']
+          PY
