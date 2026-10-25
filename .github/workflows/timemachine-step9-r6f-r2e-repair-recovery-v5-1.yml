@@ -1,0 +1,88 @@
+name: Time Machine STEP9-R6F-R2E-REPAIR-RECOVERY-V5.1
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'timemachine/triggers/step9-r6f-r2e-recovery-v5-1.txt'
+      - '.github/workflows/timemachine-step9-r6f-r2e-repair-recovery-v5-1.yml'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  recovery-v5-1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Git history preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=3a6442733624e74d6a2939fd7c8dff5604412ce8
+          echo "HEAD=$(git rev-parse HEAD)"
+          git cat-file -e "${BASE}^{commit}"
+          git merge-base --is-ancestor "$BASE" HEAD
+          echo "protected_diff_base_sha=$BASE"
+          echo "protected_diff_base_exists_local=YES"
+          echo "protected_diff_base_is_ancestor=YES"
+
+      - name: Compile V5
+        run: python -m py_compile timemachine/src/step9_r6f_r2e_repair_recovery_v2.py timemachine/src/step9_r6f_r2e_repair_recovery_v5.py
+
+      - name: Download frozen originals
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/frozen
+          gh api repos/y44195070-sudo/microcap-radar-/actions/artifacts/12600248321/zip > /tmp/frozen/repair-cert.zip
+          gh api repos/y44195070-sudo/microcap-radar-/actions/artifacts/12600776981/zip > /tmp/frozen/repair-checkpoint.zip
+          echo 'c7b23765b80ad5eb690846590cf8a10370c86f16072a8810a94adc67524e49b2  /tmp/frozen/repair-cert.zip' | sha256sum -c -
+          echo '4938611b0b249982267a61d641392336ab8141899c292d31a8b795052ec7d00c  /tmp/frozen/repair-checkpoint.zip' | sha256sum -c -
+
+      - name: Run recovery V5
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/recovery; mkdir -p /tmp/recovery
+          PYTHONPATH=timemachine/src python timemachine/src/step9_r6f_r2e_repair_recovery_v5.py --repair-cert /tmp/frozen/repair-cert.zip --repair-checkpoint /tmp/frozen/repair-checkpoint.zip --out /tmp/recovery --head-sha '${{ github.sha }}'
+
+      - name: Strict validate
+        run: |
+          test -f /tmp/recovery/certification/strict_validation.json
+          python - <<'PY'
+          import json
+          p='/tmp/recovery/certification/strict_validation.json'
+          d=json.load(open(p))
+          assert d.get('status') == 'PASS', d
+          PY
+
+      - name: Protected diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f /tmp/recovery/certification/protected_diff.json
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/recovery/certification/protected_diff.json'))
+          assert d.get('forbidden_mutations', 1) == 0, d
+          assert d.get('v2_mutations', 1) == 0, d
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: step9-r6f-r2e-repair-recovery-v5-1-checkpoint
+          path: /tmp/recovery/checkpoint
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: step9-r6f-r2e-repair-recovery-v5-1-certification
+          path: /tmp/recovery/certification
+          if-no-files-found: error

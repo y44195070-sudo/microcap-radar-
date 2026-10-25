@@ -1,0 +1,6 @@
+STEP9-R6F-R2E-REPAIR-RECOVERY-V5.1
+Purpose: repair V5 Git history acquisition only; preserve V5 certification logic and frozen lineage.
+Base: 74db7211367856b46a40477cc48e1b697c71978c
+Failed V5 run: 40199121183
+Failure class: INFRASTRUCTURE_GIT_HISTORY_ACQUISITION_FAILURE
+Requirements: full history checkout, protected-base existence + ancestry preflight, new push-triggered run, no /v2/ mutation.
