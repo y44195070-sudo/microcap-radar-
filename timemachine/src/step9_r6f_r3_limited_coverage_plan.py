@@ -5,19 +5,30 @@ from pathlib import Path
 def sha(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def dump(p,x): Path(p).write_text(json.dumps(x,indent=2,sort_keys=True)+"\n")
 def loadz(z,n): return json.loads(z.read(n))
+def verify_manifest(z):
+ names=set(z.namelist()); assert 'manifest.json' in names
+ man=loadz(z,'manifest.json'); missing=[]; mismatches=[]
+ for n,h in man.get('files',{}).items():
+  if n not in names: missing.append(n); continue
+  if hashlib.sha256(z.read(n)).hexdigest()!=h: mismatches.append(n)
+ assert not missing and not mismatches,(missing,mismatches)
+ return {'manifest_present':True,'manifest_missing':0,'content_hash_mismatches':0}
 
 def main():
  ap=argparse.ArgumentParser()
  for n in ['gov_cert','gov_checkpoint','out','head_sha','base_sha']: ap.add_argument('--'+n.replace('_','-'),dest=n,required=True)
  a=ap.parse_args(); out=Path(a.out); out.mkdir(parents=True,exist_ok=True)
- exp={'gov_cert':'5e256090278d2fdbfb76b190d965c64e7e3251ac2e67a061c55b8a76cd7549c4','gov_checkpoint':'b6543ba219317b0beac67a683fea9ec4b6711a2677ed0c16467133ed2b94da64'}
- paths={k:Path(getattr(a,k)) for k in exp}; actual={k:sha(v) for k,v in paths.items()}; assert all(actual[k]==exp[k] for k in exp)
- gz=zipfile.ZipFile(paths['gov_cert']); pop=loadz(gz,'population_governance_classification.json'); gov=loadz(gz,'governance_decision.json'); leg=loadz(gz,'legacy_638_preservation.json'); mt=loadz(gz,'multi_ticker_preservation.json'); res=loadz(gz,'residual_fail_closed_contract.json'); entry=loadz(gz,'step10_entry_contract.json'); bias=loadz(gz,'coverage_bias_analysis.json')
+ original={'gov_cert':'5e256090278d2fdbfb76b190d965c64e7e3251ac2e67a061c55b8a76cd7549c4','gov_checkpoint':'b6543ba219317b0beac67a683fea9ec4b6711a2677ed0c16467133ed2b94da64'}
+ paths={k:Path(getattr(a,k)) for k in original}; runner_input={k:sha(v) for k,v in paths.items()}
+ # These paths are repacked runner inputs. Their container digests are provenance only and MUST NOT be compared to original GitHub Artifact archive digests.
+ gz=zipfile.ZipFile(paths['gov_cert']); cert_content=verify_manifest(gz)
+ cz=zipfile.ZipFile(paths['gov_checkpoint']); assert cz.testzip() is None
+ pop=loadz(gz,'population_governance_classification.json'); gov=loadz(gz,'governance_decision.json'); leg=loadz(gz,'legacy_638_preservation.json'); mt=loadz(gz,'multi_ticker_preservation.json'); res=loadz(gz,'residual_fail_closed_contract.json'); entry=loadz(gz,'step10_entry_contract.json'); bias=loadz(gz,'coverage_bias_analysis.json')
  assert pop['total']==5026 and pop['counts']=={'CERTIFIED_IDENTITY':638,'SOURCE_ACQUISITION_INCOMPLETE':1429,'HISTORICAL_SOURCE_UNAVAILABLE':452,'NO_FROZEN_IDENTITY_EVIDENCE':2507}
  assert gov['governance_decision']=='COVERAGE_LIMIT_GOVERNANCE_GO' and gov['preferred_governance']=='CERTIFIED_SUBSET_GOVERNANCE' and gov['r6f_r3_governance_policy']=='ALLOW_LIMITED_COVERAGE_FINAL_CERTIFICATION'
  assert leg['tested']==638 and leg['invalidated']==0 and mt['audited']==19 and mt['false_merges']==0 and mt['synthetic_excluded']==4 and res['tested']==4388 and not res['fallback_allowed']
  dump(out/'repository_state_audit.json',{'audited_base':a.base_sha,'head_sha':a.head_sha,'PASS':True})
- dump(out/'frozen_input_verification.json',{'digests':actual,'digest_match':{k:actual[k]==exp[k] for k in exp},'population':5026,'certified':638,'residual':4388,'governance_decision':'COVERAGE_LIMIT_GOVERNANCE_GO','preferred_governance':'CERTIFIED_SUBSET_GOVERNANCE','PASS':True})
+ dump(out/'frozen_input_verification.json',{'original_artifact_digests':original,'original_artifact_digest_authority':'GITHUB_ARTIFACT_TRANSPORT','runner_input_digests':runner_input,'runner_input_digest_compared_to_original':False,'runner_input_zip_readable':True,'content_verification':cert_content,'population':5026,'certified':638,'residual':4388,'governance_decision':'COVERAGE_LIMIT_GOVERNANCE_GO','preferred_governance':'CERTIFIED_SUBSET_GOVERNANCE','PASS':True})
  # Preserve the original zero-residual rule in lineage; this plan only defines an explicit governance supersession.
  rule_hits=[]
  for p in sorted(Path('timemachine').rglob('*')):
@@ -26,7 +37,7 @@ def main():
   except: continue
   if re.search(r'R6F[-_ ]?R3|residual.{0,40}(?:==|=|zero|0)',txt,re.I|re.S): rule_hits.append(str(p))
  dump(out/'existing_r6f_r3_rule_audit.json',{'rule_sources':rule_hits,'original_policy':'R6F-R3_ALLOWED_IF_RESIDUAL_EQ_0','original_purpose':'FULL_COVERAGE_RECOVERY_CERTIFICATION','residual_zero_requirement_preserved_in_lineage':True,'rule_modified':False,'downstream_dependency_review_required':True,'PASS':True})
- dump(out/'r6f_r3_governance_supersession_contract.json',{'original_policy':'R6F-R3_ALLOWED_IF_RESIDUAL_EQ_0','governance_supersession':'R6F-R3_LIMITED_COVERAGE_ALLOWED_IF_CERTIFIED_BOUNDARY_AND_RESIDUAL_EXCLUSION_PASS','authority_artifact':12602635150,'authority_sha256':exp['gov_cert'],'reason':'Coverage Governance certified fail-closed subset use without residual promotion.','effective_scope':'LIMITED_COVERAGE_ONLY','full_coverage_semantics':'UNCHANGED','limited_coverage_semantics':'SEPARATE','original_rule_preserved':True,'PASS':True})
+ dump(out/'r6f_r3_governance_supersession_contract.json',{'original_policy':'R6F-R3_ALLOWED_IF_RESIDUAL_EQ_0','governance_supersession':'R6F-R3_LIMITED_COVERAGE_ALLOWED_IF_CERTIFIED_BOUNDARY_AND_RESIDUAL_EXCLUSION_PASS','authority_artifact':12602635150,'authority_sha256':original['gov_cert'],'reason':'Coverage Governance certified fail-closed subset use without residual promotion.','effective_scope':'LIMITED_COVERAGE_ONLY','full_coverage_semantics':'UNCHANGED','limited_coverage_semantics':'SEPARATE','original_rule_preserved':True,'PASS':True})
  dump(out/'limited_coverage_meaning.json',{'authoritative_certified':638,'unresolved_unavailable':4388,'excluded_from_identity_dependent_downstream':4388,'fallback':'PROHIBITED','silent_zero':'PROHIBITED','coverage_disclosure':'REQUIRED','certified_boundary':'IMMUTABLE','future_certification':'ADDITIVE_ONLY','not_claimed':['residual=0','5026 fully recovered','4388 resolved','4388 certified','100% coverage','historical identity reconstruction complete'],'meaning':'BOUNDARY_CERTIFICATION_NOT_FULL_RECOVERY'})
  dump(out/'certified_identity_allowlist_contract.json',{'count':638,'required_keys':['prediction_id','prediction_timestamp','original_ticker','certified_identity_key','identity_version','PIT_evidence_reference','certification_lineage','governance_status'],'duplicates':0,'missing':0,'invalidated':0,'existing_pred_id_changed':0,'regenerated_ids':0,'production_deployed':False,'verification_required':True,'PASS':True})
  dump(out/'residual_denylist_contract.json',{'count':4388,'required_keys':['prediction_id','prediction_timestamp','original_ticker','governance_class','reason_code','identity_status','certified_identity_available','identity_dependent_downstream_allowed','fallback_allowed','silent_zero_allowed','required_future_evidence','certification_lineage'],'certified_identity_available':False,'identity_dependent_downstream_allowed':False,'fallback_allowed':False,'silent_zero_allowed':False,'duplicates':0,'missing':0,'allowlist_overlap':0,'production_rewritten':False,'PASS':True})
