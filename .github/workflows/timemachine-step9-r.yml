@@ -1,0 +1,60 @@
+name: Time Machine STEP9-R Technical Diagnosis
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - timemachine/step9-r-trigger.txt
+permissions:
+  contents: read
+  actions: read
+jobs:
+  step9-r:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 20
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download frozen STEP8 certification and Context
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api repos/${{ github.repository }}/actions/artifacts/12584852321/zip > /tmp/step8-cert.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12583614872/zip > /tmp/step8-context.zip
+      - name: Verify frozen inputs
+        run: |
+          echo '2ec1f79a97ba4037da91e31a8b71bf1ae53bad14de4c803432dc1c9673dc500b  /tmp/step8-cert.zip' | sha256sum -c -
+          echo '4a4b15c85c50f7034a692e92b77f8665af77ee40c22e2997b06981b8cd52dc51  /tmp/step8-context.zip' | sha256sum -c -
+      - name: Run STEP9-R diagnosis and implementation-only repair
+        run: |
+          python timemachine/src/step9_r_technical_diagnosis.py \
+            --cert /tmp/step8-cert.zip \
+            --context /tmp/step8-context.zip \
+            --out /tmp/step9-r-out \
+            --repo .
+      - name: Protect production and prior/future steps
+        if: always()
+        run: |
+          test -z "$(git status --porcelain -- v2/)"
+          test -z "$(git status --porcelain -- timemachine/src/step7* timemachine/src/step8* timemachine/config/market-data-provider-v1.json)"
+          test -z "$(git status --porcelain -- timemachine/src/step10* timemachine/src/step11* .github/workflows/timemachine-step10* .github/workflows/timemachine-step11*)"
+      - name: Upload STEP9-R diagnostic artifact regardless of verdict
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step9-r-technical-diagnosis
+          path: /tmp/step9-r-out/
+          retention-days: 90
+          if-no-files-found: error
+      - name: Enforce STEP9-R technical verdict after evidence preservation
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          v=json.load(open('/tmp/step9-r-out/step9-r-verdict.json'))
+          assert v['verdict']=='STEP9_R_PASS', v
+          assert v['Final_STEP9']=='STEP9_PASS', v
+          assert v['outcome_evaluated'] is False, v
+          PY
