@@ -1,0 +1,47 @@
+name: Time Machine STEP9-R6A Canonical Security Identity
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'timemachine/triggers/step9-r6a.txt'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  step9-r6a:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Download frozen R6 artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download 40168836368 -n timemachine-step9-r6-identity-contract-specification -D /tmp/r6 && cd /tmp/r6 && zip -q -r /tmp/r6.zip .
+      - name: Verify frozen R6 digest
+        run: echo '1cd82bd38e65052aa8495f7b181c5256cedb53c1e3681057948b981e4c73871f  /tmp/r6.zip' | sha256sum -c -
+      - name: Run STEP9-R6A identity mapping closure
+        run: |
+          mkdir -p /tmp/r6a
+          python timemachine/src/step9_r6a_canonical_security_identity.py --out /tmp/r6a --r6-zip /tmp/r6.zip --base-sha 0f3e132254c994806983207b9d2a6946c7ca8e1e --head-sha ${{ github.sha }}
+      - name: Verify identity-only protection
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/r6a/protected-output-integrity.json'))
+          assert x['PASS'], x
+          PY
+      - name: Upload diagnostic artifact regardless of verdict
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step9-r6a-canonical-security-identity
+          path: /tmp/r6a/
+          if-no-files-found: error
+      - name: Enforce STEP9-R6A technical verdict
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/r6a/step9-r6a-verdict.json'))
+          assert x['verdict']=='STEP9_R6A_CANONICAL_IDENTITY_READY', x
+          PY
