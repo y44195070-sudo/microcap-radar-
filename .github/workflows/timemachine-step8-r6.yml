@@ -1,0 +1,63 @@
+name: Time Machine STEP 8-R6 Authorized Parser Repair
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'timemachine/step8-r6-trigger.txt'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  authorized-parser-repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download frozen R5-R
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12580323566/zip > /tmp/r5r.zip
+      - name: Verify frozen R5-R digest
+        run: echo '002efa3a2b93cac77df2292987362b3687b93dc109123c1a087f78d729e18fbf  /tmp/r5r.zip' | sha256sum -c -
+      - name: Download frozen R5
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12564074295/zip > /tmp/r5.zip
+      - name: Verify frozen R5 digest
+        run: echo 'b49fc8be7986883f35bb51509abb8870f2bc9dd85d470c866efd21ebc213900f  /tmp/r5.zip' | sha256sum -c -
+      - name: Download frozen STEP7I-R2
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12557232809/zip > /tmp/sec.zip
+      - name: Download frozen STEP8-R2 Context
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/${{ github.repository }}/actions/artifacts/12559529678/zip > /tmp/r2.zip
+      - name: Record all frozen input digests
+        run: sha256sum /tmp/r5r.zip /tmp/r5.zip /tmp/sec.zip /tmp/r2.zip | tee /tmp/frozen-input-sha256.txt
+      - name: Run STEP 8-R6
+        run: |
+          rm -rf /tmp/r6-out
+          python timemachine/src/step8_r6_authorized_parser_repair.py --r5r /tmp/r5r.zip --r5 /tmp/r5.zip --sec /tmp/sec.zip --r2 /tmp/r2.zip --out /tmp/r6-out
+          cp /tmp/frozen-input-sha256.txt /tmp/r6-out/frozen-input-sha256.txt
+      - name: Verify required R6 evidence
+        run: |
+          set -e
+          for f in frozen-input-verification.json r5r-gold-repair-set.json parser-repair-rules.json semantic-closure-701.json semantic-closure-summary.json repaired-authorized-capital-facts.json repaired-capital-facts-manifest.json gold-regression.json negative-regression.json spwrw-gold-control.json pit-eligibility-regression.json root-cause-closure.json context-diff.json leakage-report.json supply-semantics-audit.json context-integrity.json v2-integrity.json qa-report.json manifest.json step8-r6-verdict.json; do test -s /tmp/r6-out/$f; done
+          test $(find /tmp/r6-out/repaired-daily-context -name '*.jsonl.gz' | wc -l) -eq 20
+      - name: Verify protected repository outputs unchanged
+        run: |
+          test -z "$(git status --porcelain -- v2/)"
+          test -z "$(git status --porcelain -- timemachine/data/)"
+          test -z "$(git diff HEAD^ HEAD -- v2/)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step8-r6-authorized-parser-repair
+          path: /tmp/r6-out/
+          if-no-files-found: error
+          retention-days: 90
