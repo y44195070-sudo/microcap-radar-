@@ -1,0 +1,77 @@
+name: Time Machine STEP9-R3 Snapshot Integrity Closure
+
+on:
+  push:
+    paths:
+      - 'timemachine/triggers/step9-r3.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  step9-r3:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download frozen artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api repos/${{ github.repository }}/actions/artifacts/12584852321/zip > /tmp/step8-cert.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12583614872/zip > /tmp/step8-context.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12585990108/zip > /tmp/step9-r2.zip
+          git show cd9f5d65556e2677460b7ddf7feda4f26211607b:timemachine/src/step9_deterministic_prediction_snapshots.py > /tmp/original-step9.py
+
+      - name: Verify frozen digests
+        run: |
+          set -euo pipefail
+          echo '2ec1f79a97ba4037da91e31a8b71bf1ae53bad14de4c803432dc1c9673dc500b  /tmp/step8-cert.zip' | sha256sum -c -
+          echo '4a4b15c85c50f7034a692e92b77f8665af77ee40c22e2997b06981b8cd52dc51  /tmp/step8-context.zip' | sha256sum -c -
+          echo '780c74e090b9eaae83a7667c3f7e75cccd661d0723bb296069cdb6e66a4766bf  /tmp/step9-r2.zip' | sha256sum -c -
+
+      - name: Run STEP9-R3 forensic closure
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/step9-r3
+          python timemachine/src/step9_r3_snapshot_integrity_closure.py \
+            --cert /tmp/step8-cert.zip \
+            --context /tmp/step8-context.zip \
+            --r2 /tmp/step9-r2.zip \
+            --orig-runner /tmp/original-step9.py \
+            --out /tmp/step9-r3 \
+            --commit ${{ github.sha }}
+
+      - name: Verify protected repository outputs
+        run: |
+          set -euo pipefail
+          git diff --exit-code HEAD -- v2 timemachine/config || exit 1
+          test -z "$(git status --porcelain -- v2 timemachine/config)"
+          test -z "$(git status --porcelain | grep -E 'timemachine/(step7|step8|step10|step11)|timemachine/src/step10|timemachine/src/step11' || true)"
+
+      - name: Upload diagnostic artifact regardless of verdict
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step9-r3-snapshot-integrity-closure
+          path: /tmp/step9-r3
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Enforce STEP9-R3 technical verdict
+        if: always()
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('/tmp/step9-r3/step9-r3-verdict.json')
+          assert p.exists(), 'STEP9-R3 verdict missing'
+          v=json.loads(p.read_text())
+          assert v.get('verdict')=='STEP9_R3_PASS', v
+          f=json.loads(pathlib.Path('/tmp/step9-r3/step9-final-certification.json').read_text())
+          assert f.get('verdict')=='STEP9_PASS' and f.get('STEP10_GATE')=='OPEN', f
+          PY
