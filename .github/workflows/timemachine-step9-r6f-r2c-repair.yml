@@ -31,6 +31,7 @@ jobs:
       - name: Legacy 638 certification and alternative provider acquisition
         run: |
           rm -rf /tmp/r2c-repair && mkdir -p /tmp/r2c-repair
+          echo '{}' > /tmp/r2c-repair/manifest.json
           python timemachine/src/step9_r6f_r2c_repair.py --r2c-cert /tmp/frozen/r2c-cert.zip --r2c-checkpoint /tmp/frozen/r2c-checkpoint.zip --r2b-checkpoint /tmp/frozen/r2b-checkpoint.zip --out /tmp/r2c-repair --head-sha '${{ github.sha }}'
       - name: Strict certification validation
         run: |
@@ -47,18 +48,14 @@ jobs:
           print(t)
           PY
       - name: Verify protected diff
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
+          git fetch --no-tags --depth=1 origin 54f0b0fd743c225a349ec8a886ab1b4ea3461b8f
           python - <<'PY'
-          import json,subprocess
+          import subprocess
           base='54f0b0fd743c225a349ec8a886ab1b4ea3461b8f'
-          files=subprocess.check_output(['git','diff','--name-only',base,'HEAD'],text=True).splitlines()
-          print(files)
-          forbidden=[f for f in files if f.startswith('v2/') or f.startswith('timemachine/src/prediction') or 'snapshot' in f.lower() or 'context' in f.lower() or 'rule_engine' in f.lower()]
-          assert not forbidden,forbidden
-          allowed={'.github/workflows/timemachine-step9-r6f-r2c-repair.yml','timemachine/src/step9_r6f_r2c_repair.py','timemachine/triggers/step9-r6f-r2c-repair.txt'}
-          assert set(files)<=allowed,(set(files)-allowed)
+          files=subprocess.check_output(['git','diff','--name-only',base,'HEAD'],text=True).splitlines();print(files)
+          forbidden=[f for f in files if f.startswith('v2/') or f.startswith('timemachine/src/prediction') or 'snapshot' in f.lower() or 'context' in f.lower() or 'rule_engine' in f.lower()];assert not forbidden,forbidden
+          allowed={'.github/workflows/timemachine-step9-r6f-r2c-repair.yml','timemachine/src/step9_r6f_r2c_repair.py','timemachine/triggers/step9-r6f-r2c-repair.txt'};assert set(files)<=allowed,(set(files)-allowed)
           PY
       - name: Upload R2C repair checkpoint
         uses: actions/upload-artifact@v4
