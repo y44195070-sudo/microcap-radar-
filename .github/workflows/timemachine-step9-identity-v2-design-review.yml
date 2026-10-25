@@ -1,0 +1,59 @@
+name: Time Machine STEP9 Identity V2 Design Review
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'timemachine/triggers/step9-identity-v2-design-review.txt'
+      - '.github/workflows/timemachine-step9-identity-v2-design-review.yml'
+      - 'timemachine/src/step9_identity_v2_design_review.py'
+permissions: {contents: read, actions: read}
+jobs:
+  identity-v2-design-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Compile
+        run: python -m py_compile timemachine/src/step9_identity_v2_design_review.py
+      - name: Download and verify frozen V5.2 originals
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          mkdir -p /tmp/frozen
+          gh api repos/${{ github.repository }}/actions/artifacts/12601937820/zip > /tmp/frozen/v5-2-cert.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12601043953/zip > /tmp/frozen/v5-2-checkpoint.zip
+          echo 'c3d33505bda316031e2944aed1cf5a2203f01849b65753baad902ed8f19eb165  /tmp/frozen/v5-2-cert.zip' | sha256sum -c -
+          echo '42a2b4905b05cd3bcae9d0de8662d37b80d6ba604d785ad789d6b23120a01357  /tmp/frozen/v5-2-checkpoint.zip' | sha256sum -c -
+      - name: Run design review
+        run: |
+          rm -rf /tmp/design-review; mkdir -p /tmp/design-review
+          python timemachine/src/step9_identity_v2_design_review.py --cert /tmp/frozen/v5-2-cert.zip --checkpoint /tmp/frozen/v5-2-checkpoint.zip --out /tmp/design-review --head-sha '${{ github.sha }}' --base-sha 'a44c7c74675253e492a9bf91af97e65e14cb019d'
+      - name: Strict validate design review
+        run: |
+          python - <<'PY'
+          import json,hashlib,os
+          o='/tmp/design-review'
+          d=json.load(open(o+'/go_no_go_decision.json')); assert d['identity_v2_decision'] in {'IDENTITY_V2_GO','IDENTITY_V2_CONDITIONAL_GO','IDENTITY_V2_NO_GO'}
+          r=json.load(open(o+'/residual_root_cause_classification.json')); assert r['total']==4388 and sum(r['counts'].values())==4388
+          s=json.load(open(o+'/residual_recoverability_simulation.json')); assert s['total']==4388 and sum(s['counts'].values())==4388
+          l=json.load(open(o+'/legacy_638_compatibility.json')); assert l['tested']==638 and l['invalidated']==0 and l['existing_pred_id_changed']==0
+          m=json.load(open(o+'/multi_ticker_stress_test.json')); assert m['audited']==19 and m['false_merges']==0 and m['synthetic_included']==0 and m['synthetic_excluded']==4
+          c=json.load(open(o+'/counterfactual_recovery_test.json')); assert c['PIT_violations']==0 and c['current_information_recoveries']==0 and c['future_information_recoveries']==0
+          n=json.load(open(o+'/nonmutation.json')); assert n['PASS'] and sum(v for k,v in n.items() if k!='PASS')==0
+          sec=json.load(open(o+'/secret_scan.json')); assert sec['files_scanned']>0 and sec['confirmed_secrets']==0 and sec['credential_bearing_urls']==0 and sec['authorization_headers_stored']==0
+          man=json.load(open(o+'/manifest.json'))
+          for p,h in man['files'].items(): assert hashlib.sha256(open(os.path.join(o,p),'rb').read()).hexdigest()==h,p
+          print(json.dumps(d,indent=2))
+          PY
+      - name: Protected diff audit
+        run: |
+          python - <<'PY'
+          import subprocess
+          fs=subprocess.check_output(['git','diff','--name-only','a44c7c74675253e492a9bf91af97e65e14cb019d','HEAD'],text=True).splitlines(); print(fs)
+          allowed={'.github/workflows/timemachine-step9-identity-v2-design-review.yml','timemachine/triggers/step9-identity-v2-design-review.txt','timemachine/src/step9_identity_v2_design_review.py'}
+          assert set(fs)<=allowed,fs
+          assert not any(f.startswith('v2/') or f.startswith('timemachine/src/prediction') or 'snapshot' in f.lower() or 'context' in f.lower() or 'rule_engine' in f.lower() for f in fs)
+          PY
+      - uses: actions/upload-artifact@v4
+        with: {name: step9-identity-v2-design-review-checkpoint, path: /tmp/design-review/checkpoint.json, if-no-files-found: error}
+      - uses: actions/upload-artifact@v4
+        with: {name: step9-identity-v2-design-review-certification, path: /tmp/design-review/, if-no-files-found: error}
