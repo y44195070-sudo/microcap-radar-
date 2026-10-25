@@ -1,2 +1,3 @@
 STEP 9-R6F-R2A provider acquisition recovery certification
 phase=A
+retry=manifest-fix
