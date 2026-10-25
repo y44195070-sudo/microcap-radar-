@@ -1,0 +1,64 @@
+name: Time Machine STEP9-R6F-R2B Historical Acquisition Recovery
+on:
+  workflow_dispatch:
+  push:
+    paths: ['timemachine/triggers/step9-r6f-r2b.txt']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  step9-r6f-r2b:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Compile preflight
+        run: python -m py_compile timemachine/src/step9_r6f_r2b_historical_acquisition.py
+      - name: Download and verify frozen CR certification
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          mkdir -p /tmp/in
+          gh api repos/${{ github.repository }}/actions/artifacts/12598107409/zip > /tmp/in/cr.zip
+          echo 'a3af561a0a596f09354a23fd5f4f4b2004847bab2eeb231c3b6cbfdd838e00fe  /tmp/in/cr.zip' | sha256sum -c -
+          python - <<'PY'
+          import zipfile,json
+          z=zipfile.ZipFile('/tmp/in/cr.zip');c=json.loads(z.read('search_completeness_classification.json'));b=json.loads(z.read('boundary_769_4257.json'))
+          assert c['SEARCH_INCOMPLETE_RATE_LIMIT']==1381
+          assert c['SEARCH_INCOMPLETE_PAGINATION']==423
+          assert c['SEARCH_INCOMPLETE_DATE_COVERAGE']==3222
+          assert c['SEARCH_COMPLETE_EVIDENCE_FOUND']+c['SEARCH_COMPLETE_NO_EVIDENCE']==0
+          assert sum(c.values())==5026
+          PY
+      - name: Run R2B provider-safe historical acquisition recovery
+        env: {MASSIVE_API_KEY: '${{ secrets.MASSIVE_API_KEY }}'}
+        run: |
+          mkdir -p /tmp/r2b
+          python timemachine/src/step9_r6f_r2b_historical_acquisition.py --cr /tmp/in/cr.zip --out /tmp/r2b --head-sha '${{ github.sha }}'
+      - name: Strict certification validation
+        run: |
+          python - <<'PY'
+          import os,json,hashlib
+          o='/tmp/r2b';m=json.load(open(o+'/manifest.json'));h=json.load(open(o+'/hashes.json'));c=json.load(open(o+'/search_completeness_classification.json'));s=json.load(open(o+'/secret_redaction_audit.json'));v=json.load(open(o+'/technical_verdict.json'));d=json.load(open(o+'/determinism_audit.json'));n=json.load(open(o+'/nonmutation_audit.json'))
+          assert m['missing']==[],m['missing'];assert sum(c.values())==5026;assert s['confirmed_secrets']==0,s;assert d['disagreements']==0;assert all(x==0 for x in n.values()),n
+          for p,want in h.items():
+            got=hashlib.sha256(open(os.path.join(o,p),'rb').read()).hexdigest();assert got==want,(p,got,want)
+          assert v['STEP9']=='BLOCKED';assert v['STEP10_GATE']=='BLOCKED'
+          PY
+      - name: Verify protected diff
+        run: |
+          git diff --name-only 2f315f01d4ecf54ca42a86e1387e887c6fac28a4..${{ github.sha }} | tee /tmp/changed.txt
+          if grep -q '^v2/' /tmp/changed.txt; then echo 'FORBIDDEN /v2/ CHANGE'; exit 1; fi
+          if grep -Ev '^(\.github/workflows/timemachine-step9-r6f-r2b\.yml|timemachine/src/step9_r6f_r2b_historical_acquisition\.py|timemachine/triggers/step9-r6f-r2b\.txt)$' /tmp/changed.txt | grep -q .; then echo 'FORBIDDEN CHANGE'; exit 1; fi
+      - name: Upload R2B checkpoint
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step9-r6f-r2b-checkpoint
+          path: /tmp/r2b/checkpoint.json
+          retention-days: 90
+      - name: Upload R2B certification
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step9-r6f-r2b-historical-acquisition
+          path: /tmp/r2b/
+          retention-days: 90
