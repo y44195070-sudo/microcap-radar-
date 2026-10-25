@@ -14,17 +14,66 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Download frozen R6 artifact
+      - name: Initialize R6A diagnostic output
+        run: mkdir -p /tmp/r6a /tmp/r6
+      - name: Download original frozen R6 artifact ZIP by artifact ID
+        id: transport
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh run download 40168836368 -n timemachine-step9-r6-identity-contract-specification -D /tmp/r6 && cd /tmp/r6 && zip -q -r /tmp/r6.zip .
-      - name: Verify frozen R6 digest
-        run: echo '1cd82bd38e65052aa8495f7b181c5256cedb53c1e3681057948b981e4c73871f  /tmp/r6.zip' | sha256sum -c -
-      - name: Run STEP9-R6A identity mapping closure
         run: |
-          mkdir -p /tmp/r6a
+          set -euo pipefail
+          curl -fL \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/12590071037/zip" \
+            -o /tmp/r6.zip
+          actual=$(sha256sum /tmp/r6.zip | awk '{print $1}')
+          bytes=$(stat -c%s /tmp/r6.zip)
+          expected='1cd82bd38e65052aa8495f7b181c5256cedb53c1e3681057948b981e4c73871f'
+          match=false
+          if [ "$actual" = "$expected" ]; then match=true; fi
+          python - "$actual" "$bytes" "$match" <<'PY'
+          import json,sys
+          actual,bytes_,match=sys.argv[1:]
+          x={
+            'repair_type':'ORIGINAL_ARTIFACT_ZIP_DIGEST_VERIFICATION',
+            'previous_failed_run_id':40169619434,
+            'previous_failed_job_id':121097627368,
+            'previous_failure_point':'Verify frozen R6 digest',
+            'previous_failure_root_cause':'extracted artifact was re-zipped before SHA-256 comparison',
+            'source_run_id':40168836368,
+            'source_artifact_id':12590071037,
+            'source_artifact_name':'timemachine-step9-r6-identity-contract-specification',
+            'expected_sha256':'1cd82bd38e65052aa8495f7b181c5256cedb53c1e3681057948b981e4c73871f',
+            'actual_original_zip_sha256':actual,
+            'byte_size':int(bytes_),
+            'digest_match':match=='true',
+            'PASS':match=='true'
+          }
+          open('/tmp/r6a/artifact-transport-verification.json','w').write(json.dumps(x,sort_keys=True,indent=2)+'\n')
+          PY
+          test "$match" = true
+          unzip -q /tmp/r6.zip -d /tmp/r6
+      - name: Record transport failure diagnostic
+        if: steps.transport.outcome != 'success'
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('/tmp/r6a')
+          t=p/'artifact-transport-verification.json'
+          if not t.exists():
+            t.write_text(json.dumps({'PASS':False,'source_artifact_id':12590071037,'failure':'original artifact download or digest verification failed'},indent=2)+'\n')
+          (p/'qa-report.json').write_text(json.dumps({'transport_PASS':False,'identity_analysis_executed':False},indent=2)+'\n')
+          (p/'step9-r6a-verdict.json').write_text(json.dumps({'verdict':'STEP9_R6A_ARTIFACT_TRANSPORT_FAILURE','STEP9':'STEP9_BLOCKED','STEP10_GATE':'BLOCKED'},indent=2)+'\n')
+          PY
+      - name: Run STEP9-R6A identity mapping closure
+        if: steps.transport.outcome == 'success'
+        run: |
           python timemachine/src/step9_r6a_canonical_security_identity.py --out /tmp/r6a --r6-zip /tmp/r6.zip --base-sha 0f3e132254c994806983207b9d2a6946c7ca8e1e --head-sha ${{ github.sha }}
       - name: Verify identity-only protection
+        if: steps.transport.outcome == 'success'
         run: |
           python - <<'PY'
           import json
@@ -39,6 +88,7 @@ jobs:
           path: /tmp/r6a/
           if-no-files-found: error
       - name: Enforce STEP9-R6A technical verdict
+        if: always()
         run: |
           python - <<'PY'
           import json
