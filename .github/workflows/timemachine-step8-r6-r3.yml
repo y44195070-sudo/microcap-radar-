@@ -1,0 +1,53 @@
+name: Time Machine STEP 8-R6-R3 Context Lineage Final Closure
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'timemachine/step8-r6-r3-trigger.txt'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  context-lineage-final-closure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Download frozen artifacts
+        env: {GH_TOKEN: "${{ github.token }}"}
+        run: |
+          gh api repos/${{ github.repository }}/actions/artifacts/12582628734/zip > /tmp/r6r2.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12581859040/zip > /tmp/r6r.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12582196400/zip > /tmp/r6.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12580323566/zip > /tmp/r5r.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12564074295/zip > /tmp/r5.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12557232809/zip > /tmp/sec.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12559529678/zip > /tmp/r2.zip
+      - name: Verify frozen R6-R2 digest
+        run: |
+          echo '58f7954510b0b34da74edea85af23d71ff972fbefe47df1926759cf6aa087590  /tmp/r6r2.zip' | sha256sum -c -
+          sha256sum /tmp/r6r2.zip /tmp/r6r.zip /tmp/r6.zip /tmp/r5r.zip /tmp/r5.zip /tmp/sec.zip /tmp/r2.zip | tee /tmp/frozen-input-sha256.txt
+      - name: Run STEP 8-R6-R3
+        run: |
+          rm -rf /tmp/r6r3-out
+          python timemachine/src/step8_r6_r3_context_lineage_final_closure.py --r6r2 /tmp/r6r2.zip --r6r /tmp/r6r.zip --r6 /tmp/r6.zip --r5r /tmp/r5r.zip --r5 /tmp/r5.zip --sec /tmp/sec.zip --r2 /tmp/r2.zip --out /tmp/r6r3-out
+          cp /tmp/frozen-input-sha256.txt /tmp/r6r3-out/frozen-input-sha256.txt
+      - name: Verify required evidence
+        run: |
+          set -e
+          for f in frozen-input-verification.json context-lineage-target-reconstruction.json context-precedence-rules.json authorized-field-canonicalization.json context-lineage-33.json status-transition-audit.json precedence-decision-audit.json repaired-authorized-capital-facts.json repaired-capital-facts-manifest.json context-counts.json context-diff-vs-r6-r2.json per-day-context-diff.json context-integrity.json pit-regression.json leakage-report.json atm-negative-control.json negative-regression-16-final.json gold-318-preservation-regression.json spwrw-gold-control.json supply-semantics-audit.json root-cause-final-closure.json protected-output-integrity.json qa-report.json manifest.json step8-r6-r3-verdict.json; do test -s /tmp/r6r3-out/$f; done
+          test $(find /tmp/r6r3-out/repaired-daily-context -name '*.jsonl.gz' | wc -l) -eq 20
+      - name: Verify protected outputs unchanged
+        run: |
+          test -z "$(git status --porcelain -- v2/ timemachine/data/)"
+          test -z "$(git diff HEAD^ HEAD -- v2/)"
+          test -z "$(git diff HEAD^ HEAD -- timemachine/src/step9* .github/workflows/*step9*)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step8-r6-r3-context-lineage-final-closure
+          path: /tmp/r6r3-out/
+          if-no-files-found: error
+          retention-days: 90
