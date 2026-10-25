@@ -9,7 +9,7 @@ permissions:
 jobs:
   step9-r6f-r2:
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    timeout-minutes: 45
     env:
       MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
     steps:
@@ -41,16 +41,16 @@ jobs:
           echo 'e21d081cc4d97ecd16835c36f56631ac1d43b60f3d86c78ff57ccfe9e2980a8e  /tmp/r6br.zip' | sha256sum -c -
           echo '27d1501f5d46883574c0f546a21e276953f797ef1531f6080754fe13582b80ce  /tmp/r3.zip' | sha256sum -c -
           echo '4a4b15c85c50f7034a692e92b77f8665af77ee40c22e2997b06981b8cd52dc51  /tmp/context.zip' | sha256sum -c -
-      - name: Run R6F-R2 acquisition certification
-        run: python timemachine/src/step9_r6f_r2_historical_source_acquisition.py --r6fr /tmp/r6fr.zip --r6f /tmp/r6f.zip --r6d /tmp/r6d.zip --r6c /tmp/r6c.zip --r6br /tmp/r6br.zip --r3 /tmp/r3.zip --context /tmp/context.zip --out /tmp/r6fr2 --head-sha ${{ github.sha }}
+      - name: Run bounded resumable R6F-R2 certification
+        run: python timemachine/src/step9_r6f_r2_historical_source_acquisition.py --r6fr /tmp/r6fr.zip --r6f /tmp/r6f.zip --r6d /tmp/r6d.zip --r6c /tmp/r6c.zip --r6br /tmp/r6br.zip --r3 /tmp/r3.zip --context /tmp/context.zip --out /tmp/r6fr2 --checkpoint-dir /tmp/r6fr2-checkpoint --head-sha ${{ github.sha }}
       - name: Verify required artifact files
         run: |
           python - <<'PY'
           import json,os
           m=json.load(open('/tmp/r6fr2/manifest.json'))
-          assert m['file_count']==42, m
-          assert len(m['required_files'])==42
+          assert m['file_count']==42 and len(m['required_files'])==42
           assert all(os.path.isfile('/tmp/r6fr2/'+x) for x in m['required_files'])
+          assert os.path.isfile('/tmp/r6fr2/checkpoint.json')
           PY
       - name: Upload evidence artifact
         if: always()
@@ -67,5 +67,5 @@ jobs:
           import json
           x=json.load(open('/tmp/r6fr2/technical_verdict.json'))
           assert x['STEP9']=='STEP9_BLOCKED' and x['STEP10_GATE']=='BLOCKED'
-          assert x['technical_verdict'] in ['STEP9_R6F_R2_HISTORICAL_SEARCH_COMPLETENESS_READY','STEP9_R6F_R2_BLOCKED_RESIDUAL_ACQUISITION_GAP','STEP9_R6F_R2_BLOCKED_ACQUISITION_INFRASTRUCTURE','STEP9_R6F_R2_BLOCKED_INPUT_MISMATCH']
+          assert x['technical_verdict'] in ['STEP9_R6F_R2_HISTORICAL_SEARCH_COMPLETENESS_READY','STEP9_R6F_R2_BLOCKED_RESIDUAL_ACQUISITION_GAP','STEP9_R6F_R2_BLOCKED_ACQUISITION_INFRASTRUCTURE']
           PY
