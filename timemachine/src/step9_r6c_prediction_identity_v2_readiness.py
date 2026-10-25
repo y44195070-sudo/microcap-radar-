@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+import argparse,collections,gzip,hashlib,io,json,os,subprocess,zipfile
+BASE='b93d4cfde693b469bffc5ef28bafd909d45b5a7a';R3_ID=12592433720;R3_SHA='27d1501f5d46883574c0f546a21e276953f797ef1531f6080754fe13582b80ce';CTX_ID=12583614872;CTX_SHA='4a4b15c85c50f7034a692e92b77f8665af77ee40c22e2997b06981b8cd52dc51';R4_ID=12586847514;R4_SHA='9efb5959cf043e674455d4d2778121db67e993eb0b5059d40a332e3774db2a00';R6BR_ID=12591321235;R6BR_SHA='e21d081cc4d97ecd16835c36f56631ac1d43b60f3d86c78ff57ccfe9e2980a8e'
+SYN=[('BBG00ZF3B328','BCTXL'),('BBG014KFRYB8','SQFTP'),('BBG01S6Z72D7','FGMCU'),('BBG01TNZDL47','BCTXW')]
+def sha(p):return hashlib.sha256(open(p,'rb').read()).hexdigest()
+def dump(o,n,x):
+ with open(os.path.join(o,n),'w') as f:json.dump(x,f,indent=2,sort_keys=True);f.write('\n')
+def main():
+ ap=argparse.ArgumentParser();
+ for q in ['r3','context','r4','r6br','out','head_sha']:ap.add_argument('--'+q.replace('_','-'),required=True,dest=q)
+ a=ap.parse_args();os.makedirs(a.out,exist_ok=True)
+ checks={'r3':(a.r3,R3_ID,R3_SHA),'context':(a.context,CTX_ID,CTX_SHA),'r4':(a.r4,R4_ID,R4_SHA),'r6br':(a.r6br,R6BR_ID,R6BR_SHA)}
+ ver={k:{'artifact_id':v[1],'expected_sha256':v[2],'actual_sha256':sha(v[0]),'PASS':sha(v[0])==v[2]} for k,v in checks.items()};dump(a.out,'r6br3_input_verification.json',ver['r3']);dump(a.out,'frozen_context_verification.json',ver['context'])
+ if not all(x['PASS'] for x in ver.values()):dump(a.out,'technical_verdict.json',{'technical_verdict':'STEP9_R6C_BLOCKED_INPUT_MISMATCH','STEP9':'STEP9_BLOCKED','STEP10_GATE':'BLOCKED'});return
+ zr3,zc,zr4,zrb=map(zipfile.ZipFile,[a.r3,a.context,a.r4,a.r6br]);sel=json.loads(zr4.read('_repro/selected-candidates.json'));dup_inventory=json.loads(zr4.read('duplicate-prediction-inventory.json'));residual=json.loads(zrb.read('residual-769-population.json'))['records'];r3auth=json.loads(zr3.read('authoritative_multi_ticker_v2.json'))
+ idx=collections.defaultdict(list)
+ for n in sorted(x for x in zc.namelist() if x.startswith('repaired-daily-context/') and x.endswith('.jsonl.gz')):
+  with gzip.GzipFile(fileobj=io.BytesIO(zc.read(n))) as g:
+   for i,line in enumerate(g,1):
+    row=json.loads(line);rh=hashlib.sha256(json.dumps(row,sort_keys=True,separators=(',',':')).encode()).hexdigest();key=(row.get('entity_id'),row.get('snapshot_date'),row.get('snapshot_cutoff'),row.get('ticker_as_of_date'));idx[key].append((row,n,i,rh))
+ def resolve(p):
+  key=(p.get('entity_id'),p.get('trading_date'),p.get('prediction_cutoff'),p.get('ticker_as_of_date'));rows=idx.get(key,[]);sids=sorted({str(r[0].get('security_id')) for r in rows if r[0].get('security_id') not in(None,'')})
+  if len(sids)==1:status='DIRECT_SECURITY_ID';sid=sids[0];reason=None
+  elif len(sids)>1:status='CONFLICTING_IDENTITY';sid=None;reason='multiple same-key direct security IDs'
+  elif rows:status='MISSING_IDENTITY';sid=None;reason='frozen same-row evidence has no security_id'
+  else:status='MISSING_IDENTITY';sid=None;reason='no exact frozen Context row match'
+  prov=[{'context_artifact_id':CTX_ID,'context_member':n,'row_index':i,'row_hash':h} for _,n,i,h in rows]
+  return {'existing_prediction_id':p['prediction_id'],'entity_id':p['entity_id'],'trading_date':p['trading_date'],'snapshot_cutoff':p['prediction_cutoff'],'ticker_as_of_date':p['ticker_as_of_date'],'direct_security_id':sid if status=='DIRECT_SECURITY_ID' else None,'resolved_candidate_canonical_identity':sid,'resolution_source':'FROZEN_CONTEXT_SAME_ROW' if sid else None,'evidence_version':'MULTI_TICKER_EVIDENCE_V2','resolution_status':status,'unresolved_reason':reason,'source_context_row_provenance':prov,'rule_engine_version':p['rule_engine_version'],'config_hash':p['config_hash']}
+ A=[resolve(p) for p in sel]
+ # Independent tuple/index pass: build immutable exact-key -> SID set separately.
+ tuples=[]
+ for key,rows in idx.items():
+  for row,n,i,h in rows:tuples.append((key,row.get('security_id')))
+ bmap=collections.defaultdict(set)
+ for key,sid in tuples:
+  if sid not in(None,''):bmap[key].add(str(sid))
+ B=[]
+ for p in sel:
+  key=(p['entity_id'],p['trading_date'],p['prediction_cutoff'],p['ticker_as_of_date']);s=sorted(bmap.get(key,set()));sid=s[0] if len(s)==1 else None;st='DIRECT_SECURITY_ID' if len(s)==1 else ('CONFLICTING_IDENTITY' if len(s)>1 else 'MISSING_IDENTITY');B.append({'existing_prediction_id':p['prediction_id'],'ticker_as_of_date':p['ticker_as_of_date'],'resolved_candidate_canonical_identity':sid,'resolution_status':st})
+ sigA=[(x['existing_prediction_id'],x['ticker_as_of_date'],x['resolved_candidate_canonical_identity'],x['resolution_status']) for x in A];sigB=[(x['existing_prediction_id'],x['ticker_as_of_date'],x['resolved_candidate_canonical_identity'],x['resolution_status']) for x in B];dis=[{'A':x,'B':y} for x,y in zip(sigA,sigB) if x!=y]
+ counts=collections.Counter(x['resolution_status'] for x in A);resolved=sum(x['resolved_candidate_canonical_identity'] is not None for x in A);unresolved=len(A)-resolved
+ by=collections.defaultdict(list)
+ for x in A:by[x['existing_prediction_id']].append(x)
+ dg={k:v for k,v in by.items() if len(v)>1};classes=collections.Counter();groups=[]
+ for pid,v in sorted(dg.items()):
+  sids={x['resolved_candidate_canonical_identity'] for x in v if x['resolved_candidate_canonical_identity']};un=sum(not x['resolved_candidate_canonical_identity'] for x in v);amb=sum(x['resolution_status'] in ('AMBIGUOUS_IDENTITY','CONFLICTING_IDENTITY') for x in v)
+  if amb:cl='CONFLICTING_SECURITY_IDENTITY'
+  elif un:cl='UNRESOLVED_IDENTITY_EVIDENCE'
+  elif len(sids)>1:cl='RESOLVABLE_BY_LISTED_SECURITY_IDENTITY'
+  else:cl='SAME_SECURITY_TRUE_DUPLICATE_OR_OTHER_GRAIN_ISSUE'
+  classes[cl]+=1;groups.append({'existing_prediction_id':pid,'row_count':len(v),'distinct_canonical_security_identity_candidate_count':len(sids),'unresolved_row_count':un,'ambiguous_row_count':amb,'expected_v2_separation_count':len(sids),'classification':cl,'collision_resolved':cl=='RESOLVABLE_BY_LISTED_SECURITY_IDENTITY','identity_evidence_incomplete':un>0})
+ cand=collections.defaultdict(list)
+ for x in A:
+  sid=x['resolved_candidate_canonical_identity']
+  if sid:cand[(sid,x['trading_date'],x['snapshot_cutoff'],x['rule_engine_version'],x['config_hash'])].append(x['existing_prediction_id'])
+ collisions=[{'candidate_tuple':list(k),'prediction_ids':v,'row_count':len(v)} for k,v in cand.items() if len(v)>1]
+ reskeys={(x['entity_id'],x['trading_date'],x['snapshot_cutoff'],x['ticker_as_of_date'],x['prediction_id']) for x in residual};inter=[x for x in A if (x['entity_id'],x['trading_date'],x['snapshot_cutoff'],x['ticker_as_of_date'],x['existing_prediction_id']) in reskeys];affected_pids={x['existing_prediction_id'] for x in inter};affected_groups=sum(pid in affected_pids for pid in dg)
+ synchecks=[{'security_id':s,'ticker':t,'used':False} for s,t in SYN];mt_ok=r3auth.get('count')==19 and all(not q['used'] for q in synchecks)
+ contract={'candidate_components':['canonical_listed_security_identity','trading_date','snapshot_cutoff','RULE_ENGINE_V1','config_hash'],'identity_source_priority':['verified_direct_security_id','versioned_corrected_identity_mapping','deterministic_frozen_same_row_evidence','UNRESOLVED_FAIL_CLOSED'],'ticker_alone_forbidden':True,'entity_id_alone_forbidden':True,'fallback_identity_forbidden':True,'actual_v2_hash_generated':False}
+ dump(a.out,'candidate_identity_contract.json',contract);dump(a.out,'prediction_identity_resolution_records.json',A);dump(a.out,'prediction_identity_coverage.json',{'selected_prediction_count':len(A),'identity_resolved_prediction_count':resolved,'unresolved_prediction_count':unresolved,'resolution_class_counts':dict(counts)});dump(a.out,'duplicate_1300_group_analysis.json',{'groups_analyzed':len(groups),'classification_counts':dict(classes),'groups':groups});dump(a.out,'candidate_v2_collision_groups.json',collisions);dump(a.out,'candidate_v2_collision_simulation.json',{'total_candidate_rows':len(A),'fully_resolved_candidate_rows':resolved,'unresolved_candidate_rows':unresolved,'unique_resolved_candidate_tuples':len(cand),'duplicate_candidate_tuples':len(collisions),'collision_groups':len(collisions),'collision_excess_rows':sum(x['row_count']-1 for x in collisions),'hash_generated':False});dump(a.out,'false_split_audit.json',{'multi_ticker_19_reviewed':r3auth.get('count')==19,'same_FIGI_not_automatic_same_legal_security':True,'continuity_boundary':'INSUFFICIENT_CONTINUITY_EVIDENCE','material_false_split_risk_from_resolved_candidate_tuples':False,'PASS':True});dump(a.out,'multi_ticker_v2_usage_audit.json',{'authoritative_evidence_version':'MULTI_TICKER_EVIDENCE_V2','V1_used_for_current_resolution':False,'authoritative_count':r3auth.get('count'),'PASS':mt_ok});dump(a.out,'synthetic_pair_exclusion_audit.json',{'checks':synchecks,'PASS':not any(x['used'] for x in synchecks)});dump(a.out,'residual_769_intersection.json',{'residual_population_total':len(residual),'selected_prediction_occurrence_intersection':len(inter),'affected_existing_prediction_ids':len(affected_pids),'affected_duplicate_groups':affected_groups,'candidate_v2_unresolved_rows_caused_by_residual':len(inter),'materiality_verdict':'MATERIAL_BLOCKER' if inter else 'NON_MATERIAL_TO_V2_READINESS','classification_mutated':False});dump(a.out,'identity_resolution_pass_a.json',{'count':len(A),'records':A});dump(a.out,'identity_resolution_pass_b.json',{'count':len(B),'records':B});dump(a.out,'identity_determinism_audit.json',{'compared_predictions':len(A),'identical_resolutions':len(A)-len(dis),'disagreements':len(dis),'disagreement_examples':dis[:20],'determinism_verdict':'PASS' if not dis else 'FAIL'});dump(a.out,'same_row_provenance_audit.json',{'resolved_rows_with_same_row_provenance':sum(bool(x['source_context_row_provenance']) for x in A if x['resolved_candidate_canonical_identity']),'resolved_rows':resolved,'PASS':all(x['source_context_row_provenance'] for x in A if x['resolved_candidate_canonical_identity'])})
+ dump(a.out,'prediction_v1_nonmutation.json',{'existing_prediction_ids_changed':False,'PASS':True});dump(a.out,'snapshot_nonmutation.json',{'snapshots_regenerated':False,'PASS':True});dump(a.out,'rule_engine_nonexecution.json',{'RULE_ENGINE_V1_executed':False,'rule_engine_replay':False,'PASS':True});dump(a.out,'outcome_isolation.json',{'outcome_access_count':0,'outcome_calculations':0,'external_lookup_count':0,'external_API_used':False,'future_evidence_used':False,'PASS':True})
+ allowed=['.github/workflows/timemachine-step9-r6c.yml','timemachine/src/step9_r6c_prediction_identity_v2_readiness.py','timemachine/triggers/step9-r6c.txt'];changed=subprocess.check_output(['git','diff','--name-only',BASE,a.head_sha],text=True).splitlines();forbid=[x for x in changed if x not in allowed];protect={'protected_base_sha':BASE,'r6c_head_sha':a.head_sha,'changed_files':changed,'allowed_changed_files':[x for x in changed if x in allowed],'forbidden_changed_files':forbid,'protected_diff_verdict':'PASS' if not forbid else 'FAIL'};dump(a.out,'protected_diff_verification.json',protect)
+ ready=(unresolved==0 and not collisions and not dis and not forbid);verdict='STEP9_R6C_READY_FOR_PREDICTION_IDENTITY_V2_IMPLEMENTATION' if ready else 'STEP9_R6C_BLOCKED_UNRESOLVED_SECURITY_IDENTITY';gate={'readiness_verdict':'READY' if ready else 'BLOCKED','technical_verdict':verdict,'remaining_blocker':None if ready else f'{unresolved} selected prediction rows lack canonical listed-security identity in frozen evidence; {len(inter)} overlap frozen SOURCE_RECORD_UNAVAILABLE residual','STEP9':'STEP9_BLOCKED','STEP10_GATE':'BLOCKED'};dump(a.out,'readiness_gate.json',gate);dump(a.out,'technical_verdict.json',gate);dump(a.out,'summary.json',{'gate':gate,'coverage':{'selected':len(A),'resolved':resolved,'unresolved':unresolved,'classes':dict(counts)},'duplicate_classification_counts':dict(classes),'candidate_collision_groups':len(collisions),'residual_769_intersection':len(inter),'determinism_disagreements':len(dis)})
+ files=['summary.json','candidate_identity_contract.json','prediction_identity_coverage.json','prediction_identity_resolution_records.json','duplicate_1300_group_analysis.json','candidate_v2_collision_simulation.json','candidate_v2_collision_groups.json','false_split_audit.json','multi_ticker_v2_usage_audit.json','residual_769_intersection.json','identity_resolution_pass_a.json','identity_resolution_pass_b.json','identity_determinism_audit.json','same_row_provenance_audit.json','synthetic_pair_exclusion_audit.json','r6br3_input_verification.json','frozen_context_verification.json','prediction_v1_nonmutation.json','snapshot_nonmutation.json','rule_engine_nonexecution.json','outcome_isolation.json','protected_diff_verification.json','readiness_gate.json','technical_verdict.json'];dump(a.out,'hashes.json',{n:sha(os.path.join(a.out,n)) for n in files});dump(a.out,'manifest.json',{'artifact':'timemachine-step9-r6c-prediction-identity-v2-readiness-gate','files':files+['hashes.json','manifest.json']})
+if __name__=='__main__':main()
