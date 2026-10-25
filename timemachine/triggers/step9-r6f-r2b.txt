@@ -1,0 +1,2 @@
+R6F-R2B acquisition certification
+base=2f315f01d4ecf54ca42a86e1387e887c6fac28a4
