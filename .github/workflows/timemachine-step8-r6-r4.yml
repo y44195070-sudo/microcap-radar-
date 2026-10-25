@@ -1,0 +1,53 @@
+name: Time Machine STEP 8-R6-R4 ATM Negative Final Gate
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'timemachine/step8-r6-r4-trigger.txt'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  atm-negative-final-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Download frozen artifacts
+        env: {GH_TOKEN: "${{ github.token }}"}
+        run: |
+          gh api repos/${{ github.repository }}/actions/artifacts/12583614872/zip > /tmp/r6r3.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12582628734/zip > /tmp/r6r2.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12581859040/zip > /tmp/r6r.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12582196400/zip > /tmp/r6.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12580323566/zip > /tmp/r5r.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12564074295/zip > /tmp/r5.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12557232809/zip > /tmp/sec.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12559529678/zip > /tmp/r2.zip
+      - name: Verify frozen R6-R3 digest
+        run: |
+          echo '4a4b15c85c50f7034a692e92b77f8665af77ee40c22e2997b06981b8cd52dc51  /tmp/r6r3.zip' | sha256sum -c -
+          sha256sum /tmp/r6r3.zip /tmp/r6r2.zip /tmp/r6r.zip /tmp/r6.zip /tmp/r5r.zip /tmp/r5.zip /tmp/sec.zip /tmp/r2.zip | tee /tmp/frozen-input-sha256.txt
+      - name: Run STEP 8-R6-R4
+        run: |
+          rm -rf /tmp/r6r4-out
+          python timemachine/src/step8_r6_r4_atm_negative_final_gate.py --r6r3 /tmp/r6r3.zip --r6r2 /tmp/r6r2.zip --r6r /tmp/r6r.zip --r6 /tmp/r6.zip --r5r /tmp/r5r.zip --r5 /tmp/r5.zip --sec /tmp/sec.zip --r2 /tmp/r2.zip --out /tmp/r6r4-out
+          cp /tmp/frozen-input-sha256.txt /tmp/r6r4-out/frozen-input-sha256.txt
+      - name: Verify required evidence
+        run: |
+          set -e
+          for f in frozen-input-verification.json missing-negative-target-reconstruction.json atm-search-report.json atm-source-retrieval.json atm-negative-control.json negative-regression-16-final.json r6-r3-context-preservation.json gold-318-preservation.json pit-preservation.json leakage-preservation.json spwrw-gold-control.json supply-semantics-audit.json protected-output-integrity.json step8-evidence-chain-audit.json qa-report.json manifest.json step8-r6-r4-verdict.json step8-final-verdict.json; do test -s /tmp/r6r4-out/$f; done
+      - name: Verify protected outputs unchanged
+        run: |
+          test -z "$(git status --porcelain -- v2/ timemachine/data/)"
+          test -z "$(git diff HEAD^ HEAD -- v2/)"
+          test -z "$(git diff HEAD^ HEAD -- timemachine/src/step9* .github/workflows/*step9*)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step8-r6-r4-atm-negative-final-gate
+          path: /tmp/r6r4-out/
+          if-no-files-found: error
+          retention-days: 90
