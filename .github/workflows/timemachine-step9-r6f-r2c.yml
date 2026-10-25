@@ -1,0 +1,49 @@
+name: Time Machine STEP9-R6F-R2C Acquisition Architecture Repair
+on:
+  workflow_dispatch:
+  push:
+    paths: ['timemachine/triggers/step9-r6f-r2c.txt']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  step9-r6f-r2c:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Compile preflight
+        run: python -m py_compile timemachine/src/step9_r6f_r2c_architecture_repair.py
+      - name: Download and verify frozen R2B inputs
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          mkdir -p /tmp/in
+          gh api repos/${{ github.repository }}/actions/artifacts/12598417478/zip > /tmp/in/r2b.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12598532465/zip > /tmp/in/r2b-checkpoint.zip
+          echo 'ab1da361af142c955983c947e57a36f50c023f5f2cf49b32bf26fae8c14844e8  /tmp/in/r2b.zip' | sha256sum -c -
+          echo '304417863af9786f75806349c1c108c0d0d69619a15352e3233787e0323de8cd  /tmp/in/r2b-checkpoint.zip' | sha256sum -c -
+      - name: Run R2C promotion-grade source architecture expansion
+        run: |
+          mkdir -p /tmp/r2c
+          python timemachine/src/step9_r6f_r2c_architecture_repair.py --r2b /tmp/in/r2b.zip --out /tmp/r2c --head-sha '${{ github.sha }}'
+      - name: Strict certification validation
+        run: |
+          python - <<'PY'
+          import os,json,hashlib
+          o='/tmp/r2c';m=json.load(open(o+'/manifest.json'));h=json.load(open(o+'/hashes.json'));c=json.load(open(o+'/search_completeness_classification.json'));s=json.load(open(o+'/secret_redaction_audit.json'));d=json.load(open(o+'/determinism_audit.json'));n=json.load(open(o+'/nonmutation_audit.json'));v=json.load(open(o+'/technical_verdict.json'))
+          assert m['missing']==[];assert sum(c.values())==5026;assert s['confirmed_secrets']==0;assert d['disagreements']==0;assert all(x==0 for x in n.values())
+          for p,want in h.items(): assert hashlib.sha256(open(os.path.join(o,p),'rb').read()).hexdigest()==want
+          assert v['STEP9']=='BLOCKED' and v['STEP10_GATE']=='BLOCKED'
+          PY
+      - name: Verify protected diff
+        run: |
+          git diff --name-only d085e8c4530fc7ab8dc2ee2a69874f5ecb91e47c..${{ github.sha }} | tee /tmp/changed.txt
+          if grep -q '^v2/' /tmp/changed.txt; then exit 1; fi
+          if grep -Ev '^(\.github/workflows/timemachine-step9-r6f-r2c\.yml|timemachine/src/step9_r6f_r2c_architecture_repair\.py|timemachine/triggers/step9-r6f-r2c\.txt)$' /tmp/changed.txt | grep -q .; then exit 1; fi
+      - name: Upload R2C checkpoint
+        uses: actions/upload-artifact@v4
+        with: {name: timemachine-step9-r6f-r2c-checkpoint, path: /tmp/r2c/checkpoint.json, retention-days: 90}
+      - name: Upload R2C certification
+        uses: actions/upload-artifact@v4
+        with: {name: timemachine-step9-r6f-r2c-architecture-repair, path: /tmp/r2c/, retention-days: 90}
