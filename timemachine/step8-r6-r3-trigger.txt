@@ -1,0 +1,3 @@
+Trigger STEP 8-R6-R3 context lineage final closure.
+Created for frozen R6-R2 artifact 12582628734.
+STEP9 remains prohibited.
