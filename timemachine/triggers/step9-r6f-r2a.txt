@@ -1,4 +1,5 @@
-STEP 9-R6F-R2A provider acquisition recovery certification
+STEP 9-R6F-R2A-CR certification integrity repair
 phase=B
-resume_from_run=40190688439
-resume_checkpoint_artifact=12598135395
+repair=manifest-strict
+resume_from_run=40190758361
+resume_checkpoint_artifact=12596749782
