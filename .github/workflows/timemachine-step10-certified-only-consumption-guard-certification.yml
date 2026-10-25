@@ -1,0 +1,107 @@
+name: Time Machine STEP10 Certified-Only Consumption Guard Certification
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'timemachine/triggers/step10-certified-only-consumption-guard-certification.txt'
+      - '.github/workflows/timemachine-step10-certified-only-consumption-guard-certification.yml'
+      - 'timemachine/src/step10_certified_only_consumption_guard.py'
+      - 'timemachine/src/step10_certified_only_consumption_guard_certification.py'
+permissions: {contents: read, actions: read}
+jobs:
+  certify:
+    runs-on: ubuntu-latest
+    env: {GH_TOKEN: '${{ github.token }}'}
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Compile
+        run: python -m py_compile timemachine/src/step10_certified_only_consumption_guard.py timemachine/src/step10_certified_only_consumption_guard_certification.py
+      - name: Reacquire frozen authorities
+        run: |
+          mkdir -p /tmp/frozen
+          gh api /repos/${{ github.repository }}/actions/artifacts/12603520492/zip > /tmp/frozen/step9.zip
+          gh api /repos/${{ github.repository }}/actions/artifacts/12603725128/zip > /tmp/frozen/step9-checkpoint.zip
+          gh api /repos/${{ github.repository }}/actions/artifacts/12603066455/zip > /tmp/frozen/plan.zip
+          gh api /repos/${{ github.repository }}/actions/artifacts/12602074250/zip > /tmp/frozen/plan-checkpoint.zip
+          gh api /repos/${{ github.repository }}/actions/artifacts/12602635150/zip > /tmp/frozen/governance.zip
+          gh api /repos/${{ github.repository }}/actions/artifacts/12602225859/zip > /tmp/frozen/governance-checkpoint.zip
+      - name: Verify frozen original artifact digests
+        run: |
+          python - <<'PY'
+          import hashlib,zipfile
+          exp={'step9.zip':'3ec6a1f4ec88ff284eade8d7730b301ea65d2d5a932feb11a0f76c0592c7c19c','step9-checkpoint.zip':'a77f89137bfe5c299e46e39864e37826cc03ce84c3cbbede8c681bf538e31238','plan.zip':'d6c4e4703a8614907631345f6312933da06bd2c55e9f09a008759d606a51cd50','plan-checkpoint.zip':'fbc1852d688859f41d543853ac45e798a8df89f378949bcb82f2f0caeaccf65e','governance.zip':'5e256090278d2fdbfb76b190d965c64e7e3251ac2e67a061c55b8a76cd7549c4','governance-checkpoint.zip':'b6543ba219317b0beac67a683fea9ec4b6711a2677ed0c16467133ed2b94da64'}
+          for n,h in exp.items():
+           p='/tmp/frozen/'+n; got=hashlib.sha256(open(p,'rb').read()).hexdigest(); assert got==h,(n,got,h); assert zipfile.ZipFile(p).testzip() is None
+          PY
+      - name: Execute STEP10 Pass A
+        run: PYTHONPATH=timemachine/src python timemachine/src/step10_certified_only_consumption_guard_certification.py --step9 /tmp/frozen/step9.zip --out /tmp/step10-a --head-sha '${{ github.sha }}'
+      - name: Execute STEP10 Pass B
+        run: PYTHONPATH=timemachine/src python timemachine/src/step10_certified_only_consumption_guard_certification.py --step9 /tmp/frozen/step9.zip --out /tmp/step10-b --head-sha '${{ github.sha }}'
+      - name: Determinism and strict validation
+        run: |
+          python - <<'PY'
+          import hashlib,json,glob,os
+          A='/tmp/step10-a'; B='/tmp/step10-b'
+          for n in ['occurrence_boundary_verification.json','certified_allowlist_test.json','residual_denylist_test.json','unknown_occurrence_test.json','shared_prediction_id_test.json','query_coverage_test.json','step10_decision.json']:
+           assert hashlib.sha256(open(A+'/'+n,'rb').read()).hexdigest()==hashlib.sha256(open(B+'/'+n,'rb').read()).hexdigest(),n
+          o=json.load(open(A+'/occurrence_boundary_verification.json')); assert o=={'certified':638,'duplicates':0,'missing':0,'overlap':0,'residual':4388,'total':5026,'unique_occurrence_keys':5026,'PASS':True}
+          a=json.load(open(A+'/certified_allowlist_test.json')); assert a['tested']==638 and a['allowed']==638 and a['denied']==0
+          d=json.load(open(A+'/residual_denylist_test.json')); assert d['tested']==4388 and d['allowed']==0 and d['denied']==4388 and d['fallback_success']==0
+          u=json.load(open(A+'/unknown_occurrence_test.json')); assert u['allowed']==0 and u['PASS']
+          q=json.load(open(A+'/query_coverage_test.json')); assert q['partial']['result_status']=='PARTIAL' and q['zero_certified']['result_status']=='NO_CERTIFIED_IDENTITY'
+          g=json.load(open(A+'/guard_bypass_audit.json')); assert g['identity_dependent_active_consumers_unguarded']==0 and g['ambiguous_active_consumers']==0 and g['known_bypass_paths']==0
+          PY
+      - name: Protected diff audit
+        run: |
+          python - <<'PY'
+          import subprocess,json
+          fs=subprocess.check_output(['git','diff','--name-only','03457bba70c0297b425ecd68e5e9c568df038f1d','HEAD'],text=True).splitlines()
+          allowed={'.github/workflows/timemachine-step10-certified-only-consumption-guard-certification.yml','timemachine/triggers/step10-certified-only-consumption-guard-certification.txt','timemachine/src/step10_certified_only_consumption_guard.py','timemachine/src/step10_certified_only_consumption_guard_certification.py'}
+          assert set(fs)<=allowed,fs
+          assert not any(f.startswith('v2/') or f.endswith('prediction.py') or 'snapshot' in f.lower() or 'rule_engine' in f.lower() or 'context' in f.lower() for f in fs)
+          json.dump({'changed_files':fs,'forbidden_mutations':0,'v2_mutations':0,'PASS':True},open('/tmp/step10-a/protected_diff_audit.json','w'),indent=2)
+          PY
+      - name: Security scan
+        run: |
+          python - <<'PY'
+          import re,glob,os,json
+          pats=[re.compile(r'ghp_[A-Za-z0-9]{20,}'),re.compile(r'github_pat_[A-Za-z0-9_]{20,}'),re.compile(r'Authorization:\\s*(Bearer|token)\\s+\\S+',re.I),re.compile(r'https?://[^\\s]+(?:api[_-]?key|token|authorization)=',re.I)]
+          files=glob.glob('/tmp/step10-a/*')+glob.glob('timemachine/src/step10_certified_only*')+['.github/workflows/timemachine-step10-certified-only-consumption-guard-certification.yml']; hits=[]
+          for f in files:
+           if os.path.isfile(f):
+            t=open(f,errors='ignore').read()
+            for p in pats:
+             if p.search(t): hits.append((f,p.pattern))
+          assert not hits,hits
+          json.dump({'confirmed_secrets':0,'credential_bearing_urls':0,'authorization_headers_stored':0,'API_keys_stored':0,'tokens_stored':0,'PASS':True},open('/tmp/step10-a/security_audit_runtime.json','w'),indent=2)
+          PY
+      - name: Finalize manifest
+        run: |
+          python - <<'PY'
+          import glob,os,json,hashlib
+          o='/tmp/step10-a'; files=[p for p in glob.glob(o+'/*') if os.path.isfile(p) and os.path.basename(p) not in ['manifest.json','checkpoint.json']]
+          json.dump({'schema':'STEP10_CERTIFIED_ONLY_CONSUMPTION_GUARD_CERTIFICATION_V1','files':{os.path.basename(p):hashlib.sha256(open(p,'rb').read()).hexdigest() for p in sorted(files)},'file_count':len(files)},open(o+'/manifest.json','w'),indent=2,sort_keys=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        with: {name: step10-certified-only-consumption-guard-certification-checkpoint, path: /tmp/step10-a/checkpoint.json, if-no-files-found: error}
+      - uses: actions/upload-artifact@v4
+        with: {name: step10-certified-only-consumption-guard-certification, path: /tmp/step10-a/, if-no-files-found: error}
+      - name: Independently verify uploaded original ZIPs
+        run: |
+          sleep 3
+          python - <<'PY'
+          import json,subprocess,hashlib,zipfile,os
+          repo=os.environ['GITHUB_REPOSITORY']; run=os.environ['GITHUB_RUN_ID']; data=json.loads(subprocess.check_output(['gh','api',f'/repos/{repo}/actions/runs/{run}/artifacts'],text=True)); arts=data['artifacts']; assert len(arts)==2
+          for a in arts:
+           p=f"/tmp/uploaded-{a['id']}.zip"
+           with open(p,'wb') as f: subprocess.run(['gh','api',f"/repos/{repo}/actions/artifacts/{a['id']}/zip"],stdout=f,check=True)
+           h=hashlib.sha256(open(p,'rb').read()).hexdigest(); assert a.get('digest')==f'sha256:{h}',(a['name'],a.get('digest'),h)
+           z=zipfile.ZipFile(p); assert z.testzip() is None
+           if a['name']=='step10-certified-only-consumption-guard-certification':
+            m=json.loads(z.read('manifest.json'))
+            for n,x in m['files'].items(): assert hashlib.sha256(z.read(n)).hexdigest()==x,n
+            d=json.loads(z.read('step10_decision.json')); assert d['decision']=='STEP10_CERTIFIED_ONLY_CONSUMPTION_GUARD_CERTIFIED'
+            g=json.loads(z.read('guard_bypass_audit.json')); assert g['identity_dependent_active_consumers_unguarded']==0 and g['known_bypass_paths']==0
+          print('STEP10_INDEPENDENT_ORIGINAL_ZIP_VERIFICATION_PASS')
+          PY
