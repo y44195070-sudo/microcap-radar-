@@ -1,0 +1,64 @@
+name: Time Machine STEP9-R6B Historical Security Identity Evidence
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'timemachine/triggers/step9-r6b.txt'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  step9-r6b:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Initialize R6B diagnostic output
+        run: mkdir -p /tmp/r6b
+      - name: Download frozen original artifacts by ID
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for spec in \
+            '12589764522:/tmp/r6a.zip' \
+            '12583614872:/tmp/context.zip' \
+            '12586847514:/tmp/r4.zip'; do
+            id=${spec%%:*}; out=${spec#*:}
+            curl -fL -H "Authorization: Bearer ${GH_TOKEN}" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${id}/zip" -o "${out}"
+          done
+      - name: Verify frozen artifact digests
+        run: |
+          set -euo pipefail
+          echo '81ac567274bea4f35d3091ae51c5be0dcb01b0789b59b934b1710e88e11f6b10  /tmp/r6a.zip' | sha256sum -c -
+          echo '4a4b15c85c50f7034a692e92b77f8665af77ee40c22e2997b06981b8cd52dc51  /tmp/context.zip' | sha256sum -c -
+          echo '9efb5959cf043e674455d4d2778121db67e993eb0b5059d40a332e3774db2a00  /tmp/r4.zip' | sha256sum -c -
+      - name: Run STEP9-R6B historical identity evidence recovery
+        run: |
+          python timemachine/src/step9_r6b_historical_security_identity_evidence.py --r6a /tmp/r6a.zip --context /tmp/context.zip --r4 /tmp/r4.zip --out /tmp/r6b --head-sha ${{ github.sha }}
+      - name: Verify identity-only protection
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/r6b/protected-output-integrity.json'))
+          assert x['PASS'], x
+          y=json.load(open('/tmp/r6b/outcome-isolation-audit.json'))
+          assert y['outcome_access_count']==0 and y['outcome_calculations']==0, y
+          PY
+      - name: Upload diagnostic artifact regardless of verdict
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step9-r6b-historical-security-identity-evidence
+          path: /tmp/r6b/
+          if-no-files-found: error
+          retention-days: 90
+      - name: Enforce STEP9-R6B technical verdict
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/r6b/step9-r6b-verdict.json'))
+          assert x['verdict']=='STEP9_R6B_CANONICAL_IDENTITY_READY', x
+          PY
