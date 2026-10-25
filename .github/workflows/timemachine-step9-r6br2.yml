@@ -1,0 +1,61 @@
+name: Time Machine STEP9-R6B-R2 Multi-Ticker Lineage Closure
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'timemachine/triggers/step9-r6br2.txt'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  step9-r6br2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Initialize diagnostic output
+        run: mkdir -p /tmp/r6br2
+      - name: Download frozen original artifacts by ID
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/12591321235/zip > /tmp/r6br.zip
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/12586847514/zip > /tmp/r4.zip
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/12589650461/zip > /tmp/r5.zip
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/12583614872/zip > /tmp/context.zip
+      - name: Verify original ZIP digests
+        run: |
+          set -euo pipefail
+          echo 'e21d081cc4d97ecd16835c36f56631ac1d43b60f3d86c78ff57ccfe9e2980a8e  /tmp/r6br.zip' | sha256sum -c -
+          echo '9efb5959cf043e674455d4d2778121db67e993eb0b5059d40a332e3774db2a00  /tmp/r4.zip' | sha256sum -c -
+          echo '7f9d230aebe1626f5968be06ad09fdb1f8c598c69afccaf0d0eff4c1f79cb302  /tmp/r5.zip' | sha256sum -c -
+          echo '4a4b15c85c50f7034a692e92b77f8665af77ee40c22e2997b06981b8cd52dc51  /tmp/context.zip' | sha256sum -c -
+      - name: Run STEP9-R6B-R2 exact row-pairing closure
+        run: python timemachine/src/step9_r6br2_multi_ticker_lineage_closure.py --r6br /tmp/r6br.zip --r4 /tmp/r4.zip --r5 /tmp/r5.zip --context /tmp/context.zip --out /tmp/r6br2 --head-sha ${{ github.sha }}
+      - name: Verify protection and isolation
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('/tmp/r6br2/protected-output-integrity.json')); assert p['PASS'],p
+          o=json.load(open('/tmp/r6br2/pit-outcome-isolation-audit.json')); assert o['outcome_access_count']==0 and o['outcome_calculations']==0,o
+          n=json.load(open('/tmp/r6br2/prediction-snapshot-nonmutation-audit.json')); assert n['PASS'],n
+          PY
+      - name: Upload diagnostic artifact regardless of verdict
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step9-r6br2-multi-ticker-lineage-closure
+          path: /tmp/r6br2/
+          if-no-files-found: error
+          retention-days: 90
+      - name: Enforce forensic closure verdict
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/r6br2/step9-r6br2-verdict.json'))
+          assert x['verdict']=='STEP9_R6BR2_MULTI_TICKER_DEFECT_CLOSED',x
+          assert x['STEP9']=='STEP9_BLOCKED' and x['STEP10_GATE']=='BLOCKED',x
+          PY
