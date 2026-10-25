@@ -45,13 +45,15 @@ jobs:
       - name: Determinism and strict validation
         run: |
           python - <<'PY'
-          import json,hashlib,os
+          import json,hashlib
           A='/tmp/final-a'; B='/tmp/final-b'
-          for n in ['certified_identity_allowlist.json','residual_identity_denylist.json','population_conservation.json','final_decision.json']:
+          for n in ['certified_identity_allowlist.json','residual_identity_denylist.json','population_conservation.json','final_decision.json','authoritative_occurrence_key_audit.json','prediction_id_semantics_audit.json']:
            assert hashlib.sha256(open(A+'/'+n,'rb').read()).hexdigest()==hashlib.sha256(open(B+'/'+n,'rb').read()).hexdigest(),n
-          s=json.load(open(A+'/population_conservation.json')); assert s['total']==5026 and s['certified_allowlist']==638 and s['residual_denylist']==4388 and s['overlap']==0 and s['missing']==0
+          s=json.load(open(A+'/population_conservation.json')); assert s['total']==5026 and s['certified_allowlist']==638 and s['residual_denylist']==4388 and s['overlap']==0 and s['missing']==0 and s['duplicates']==0 and s['unique_occurrence_keys']==5026
+          o=json.load(open(A+'/authoritative_occurrence_key_audit.json')); assert o['field']=='forensic_occurrence_id' and o['records']==5026 and o['unique']==5026 and o['null']==0 and o['duplicates']==0
           r=json.load(open(A+'/residual_fail_closed_test.json')); assert r['tested']==4388 and r['allowed']==0 and r['fallback_success']==0
           d=json.load(open(A+'/final_decision.json')); assert d['decision']=='STEP9_LIMITED_COVERAGE_CERTIFIED' and d['STEP10_GATE']=='BLOCKED'
+          p=json.load(open(A+'/shared_prediction_id_positive_regression.json')); assert p['PASS'] and p['observed_prediction_ids_with_multiple_occurrence_keys']>0
           m=json.load(open(A+'/manifest.json'))
           for n,h in m['files'].items(): assert hashlib.sha256(open(A+'/'+n,'rb').read()).hexdigest()==h,n
           PY
@@ -60,12 +62,12 @@ jobs:
           python - <<'PY'
           import json
           n=json.load(open('/tmp/final-a/negative_tests.json'))
-          assert n['PASS'] and n['expected_failures']==16 and n['observed_fail_closed']==16
+          assert n['PASS'] and n['expected_failures']==20 and n['observed_fail_closed']==20 and n['shared_prediction_id_positive_regression']=='PASS'
           PY
       - name: Protected diff audit
         run: |
           python - <<'PY'
-          import subprocess
+          import subprocess,json
           fs=subprocess.check_output(['git','diff','--name-only','8fe4fb098bb64a1a501fd6604e322e7bc55129fa','HEAD'],text=True).splitlines()
           allowed={'.github/workflows/timemachine-step9-r6f-r3-limited-coverage-final-certification.yml','timemachine/triggers/step9-r6f-r3-limited-coverage-final-certification.txt','timemachine/src/step9_r6f_r3_limited_coverage_final_certification.py'}
           assert set(fs)<=allowed,fs
@@ -114,7 +116,7 @@ jobs:
            if a['name'].endswith('final-certification'):
             m=json.loads(z.read('manifest.json'))
             for n,x in m['files'].items(): assert hashlib.sha256(z.read(n)).hexdigest()==x,n
-            s=json.loads(z.read('population_conservation.json')); assert s['total']==5026 and s['certified_allowlist']==638 and s['residual_denylist']==4388
+            s=json.loads(z.read('population_conservation.json')); assert s['total']==5026 and s['certified_allowlist']==638 and s['residual_denylist']==4388 and s['unique_occurrence_keys']==5026
             d=json.loads(z.read('final_decision.json')); assert d['decision']=='STEP9_LIMITED_COVERAGE_CERTIFIED' and d['STEP10_GATE']=='BLOCKED'
           print('INDEPENDENT_ORIGINAL_ZIP_VERIFICATION_PASS')
           PY
