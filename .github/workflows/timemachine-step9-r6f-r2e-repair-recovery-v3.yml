@@ -1,0 +1,51 @@
+name: Time Machine STEP9-R6F-R2E-REPAIR-RECOVERY-V3
+on:
+  push:
+    branches: [main]
+    paths: ['timemachine/triggers/step9-r6f-r2e-repair-recovery-v3.txt']
+permissions: {contents: read, actions: read}
+jobs:
+  recovery-v3:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m py_compile timemachine/src/step9_r6f_r2e_repair_recovery_v2.py timemachine/src/step9_r6f_r2e_repair_recovery_v3.py
+      - name: Download frozen originals
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          mkdir -p /tmp/frozen
+          gh api repos/${{ github.repository }}/actions/artifacts/12600248321/zip > /tmp/frozen/repair-cert.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12600776981/zip > /tmp/frozen/repair-checkpoint.zip
+          echo 'c7b23765b80ad5eb690846590cf8a10370c86f16072a8810a94adc67524e49b2  /tmp/frozen/repair-cert.zip' | sha256sum -c -
+          echo '4938611b0b249982267a61d641392336ab8141899c292d31a8b795052ec7d00c  /tmp/frozen/repair-checkpoint.zip' | sha256sum -c -
+      - name: Run recovery V3
+        run: |
+          rm -rf /tmp/recovery;mkdir -p /tmp/recovery
+          PYTHONPATH=timemachine/src python timemachine/src/step9_r6f_r2e_repair_recovery_v3.py --repair-cert /tmp/frozen/repair-cert.zip --repair-checkpoint /tmp/frozen/repair-checkpoint.zip --out /tmp/recovery --head-sha '${{ github.sha }}'
+      - name: Strict validate
+        run: |
+          python - <<'PY'
+          import json,hashlib,os
+          o='/tmp/recovery';assert json.load(open(o+'/manifest.json'))['missing']==[]
+          for p,h in json.load(open(o+'/hashes.json')).items():assert hashlib.sha256(open(os.path.join(o,p),'rb').read()).hexdigest()==h,p
+          for p,h in json.load(open(o+'/raw_evidence_hashes.json')).items():assert hashlib.sha256(open(os.path.join(o,p),'rb').read()).hexdigest()==h,p
+          c=json.load(open(o+'/crsp_documentation_audit.json'));assert c['capability']=='CAPABILITY_CERTIFIED' and c['official_document_acquisition']=='PASS' and c['documentation_content_validation']=='PASS'
+          assert len(json.load(open(o+'/residual_occurrences.json')))==4388
+          assert json.load(open(o+'/unsupported_claim_audit.json'))['unsupported_yes_claims']==0
+          s=json.load(open(o+'/secret_redaction_audit.json'));assert s['files_scanned']>0 and s['confirmed_secrets']==0
+          assert all(v==0 for v in json.load(open(o+'/nonmutation_audit.json')).values())
+          t=json.load(open(o+'/technical_verdict.json'));assert t['runner_verdict']=='STEP9_R6F_R2E_REPAIR_PAID_DATA_ACCESS_REQUIRED';print(t)
+          PY
+      - name: Protected diff
+        run: |
+          git fetch --no-tags --depth=1 origin fb68a0aa2ea6a866df61a9a7d8550b40fb62a649
+          python - <<'PY'
+          import subprocess
+          fs=subprocess.check_output(['git','diff','--name-only','fb68a0aa2ea6a866df61a9a7d8550b40fb62a649','HEAD'],text=True).splitlines();print(fs)
+          allowed={'.github/workflows/timemachine-step9-r6f-r2e-repair-recovery-v3.yml','timemachine/src/step9_r6f_r2e_repair_recovery_v3.py','timemachine/triggers/step9-r6f-r2e-repair-recovery-v3.txt'};assert set(fs)<=allowed;assert not any(f.startswith('v2/') for f in fs)
+          PY
+      - uses: actions/upload-artifact@v4
+        with: {name: timemachine-step9-r6f-r2e-repair-recovery-v3-checkpoint, path: /tmp/recovery/checkpoint.json, if-no-files-found: error}
+      - uses: actions/upload-artifact@v4
+        with: {name: timemachine-step9-r6f-r2e-repair-recovery-v3-certification, path: /tmp/recovery/, if-no-files-found: error}
