@@ -1,0 +1,3 @@
+STEP 8-R6 authorized shares parser repair and semantic closure trigger.
+Frozen R5-R artifact: 12580323566
+STEP9 remains blocked until independent R6 validation.
