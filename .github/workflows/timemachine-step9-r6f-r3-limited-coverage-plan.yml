@@ -21,10 +21,16 @@ jobs:
           run-id: 40201724765
           github-token: '${{ github.token }}'
           path: /tmp/frozen
+      - name: Repack downloaded artifacts and verify frozen digests
+        run: |
+          cd /tmp/frozen/step9-coverage-limit-governance-certification && zip -q -X -r /tmp/gov-cert.zip .
+          cd /tmp/frozen/step9-coverage-limit-governance-checkpoint && zip -q -X -r /tmp/gov-checkpoint.zip .
+          echo '5e256090278d2fdbfb76b190d965c64e7e3251ac2e67a061c55b8a76cd7549c4  /tmp/gov-cert.zip' | sha256sum -c -
+          echo 'b6543ba219317b0beac67a683fea9ec4b6711a2677ed0c16467133ed2b94da64  /tmp/gov-checkpoint.zip' | sha256sum -c -
       - name: Run plan certification
         run: |
           rm -rf /tmp/plan; mkdir -p /tmp/plan
-          python timemachine/src/step9_r6f_r3_limited_coverage_plan.py --gov-cert /tmp/frozen/step9-coverage-limit-governance-certification.zip --gov-checkpoint /tmp/frozen/step9-coverage-limit-governance-checkpoint.zip --out /tmp/plan --head-sha '${{ github.sha }}' --base-sha '2b1be90b410fb4711f13baf41913060a663954ce'
+          python timemachine/src/step9_r6f_r3_limited_coverage_plan.py --gov-cert /tmp/gov-cert.zip --gov-checkpoint /tmp/gov-checkpoint.zip --out /tmp/plan --head-sha '${{ github.sha }}' --base-sha '2b1be90b410fb4711f13baf41913060a663954ce'
       - name: Strict validate
         run: |
           python - <<'PY'
