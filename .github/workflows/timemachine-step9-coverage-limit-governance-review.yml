@@ -60,3 +60,46 @@ jobs:
         with: {name: step9-coverage-limit-governance-checkpoint, path: /tmp/governance/checkpoint.json, if-no-files-found: error}
       - uses: actions/upload-artifact@v4
         with: {name: step9-coverage-limit-governance-certification, path: /tmp/governance/, if-no-files-found: error}
+      - name: Independently download and verify original uploaded ZIPs
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          sleep 2
+          gh api repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts > /tmp/artifacts.json
+          python - <<'PY'
+          import json
+          a=json.load(open('/tmp/artifacts.json'))['artifacts']
+          assert len(a)==2,a
+          names={x['name'] for x in a}
+          assert names=={'step9-coverage-limit-governance-certification','step9-coverage-limit-governance-checkpoint'},names
+          PY
+          CERT_ID=$(jq -r '.artifacts[]|select(.name=="step9-coverage-limit-governance-certification")|.id' /tmp/artifacts.json)
+          CHK_ID=$(jq -r '.artifacts[]|select(.name=="step9-coverage-limit-governance-checkpoint")|.id' /tmp/artifacts.json)
+          CERT_DIGEST=$(jq -r '.artifacts[]|select(.name=="step9-coverage-limit-governance-certification")|.digest' /tmp/artifacts.json | sed 's/^sha256://')
+          CHK_DIGEST=$(jq -r '.artifacts[]|select(.name=="step9-coverage-limit-governance-checkpoint")|.digest' /tmp/artifacts.json | sed 's/^sha256://')
+          gh api repos/${{ github.repository }}/actions/artifacts/$CERT_ID/zip > /tmp/original-cert.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/$CHK_ID/zip > /tmp/original-checkpoint.zip
+          test "$(sha256sum /tmp/original-cert.zip | cut -d' ' -f1)" = "$CERT_DIGEST"
+          test "$(sha256sum /tmp/original-checkpoint.zip | cut -d' ' -f1)" = "$CHK_DIGEST"
+          rm -rf /tmp/ind-cert /tmp/ind-check; mkdir /tmp/ind-cert /tmp/ind-check
+          unzip -q /tmp/original-cert.zip -d /tmp/ind-cert
+          unzip -q /tmp/original-checkpoint.zip -d /tmp/ind-check
+          python - <<'PY'
+          import json,hashlib,os
+          o='/tmp/ind-cert'
+          man=json.load(open(o+'/manifest.json')); missing=0; mismatches=0
+          for p,h in man['files'].items():
+            q=os.path.join(o,p)
+            if not os.path.exists(q): missing+=1; continue
+            if hashlib.sha256(open(q,'rb').read()).hexdigest()!=h: mismatches+=1
+          assert missing==0 and mismatches==0,(missing,mismatches)
+          pop=json.load(open(o+'/population_governance_classification.json')); assert pop['total']==5026 and pop['counts']=={'CERTIFIED_IDENTITY':638,'SOURCE_ACQUISITION_INCOMPLETE':1429,'HISTORICAL_SOURCE_UNAVAILABLE':452,'NO_FROZEN_IDENTITY_EVIDENCE':2507}
+          res=json.load(open(o+'/residual_fail_closed_contract.json')); assert res['tested']==4388 and not res['fallback_allowed'] and not res['identity_dependent_downstream_allowed']
+          leg=json.load(open(o+'/legacy_638_preservation.json')); assert leg['tested']==638 and leg['invalidated']==0
+          mt=json.load(open(o+'/multi_ticker_preservation.json')); assert mt['audited']==19 and mt['false_merges']==0 and mt['synthetic_excluded']==4
+          det=json.load(open(o+'/determinism.json')); assert det['PASS'] and det['classification_disagreements']==0 and det['governance_disagreements']==0
+          sec=json.load(open(o+'/secret_scan.json')); assert sec['confirmed_secrets']==0 and sec['credential_bearing_urls']==0 and sec['authorization_headers_stored']==0
+          non=json.load(open(o+'/nonmutation.json')); assert non['PASS'] and sum(v for k,v in non.items() if k!='PASS')==0
+          pd=json.load(open(o+'/protected_diff.json')); assert pd['PASS'] and pd['forbidden_mutations']==0 and pd['v2_mutations']==0
+          gov=json.load(open(o+'/governance_decision.json')); assert gov['governance_decision']=='COVERAGE_LIMIT_GOVERNANCE_GO'
+          print(json.dumps({'original_cert_digest_match':True,'original_checkpoint_digest_match':True,'manifest_missing':missing,'independent_hash_mismatches':mismatches,'independent_verdict':gov['runner_verdict']},indent=2))
+          PY
