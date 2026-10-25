@@ -1,0 +1,4 @@
+STEP 8-R6-R trigger
+Frozen R6 artifact: 12582196400
+Scope: Authorized Shares value extraction repair and final semantic closure only.
+STEP9 forbidden.
