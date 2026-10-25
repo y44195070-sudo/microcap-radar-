@@ -34,7 +34,7 @@ jobs:
           for p,h in json.load(open(o+'/raw_evidence_hashes.json')).items():assert hashlib.sha256(open(os.path.join(o,p),'rb').read()).hexdigest()==h,p
           f=json.load(open(o+'/frozen_r2e_audit.json'));assert f['Legacy_complete']==638 and f['Residual']==4388 and f['PASS']
           assert len(json.load(open(o+'/residual_occurrences.json')))==4388
-          assert len(json.load(open(o+'/representative_sample.json'))==100
+          assert len(json.load(open(o+'/representative_sample.json')))==100
           u=json.load(open(o+'/unsupported_claim_audit.json'));assert u['unsupported_yes_claims']==0 and u['PASS']
           d=json.load(open(o+'/determinism_audit.json'));assert d['classification_disagreements']==0 and d['sample_disagreements']==0
           s=json.load(open(o+'/secret_redaction_audit.json'));assert s['files_scanned']>0 and s['confirmed_secrets']==0
