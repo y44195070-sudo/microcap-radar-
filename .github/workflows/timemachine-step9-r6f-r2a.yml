@@ -56,13 +56,26 @@ jobs:
           EXTRA=""
           if [ "${{ steps.resume.outputs.resume }}" = "true" ]; then EXTRA="--resume-zip /tmp/resume/checkpoint.zip"; PHASE=B; fi
           python timemachine/src/step9_r6f_r2a_provider_acquisition.py --r6fr2 /tmp/in/r6fr2.zip --out /tmp/r2a --head-sha "${{ github.sha }}" --phase "$PHASE" $EXTRA
+      - name: Finalize manifest inventory
+        run: |
+          python - <<'PY'
+          import json,os
+          o='/tmp/r2a'; p=o+'/manifest.json'
+          m=json.load(open(p))
+          m['missing']=[n for n in m['required_files'] if not os.path.exists(os.path.join(o,n))]
+          m['payload_files']=sum(len(fs) for _,_,fs in os.walk(o))
+          with open(p,'w') as f: json.dump(m,f,indent=2,sort_keys=True); f.write('\n')
+          PY
       - name: Validate artifact and secret canary
         run: |
           python - <<'PY'
-          import json
-          o='/tmp/r2a';m=json.load(open(o+'/manifest.json'));s=json.load(open(o+'/secret_redaction_audit.json'));c=json.load(open(o+'/search_completeness_classification.json'))
-          missing=[x for x in m['missing'] if x!='manifest.json']
-          assert not missing,missing;assert s['leak_count']==0,s;assert sum(c.values())==5026
+          import json,os,hashlib
+          o='/tmp/r2a';m=json.load(open(o+'/manifest.json'));s=json.load(open(o+'/secret_redaction_audit.json'));c=json.load(open(o+'/search_completeness_classification.json'));h=json.load(open(o+'/hashes.json'))
+          assert m['missing']==[],m['missing']
+          assert all(os.path.exists(os.path.join(o,n)) for n in m['required_files'])
+          for n,want in h.items():
+            got=hashlib.sha256(open(os.path.join(o,n),'rb').read()).hexdigest(); assert got==want,(n,got,want)
+          assert s['leak_count']==0,s;assert sum(c.values())==5026
           assert json.load(open(o+'/technical_verdict.json'))['STEP9']=='BLOCKED'
           assert json.load(open(o+'/technical_verdict.json'))['STEP10_GATE']=='BLOCKED'
           PY
