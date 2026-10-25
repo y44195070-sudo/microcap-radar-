@@ -1,0 +1,71 @@
+name: Time Machine STEP9-R6F-R2 Historical Source Acquisition Recovery
+on:
+  workflow_dispatch:
+  push:
+    paths: ['timemachine/triggers/step9-r6f-r2.txt']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  step9-r6f-r2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Python compile preflight
+        run: python -m py_compile timemachine/src/step9_r6f_r2_historical_source_acquisition.py
+      - name: Verify historical provider credential without printing it
+        run: |
+          test -n "$MASSIVE_API_KEY" || { echo BLOCKED_API_KEY_NOT_CONNECTED; exit 2; }
+          echo 'MASSIVE_API_KEY connected (masked).'
+      - name: Download frozen evidence
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          set -euo pipefail
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/12595027148/zip > /tmp/r6fr.zip
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/12595155004/zip > /tmp/r6f.zip
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/12593975754/zip > /tmp/r6d.zip
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/12593164641/zip > /tmp/r6c.zip
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/12591321235/zip > /tmp/r6br.zip
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/12592433720/zip > /tmp/r3.zip
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/12583614872/zip > /tmp/context.zip
+      - name: Verify frozen digests
+        run: |
+          echo '3561abf1e5d4725aa368fad4cb718c2675a510db1b133da8af33b7b9eb40bc30  /tmp/r6fr.zip' | sha256sum -c -
+          echo '53e4da5ac4777a295aa6278c8b2483a5413e40c12aed41379b8afb2eb27a454f  /tmp/r6f.zip' | sha256sum -c -
+          echo 'b10bb72c0a3197288a36ef1af66e1b0fd1a0c875b0ff12da1f506def406bc553  /tmp/r6d.zip' | sha256sum -c -
+          echo '26dbf2d98256fc837f92a5520431b8f1e05ca0e4fe74dbfbddce98f9b7e96b5e  /tmp/r6c.zip' | sha256sum -c -
+          echo 'e21d081cc4d97ecd16835c36f56631ac1d43b60f3d86c78ff57ccfe9e2980a8e  /tmp/r6br.zip' | sha256sum -c -
+          echo '27d1501f5d46883574c0f546a21e276953f797ef1531f6080754fe13582b80ce  /tmp/r3.zip' | sha256sum -c -
+          echo '4a4b15c85c50f7034a692e92b77f8665af77ee40c22e2997b06981b8cd52dc51  /tmp/context.zip' | sha256sum -c -
+      - name: Run R6F-R2 acquisition certification
+        run: python timemachine/src/step9_r6f_r2_historical_source_acquisition.py --r6fr /tmp/r6fr.zip --r6f /tmp/r6f.zip --r6d /tmp/r6d.zip --r6c /tmp/r6c.zip --r6br /tmp/r6br.zip --r3 /tmp/r3.zip --context /tmp/context.zip --out /tmp/r6fr2 --head-sha ${{ github.sha }}
+      - name: Verify required artifact files
+        run: |
+          python - <<'PY'
+          import json,os
+          m=json.load(open('/tmp/r6fr2/manifest.json'))
+          assert m['file_count']==42, m
+          assert len(m['required_files'])==42
+          assert all(os.path.isfile('/tmp/r6fr2/'+x) for x in m['required_files'])
+          PY
+      - name: Upload evidence artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step9-r6f-r2-historical-source-acquisition
+          path: /tmp/r6fr2/
+          if-no-files-found: error
+          retention-days: 90
+      - name: Enforce gate semantics
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/r6fr2/technical_verdict.json'))
+          assert x['STEP9']=='STEP9_BLOCKED' and x['STEP10_GATE']=='BLOCKED'
+          assert x['technical_verdict'] in ['STEP9_R6F_R2_HISTORICAL_SEARCH_COMPLETENESS_READY','STEP9_R6F_R2_BLOCKED_RESIDUAL_ACQUISITION_GAP','STEP9_R6F_R2_BLOCKED_ACQUISITION_INFRASTRUCTURE','STEP9_R6F_R2_BLOCKED_INPUT_MISMATCH']
+          PY
