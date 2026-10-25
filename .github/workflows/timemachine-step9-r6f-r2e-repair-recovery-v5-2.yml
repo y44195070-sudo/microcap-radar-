@@ -22,3 +22,59 @@ jobs:
           git merge-base --is-ancestor 3a6442733624e74d6a2939fd7c8dff5604412ce8 HEAD
       - name: Compile
         run: python -m py_compile timemachine/src/step9_r6f_r2e_repair_recovery_v5.py timemachine/src/step9_r6f_r2e_recovery_v5_2_finalize.py
+      - uses: actions/download-artifact@v4
+        with:
+          name: timemachine-step9-r6f-r2e-repair-certification
+          path: /tmp/frozen/cert
+          repository: y44195070-sudo/microcap-radar-
+          run-id: 40197392698
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: timemachine-step9-r6f-r2e-repair-checkpoint
+          path: /tmp/frozen/checkpoint
+          repository: y44195070-sudo/microcap-radar-
+          run-id: 40197392698
+          github-token: ${{ github.token }}
+      - name: Rebuild and verify frozen original ZIPs
+        run: |
+          cd /tmp/frozen/cert && zip -qr /tmp/frozen/repair-cert.zip .
+          cd /tmp/frozen/checkpoint && zip -qr /tmp/frozen/repair-checkpoint.zip .
+          test -s /tmp/frozen/repair-cert.zip
+          test -s /tmp/frozen/repair-checkpoint.zip
+      - name: Run recovery V5
+        run: |
+          rm -rf /tmp/recovery; mkdir -p /tmp/recovery
+          PYTHONPATH=timemachine/src python timemachine/src/step9_r6f_r2e_repair_recovery_v5.py --repair-cert /tmp/frozen/repair-cert.zip --repair-checkpoint /tmp/frozen/repair-checkpoint.zip --out /tmp/recovery --head-sha '${{ github.sha }}'
+      - name: Finalize V5.2
+        run: python timemachine/src/step9_r6f_r2e_recovery_v5_2_finalize.py /tmp/recovery
+      - name: Strict validate V5.2
+        run: |
+          python - <<'PY'
+          import json,hashlib,os
+          o='/tmp/recovery';s=json.load(open(o+'/strict_validation.json'));assert s['status']=='PASS',s
+          assert json.load(open(o+'/unsupported_claim_audit_v5_2.json'))['unsupported_yes_claims']==0
+          assert json.load(open(o+'/unsupported_access_audit.json'))['unsupported_access_claims']==0
+          t=json.load(open(o+'/technical_verdict_v5_2.json'));assert t['runner_verdict'] in {'STEP9_R6F_R2E_REPAIR_PAID_DATA_ACCESS_REQUIRED','STEP9_R6F_R2E_REPAIR_NO_VIABLE_SOURCE_CONFIRMED','STEP9_R6F_R2E_REPAIR_FREE_DATA_PATH_CONFIRMED','STEP9_R6F_R2E_REPAIR_EXTERNAL_DATA_PATH_CONFIRMED'},t
+          for p,h in json.load(open(o+'/v5_2_hashes.json')).items():assert hashlib.sha256(open(os.path.join(o,p),'rb').read()).hexdigest()==h,p
+          print(json.dumps(t,indent=2))
+          PY
+      - name: Protected diff certification
+        run: |
+          python - <<'PY'
+          import subprocess
+          fs=subprocess.check_output(['git','diff','--name-only','8974cb342d9f8e72d44f35f6d21c0ac67358f6c4','HEAD'],text=True).splitlines();print(fs)
+          allowed={'.github/workflows/timemachine-step9-r6f-r2e-repair-recovery-v5-2.yml','timemachine/src/step9_r6f_r2e_recovery_v5_2_finalize.py','timemachine/triggers/step9-r6f-r2e-recovery-v5-2.txt'}
+          assert set(fs)<=allowed,fs
+          assert not any(f.startswith('v2/') or f.startswith('timemachine/src/prediction') or 'snapshot' in f.lower() or 'context' in f.lower() or 'rule_engine' in f.lower() for f in fs)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: step9-r6f-r2e-repair-recovery-v5-2-checkpoint
+          path: /tmp/recovery/checkpoint_v5_2.json
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: step9-r6f-r2e-repair-recovery-v5-2-certification
+          path: /tmp/recovery/
+          if-no-files-found: error
