@@ -1,0 +1,120 @@
+name: Time Machine STEP9 R6F-R3 Limited Coverage Final Certification
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'timemachine/triggers/step9-r6f-r3-limited-coverage-final-certification.txt'
+      - '.github/workflows/timemachine-step9-r6f-r3-limited-coverage-final-certification.yml'
+      - 'timemachine/src/step9_r6f_r3_limited_coverage_final_certification.py'
+permissions: {contents: read, actions: read}
+jobs:
+  final-certification:
+    runs-on: ubuntu-latest
+    env: {GH_TOKEN: '${{ github.token }}'}
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Compile
+        run: python -m py_compile timemachine/src/step9_r6f_r3_limited_coverage_final_certification.py
+      - name: Download frozen original artifacts by ID
+        run: |
+          mkdir -p /tmp/frozen
+          gh api /repos/${{ github.repository }}/actions/artifacts/12603066455/zip > /tmp/frozen/plan-cert.zip
+          gh api /repos/${{ github.repository }}/actions/artifacts/12602074250/zip > /tmp/frozen/plan-checkpoint.zip
+          gh api /repos/${{ github.repository }}/actions/artifacts/12593975754/zip > /tmp/frozen/r6d.zip
+          gh api /repos/${{ github.repository }}/actions/artifacts/12598834536/zip > /tmp/frozen/r2c.zip
+          gh api /repos/${{ github.repository }}/actions/artifacts/12601229639/zip > /tmp/frozen/design.zip
+      - name: Verify frozen original archive digests and content
+        run: |
+          python - <<'PY'
+          import hashlib,zipfile,json
+          exp={'plan-cert.zip':'d6c4e4703a8614907631345f6312933da06bd2c55e9f09a008759d606a51cd50','plan-checkpoint.zip':'fbc1852d688859f41d543853ac45e798a8df89f378949bcb82f2f0caeaccf65e','r6d.zip':'b10bb72c0a3197288a36ef1af66e1b0fd1a0c875b0ff12da1f506def406bc553','r2c.zip':'f6069ac7ebd3838fba066e47a89db50023f7f9bcab0583ee715ea077f45cc42d','design.zip':'dad090de7b74209857bc6f7fde65e438e55d9f69c7bf38113cda2bc97864f677'}
+          for n,h in exp.items():
+           p='/tmp/frozen/'+n; a=hashlib.sha256(open(p,'rb').read()).hexdigest(); assert a==h,(n,a,h); z=zipfile.ZipFile(p); assert z.testzip() is None
+          z=zipfile.ZipFile('/tmp/frozen/plan-cert.zip'); m=json.loads(z.read('manifest.json'))
+          for n,h in m['files'].items(): assert hashlib.sha256(z.read(n)).hexdigest()==h,n
+          assert json.loads(z.read('plan_decision.json'))['plan_decision']=='LIMITED_COVERAGE_CERTIFICATION_PLAN_GO'
+          PY
+      - name: Execute final certification Pass A
+        run: |
+          rm -rf /tmp/final-a /tmp/final-b; mkdir -p /tmp/final-a /tmp/final-b
+          python timemachine/src/step9_r6f_r3_limited_coverage_final_certification.py --plan-cert /tmp/frozen/plan-cert.zip --plan-checkpoint /tmp/frozen/plan-checkpoint.zip --r6d /tmp/frozen/r6d.zip --r2c /tmp/frozen/r2c.zip --design /tmp/frozen/design.zip --out /tmp/final-a --head-sha '${{ github.sha }}' --base-sha '8fe4fb098bb64a1a501fd6604e322e7bc55129fa'
+      - name: Execute final certification Pass B
+        run: |
+          python timemachine/src/step9_r6f_r3_limited_coverage_final_certification.py --plan-cert /tmp/frozen/plan-cert.zip --plan-checkpoint /tmp/frozen/plan-checkpoint.zip --r6d /tmp/frozen/r6d.zip --r2c /tmp/frozen/r2c.zip --design /tmp/frozen/design.zip --out /tmp/final-b --head-sha '${{ github.sha }}' --base-sha '8fe4fb098bb64a1a501fd6604e322e7bc55129fa'
+      - name: Determinism and strict validation
+        run: |
+          python - <<'PY'
+          import json,hashlib,os
+          A='/tmp/final-a'; B='/tmp/final-b'
+          for n in ['certified_identity_allowlist.json','residual_identity_denylist.json','population_conservation.json','final_decision.json']:
+           assert hashlib.sha256(open(A+'/'+n,'rb').read()).hexdigest()==hashlib.sha256(open(B+'/'+n,'rb').read()).hexdigest(),n
+          s=json.load(open(A+'/population_conservation.json')); assert s['total']==5026 and s['certified_allowlist']==638 and s['residual_denylist']==4388 and s['overlap']==0 and s['missing']==0
+          r=json.load(open(A+'/residual_fail_closed_test.json')); assert r['tested']==4388 and r['allowed']==0 and r['fallback_success']==0
+          d=json.load(open(A+'/final_decision.json')); assert d['decision']=='STEP9_LIMITED_COVERAGE_CERTIFIED' and d['STEP10_GATE']=='BLOCKED'
+          m=json.load(open(A+'/manifest.json'))
+          for n,h in m['files'].items(): assert hashlib.sha256(open(A+'/'+n,'rb').read()).hexdigest()==h,n
+          PY
+      - name: Negative regression tests
+        run: |
+          python - <<'PY'
+          import json
+          n=json.load(open('/tmp/final-a/negative_tests.json'))
+          assert n['PASS'] and n['expected_failures']==16 and n['observed_fail_closed']==16
+          PY
+      - name: Protected diff audit
+        run: |
+          python - <<'PY'
+          import subprocess
+          fs=subprocess.check_output(['git','diff','--name-only','8fe4fb098bb64a1a501fd6604e322e7bc55129fa','HEAD'],text=True).splitlines()
+          allowed={'.github/workflows/timemachine-step9-r6f-r3-limited-coverage-final-certification.yml','timemachine/triggers/step9-r6f-r3-limited-coverage-final-certification.txt','timemachine/src/step9_r6f_r3_limited_coverage_final_certification.py'}
+          assert set(fs)<=allowed,fs
+          assert not any(f.startswith('v2/') or f.startswith('timemachine/src/prediction') or 'snapshot' in f.lower() or 'context' in f.lower() or 'rule_engine' in f.lower() for f in fs)
+          json.dump({'changed_files':fs,'forbidden_mutations':0,'v2_mutations':0,'PASS':True},open('/tmp/final-a/protected_diff.json','w'),indent=2)
+          PY
+      - name: Security scan
+        run: |
+          python - <<'PY'
+          import re,glob,json,os
+          files=glob.glob('/tmp/final-a/*')+['timemachine/src/step9_r6f_r3_limited_coverage_final_certification.py','.github/workflows/timemachine-step9-r6f-r3-limited-coverage-final-certification.yml']
+          pats=[re.compile(r'ghp_[A-Za-z0-9]{20,}'),re.compile(r'github_pat_[A-Za-z0-9_]{20,}'),re.compile(r'Authorization:\\s*(?:Bearer|token)\\s+\\S+',re.I),re.compile(r'https?://[^\\s]+(?:api[_-]?key|token|authorization)=',re.I)]
+          hits=[]
+          for f in files:
+           if not os.path.isfile(f): continue
+           t=open(f,errors='ignore').read()
+           for p in pats:
+            if p.search(t): hits.append((f,p.pattern))
+          assert not hits,hits
+          json.dump({'files_scanned':len(files),'confirmed_secrets':0,'credential_bearing_urls':0,'authorization_headers_stored':0,'API_keys_stored':0,'tokens_stored':0,'PASS':True},open('/tmp/final-a/security_scan_runtime.json','w'),indent=2)
+          PY
+      - name: Finalize manifest after runtime audits
+        run: |
+          python - <<'PY'
+          import json,hashlib,glob,os
+          o='/tmp/final-a'; files=[p for p in glob.glob(o+'/*') if os.path.isfile(p) and os.path.basename(p) not in ['manifest.json','checkpoint.json']]
+          m={'schema':'STEP9_R6F_R3_LIMITED_COVERAGE_FINAL_CERTIFICATION_V1','files':{os.path.basename(p):hashlib.sha256(open(p,'rb').read()).hexdigest() for p in sorted(files)},'file_count':len(files)}
+          json.dump(m,open(o+'/manifest.json','w'),indent=2,sort_keys=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        with: {name: step9-r6f-r3-limited-coverage-final-certification-checkpoint, path: /tmp/final-a/checkpoint.json, if-no-files-found: error}
+      - uses: actions/upload-artifact@v4
+        with: {name: step9-r6f-r3-limited-coverage-final-certification, path: /tmp/final-a/, if-no-files-found: error}
+      - name: Independently verify uploaded original ZIPs
+        run: |
+          sleep 3
+          python - <<'PY'
+          import json,subprocess,hashlib,zipfile,os
+          repo=os.environ['GITHUB_REPOSITORY']; run=os.environ['GITHUB_RUN_ID']
+          data=json.loads(subprocess.check_output(['gh','api',f'/repos/{repo}/actions/runs/{run}/artifacts'],text=True)); arts=data['artifacts']; assert len(arts)==2,[(a['id'],a['name']) for a in arts]
+          for a in arts:
+           p=f"/tmp/uploaded-{a['id']}.zip"
+           with open(p,'wb') as f: subprocess.run(['gh','api',f"/repos/{repo}/actions/artifacts/{a['id']}/zip"],stdout=f,check=True)
+           h=hashlib.sha256(open(p,'rb').read()).hexdigest(); md=a.get('digest',''); assert md==f'sha256:{h}',(a['name'],md,h)
+           z=zipfile.ZipFile(p); assert z.testzip() is None
+           if a['name'].endswith('final-certification'):
+            m=json.loads(z.read('manifest.json'))
+            for n,x in m['files'].items(): assert hashlib.sha256(z.read(n)).hexdigest()==x,n
+            s=json.loads(z.read('population_conservation.json')); assert s['total']==5026 and s['certified_allowlist']==638 and s['residual_denylist']==4388
+            d=json.loads(z.read('final_decision.json')); assert d['decision']=='STEP9_LIMITED_COVERAGE_CERTIFIED' and d['STEP10_GATE']=='BLOCKED'
+          print('INDEPENDENT_ORIGINAL_ZIP_VERIFICATION_PASS')
+          PY
