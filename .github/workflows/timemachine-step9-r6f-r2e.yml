@@ -1,0 +1,57 @@
+name: Time Machine STEP9-R6F-R2E External Historical Data Requirement
+on:
+  push:
+    branches: [main]
+    paths: ['timemachine/triggers/step9-r6f-r2e.txt']
+  workflow_dispatch:
+permissions: {contents: read, actions: read}
+jobs:
+  step9-r6f-r2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile preflight
+        run: python -m py_compile timemachine/src/step9_r6f_r2e_external_data.py
+      - name: Download and verify frozen R2D baseline
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          set -euo pipefail; mkdir -p /tmp/frozen
+          gh api repos/${{ github.repository }}/actions/artifacts/12600326397/zip > /tmp/frozen/r2d-cert.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12600112070/zip > /tmp/frozen/r2d-checkpoint.zip
+          echo '2490d4c8e83fb06010cd2716e64890e14088dc55334fa1693dbd50136c2653a5  /tmp/frozen/r2d-cert.zip' | sha256sum -c -
+          echo 'b3444b56ba5f8d240d1a24c59fbedd9bbfb71f8d0a0bd284ffe7c5f8d9cb85ed  /tmp/frozen/r2d-checkpoint.zip' | sha256sum -c -
+      - name: External historical provider feasibility and acquisition probes
+        run: |
+          rm -rf /tmp/r2e && mkdir -p /tmp/r2e
+          python timemachine/src/step9_r6f_r2e_external_data.py --r2d-cert /tmp/frozen/r2d-cert.zip --r2d-checkpoint /tmp/frozen/r2d-checkpoint.zip --out /tmp/r2e --head-sha '${{ github.sha }}'
+      - name: Strict certification validation
+        run: |
+          python - <<'PY'
+          import json,hashlib,os
+          o='/tmp/r2e';m=json.load(open(o+'/manifest.json'));assert m['missing']==[]
+          for p,h in json.load(open(o+'/hashes.json')).items():assert hashlib.sha256(open(os.path.join(o,p),'rb').read()).hexdigest()==h,p
+          for p,h in json.load(open(o+'/raw_evidence_hashes.json')).items():assert hashlib.sha256(open(os.path.join(o,p),'rb').read()).hexdigest()==h,p
+          b=json.load(open(o+'/frozen_baseline_audit.json'));assert b['Legacy_complete']==638 and b['Residual']==4388 and b['PASS']
+          assert len(json.load(open(o+'/residual_occurrences.json')))==4388
+          assert len(json.load(open(o+'/representative_sample.json')))>=50
+          p=json.load(open(o+'/provider_probe_audit.json'));assert len(p)>=3 and sum(x['queries'] for x in p)>=3
+          s=json.load(open(o+'/secret_redaction_audit.json'));assert s['files_scanned']>0 and s['confirmed_secrets']==0
+          assert all(v==0 for v in json.load(open(o+'/nonmutation_audit.json')).values())
+          t=json.load(open(o+'/technical_verdict.json'));assert t['STEP9']=='BLOCKED' and t['STEP10_GATE']=='BLOCKED' and t['R6F_R3']=='NOT_ALLOWED';print(t)
+          PY
+      - name: Verify protected diff
+        run: |
+          git fetch --no-tags --depth=1 origin e46cdf22f5d80e3c5b49b57a55e2458c549d89fd
+          python - <<'PY'
+          import subprocess
+          base='e46cdf22f5d80e3c5b49b57a55e2458c549d89fd';files=subprocess.check_output(['git','diff','--name-only',base,'HEAD'],text=True).splitlines();print(files)
+          forbidden=[f for f in files if f.startswith('v2/') or f.startswith('timemachine/src/prediction') or 'snapshot' in f.lower() or 'context' in f.lower() or 'rule_engine' in f.lower()];assert not forbidden
+          allowed={'.github/workflows/timemachine-step9-r6f-r2e.yml','timemachine/src/step9_r6f_r2e_external_data.py','timemachine/triggers/step9-r6f-r2e.txt'};assert set(files)<=allowed
+          PY
+      - name: Upload R2E checkpoint
+        uses: actions/upload-artifact@v4
+        with: {name: timemachine-step9-r6f-r2e-checkpoint, path: /tmp/r2e/checkpoint.json, if-no-files-found: error}
+      - name: Upload R2E certification
+        uses: actions/upload-artifact@v4
+        with: {name: timemachine-step9-r6f-r2e-certification, path: /tmp/r2e/, if-no-files-found: error}
