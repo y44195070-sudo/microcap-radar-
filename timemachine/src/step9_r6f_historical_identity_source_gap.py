@@ -29,7 +29,6 @@ def main():
  boundary={'input':len(rows),'frozen_source_record_unavailable':c769,'no_frozen_identity_evidence':c4257,'PASS':len(rows)==5026 and c769==769 and c4257==4257};dump(a.out,'boundary_769_4257_preservation.json',boundary);dump(a.out,'unresolved_5026_population.json',rows)
  hierarchy={'Tier1':'Original Historical Provider Record','Tier2':'Immutable Archived Historical Dataset','Tier3':'Official Historical Security Reference','Tier4':'Deterministic Cross-Source Historical Mapping','Tier5':'Continuity Evidence','rule':'retrieval_time != evidence_valid_time; current-state backfill forbidden'};dump(a.out,'historical_source_hierarchy.json',hierarchy)
  key=os.getenv('MASSIVE_API_KEY'); cache={}; raw=[]; searches=[]; historical_lookup_count=0
- # Massive dated reference universe is explicitly VENDOR_RECONSTRUCTED_PIT. We query each prediction trading date, not current ticker details.
  dates=sorted({x['trading_date'] for x in rows})
  for d in dates:
   if not key:break
@@ -42,7 +41,6 @@ def main():
    obj=json.loads(b); rh=hashlib.sha256(b).hexdigest(); raw.append({'source':'Massive dated universe','date':d,'page':page,'sha256':rh,'byte_length':len(b),'response_status':status,'retrieval_timestamp':now(),'historical_effective_timestamp':d,'source_type':'VENDOR_RECONSTRUCTED_PIT'});rec.extend(obj.get('results') or []); searches.append({'date':d,'page':page,'status':status,'records':len(obj.get('results') or []),'response_hash':rh});n=obj.get('next_url');url=(n+('&' if '?' in n else '?')+'apiKey='+urllib.parse.quote(key)) if n else None
    if url:time.sleep(12.2)
   cache[d]=rec
- # Conservative gate: dated reconstructed vendor records are source discovery evidence, but not native publication-time proof. No record is promoted to canonical identity in R6F without evidence_available_at<=cutoff/native archive proof.
  idx={d:collections.defaultdict(list) for d in cache}
  for d,rs in cache.items():
   for r in rs: idx[d][r.get('ticker')].append(r)
@@ -59,7 +57,7 @@ def main():
  passA=[(x['forensic_occurrence_id'],x['historical_source_acquisition_status'],x['resolved_canonical_identity']) for x in out]; sourceindex={x['forensic_occurrence_id']:(x['historical_source_acquisition_status'],x['resolved_canonical_identity']) for x in out};passB=[(x['forensic_occurrence_id'],)+sourceindex[x['forensic_occurrence_id']] for x in out];dis=[{'A':u,'B':v} for u,v in zip(passA,passB) if u!=v]
  dump(a.out,'recovery_pass_a.json',{'count':len(passA),'records':passA});dump(a.out,'recovery_pass_b.json',{'count':len(passB),'records':passB});dump(a.out,'recovery_determinism_audit.json',{'compared':5026,'disagreements':len(dis),'examples':dis[:20],'PASS':not dis});dump(a.out,'source_independence_audit.json',{'sources':['Massive dated reference universe'],'independent_source_count':1,'mirrored_sources_counted_as_independent':False})
  def breakdown(cls):
- q=[x for x in out if x['r6d_classification']==cls];return {'total':len(q),'source_found':sum(bool(x['candidate_records']) for x in q),'direct_identity_recovered':0,'historical_mapping_recovered':0,'continuity_recovered':0,'still_unresolved':len(q),'taxonomy':dict(collections.Counter(x['historical_source_acquisition_status'] for x in q))}
+  q=[x for x in out if x['r6d_classification']==cls];return {'total':len(q),'source_found':sum(bool(x['candidate_records']) for x in q),'direct_identity_recovered':0,'historical_mapping_recovered':0,'continuity_recovered':0,'still_unresolved':len(q),'taxonomy':dict(collections.Counter(x['historical_source_acquisition_status'] for x in q))}
  dump(a.out,'residual_769_historical_recovery.json',breakdown('FROZEN_SOURCE_RECORD_UNAVAILABLE'));dump(a.out,'non769_4257_historical_recovery.json',breakdown('NO_FROZEN_IDENTITY_EVIDENCE'))
  dg=json.loads(zd.read('duplicate_404_reanalysis.json')); gcount={'BLOCKED_PROVENANCE':len(dg.get('groups',[]))};dump(a.out,'duplicate_404_reanalysis.json',{'groups_analyzed':len(dg.get('groups',[])),'fully_recoverable':0,'partially_recoverable':0,'blocked_by_reason':gcount,'groups':dg.get('groups',[])})
  dump(a.out,'prospective_coverage_simulation.json',{'baseline_resolved':10897,'baseline_unresolved':5026,'newly_recoverable':recover,'prospective_resolved':10897+recover,'prospective_unresolved':still,'prospective_coverage_pct':round((10897+recover)/15923*100,6)})
