@@ -1,3 +1,4 @@
 STEP 9-R6F-R2D — Historical Source Strategy Redesign & Alternative Source Acquisition Certification
 Protected base: b7a8e237d8387ca5e5f6e74858586bf21134f2c3
 Legacy 638 frozen; STEP9 and STEP10_GATE remain BLOCKED.
+Certification repair: exact 404 duplicate-group audit from frozen R6C.
