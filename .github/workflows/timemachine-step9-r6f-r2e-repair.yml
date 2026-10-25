@@ -1,0 +1,58 @@
+name: Time Machine STEP9-R6F-R2E-REPAIR Provider Evidence Repair
+on:
+  push:
+    branches: [main]
+    paths: ['timemachine/triggers/step9-r6f-r2e-repair.txt']
+  workflow_dispatch:
+permissions: {contents: read, actions: read}
+jobs:
+  step9-r6f-r2e-repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile preflight
+        run: python -m py_compile timemachine/src/step9_r6f_r2e_provider_evidence_repair.py
+      - name: Download and independently verify frozen R2E originals
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          set -euo pipefail; mkdir -p /tmp/frozen
+          gh api repos/${{ github.repository }}/actions/artifacts/12600496911/zip > /tmp/frozen/r2e-cert.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12600666438/zip > /tmp/frozen/r2e-checkpoint.zip
+          echo 'a36b99b4cb9524eb04e43a0ba919c9502072cfee488e0ade034e0681cb251ac1  /tmp/frozen/r2e-cert.zip' | sha256sum -c -
+          echo '733212bdb56e757cd76b9e8de58e50848f91269346b5dfa38bc021ab8acc3b12  /tmp/frozen/r2e-checkpoint.zip' | sha256sum -c -
+      - name: Provider documentation evidence repair and applicability probes
+        run: |
+          rm -rf /tmp/r2e-repair && mkdir -p /tmp/r2e-repair
+          python timemachine/src/step9_r6f_r2e_provider_evidence_repair.py --r2e-cert /tmp/frozen/r2e-cert.zip --r2e-checkpoint /tmp/frozen/r2e-checkpoint.zip --out /tmp/r2e-repair --head-sha '${{ github.sha }}'
+      - name: Strict certification validation
+        run: |
+          python - <<'PY'
+          import json,hashlib,os
+          o='/tmp/r2e-repair';m=json.load(open(o+'/manifest.json'));assert m['missing']==[]
+          for p,h in json.load(open(o+'/hashes.json')).items():assert hashlib.sha256(open(os.path.join(o,p),'rb').read()).hexdigest()==h,p
+          for p,h in json.load(open(o+'/raw_evidence_hashes.json')).items():assert hashlib.sha256(open(os.path.join(o,p),'rb').read()).hexdigest()==h,p
+          f=json.load(open(o+'/frozen_r2e_audit.json'));assert f['Legacy_complete']==638 and f['Residual']==4388 and f['PASS']
+          assert len(json.load(open(o+'/residual_occurrences.json')))==4388
+          assert len(json.load(open(o+'/representative_sample.json')))==100
+          u=json.load(open(o+'/unsupported_claim_audit.json'));assert u['unsupported_yes_claims']==0 and u['PASS']
+          d=json.load(open(o+'/determinism_audit.json'));assert d['classification_disagreements']==0 and d['sample_disagreements']==0
+          s=json.load(open(o+'/secret_redaction_audit.json'));assert s['files_scanned']>0 and s['confirmed_secrets']==0
+          assert all(v==0 for v in json.load(open(o+'/nonmutation_audit.json')).values())
+          t=json.load(open(o+'/technical_verdict.json'));assert t['STEP9']=='BLOCKED' and t['STEP10_GATE']=='BLOCKED' and t['R6F_R3']=='NOT_ALLOWED';print(t)
+          PY
+      - name: Verify protected diff
+        run: |
+          git fetch --no-tags --depth=1 origin 04d6fe2509ddae46a8227824db9be3451c6ab347
+          python - <<'PY'
+          import subprocess
+          base='04d6fe2509ddae46a8227824db9be3451c6ab347';files=subprocess.check_output(['git','diff','--name-only',base,'HEAD'],text=True).splitlines();print(files)
+          forbidden=[f for f in files if f.startswith('v2/') or f.startswith('timemachine/src/prediction') or 'snapshot' in f.lower() or 'context' in f.lower() or 'rule_engine' in f.lower()];assert not forbidden
+          allowed={'.github/workflows/timemachine-step9-r6f-r2e-repair.yml','timemachine/src/step9_r6f_r2e_provider_evidence_repair.py','timemachine/triggers/step9-r6f-r2e-repair.txt'};assert set(files)<=allowed
+          PY
+      - name: Upload R2E-REPAIR checkpoint
+        uses: actions/upload-artifact@v4
+        with: {name: timemachine-step9-r6f-r2e-repair-checkpoint, path: /tmp/r2e-repair/checkpoint.json, if-no-files-found: error}
+      - name: Upload R2E-REPAIR certification
+        uses: actions/upload-artifact@v4
+        with: {name: timemachine-step9-r6f-r2e-repair-certification, path: /tmp/r2e-repair/, if-no-files-found: error}
