@@ -1,0 +1,52 @@
+name: Time Machine STEP9 R6F-R3 Limited Coverage Certification Plan
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'timemachine/triggers/step9-r6f-r3-limited-coverage-plan.txt'
+      - '.github/workflows/timemachine-step9-r6f-r3-limited-coverage-plan.yml'
+      - 'timemachine/src/step9_r6f_r3_limited_coverage_plan.py'
+permissions: {contents: read, actions: read}
+jobs:
+  limited-coverage-plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Compile
+        run: python -m py_compile timemachine/src/step9_r6f_r3_limited_coverage_plan.py
+      - name: Download frozen Governance artifacts
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 40201724765
+          github-token: '${{ github.token }}'
+          path: /tmp/frozen
+      - name: Run plan certification
+        run: |
+          rm -rf /tmp/plan; mkdir -p /tmp/plan
+          python timemachine/src/step9_r6f_r3_limited_coverage_plan.py --gov-cert /tmp/frozen/step9-coverage-limit-governance-certification.zip --gov-checkpoint /tmp/frozen/step9-coverage-limit-governance-checkpoint.zip --out /tmp/plan --head-sha '${{ github.sha }}' --base-sha '2b1be90b410fb4711f13baf41913060a663954ce'
+      - name: Strict validate
+        run: |
+          python - <<'PY'
+          import json,hashlib,os
+          o='/tmp/plan'; d=json.load(open(o+'/plan_decision.json')); assert d['plan_decision']=='LIMITED_COVERAGE_CERTIFICATION_PLAN_GO' and d['STEP9']=='BLOCKED' and d['R6F_R3']=='NOT_ALLOWED'
+          p=json.load(open(o+'/population_partition_invariant.json')); assert p['total']==5026 and p['allowlist']==638 and p['denylist']==4388 and p['overlap']==0 and p['missing']==0
+          s=json.load(open(o+'/r6f_r3_governance_supersession_contract.json')); assert s['original_rule_preserved'] and s['full_coverage_semantics']=='UNCHANGED'
+          n=json.load(open(o+'/nonmutation_contract.json')); assert n['PASS'] and sum(v for k,v in n.items() if k!='PASS')==0
+          sec=json.load(open(o+'/secret_scan.json')); assert sec['files_scanned']>0 and sec['confirmed_secrets']==0
+          man=json.load(open(o+'/manifest.json'))
+          for p,h in man['files'].items(): assert hashlib.sha256(open(os.path.join(o,p),'rb').read()).hexdigest()==h,p
+          PY
+      - name: Protected diff audit
+        run: |
+          python - <<'PY'
+          import subprocess
+          fs=subprocess.check_output(['git','diff','--name-only','2b1be90b410fb4711f13baf41913060a663954ce','HEAD'],text=True).splitlines()
+          allowed={'.github/workflows/timemachine-step9-r6f-r3-limited-coverage-plan.yml','timemachine/triggers/step9-r6f-r3-limited-coverage-plan.txt','timemachine/src/step9_r6f_r3_limited_coverage_plan.py'}
+          assert set(fs)<=allowed,fs
+          assert not any(f.startswith('v2/') or f.startswith('timemachine/src/prediction') or 'snapshot' in f.lower() or 'context' in f.lower() or 'rule_engine' in f.lower() for f in fs)
+          PY
+      - uses: actions/upload-artifact@v4
+        with: {name: step9-r6f-r3-limited-coverage-plan-checkpoint, path: /tmp/plan/checkpoint.json, if-no-files-found: error}
+      - uses: actions/upload-artifact@v4
+        with: {name: step9-r6f-r3-limited-coverage-plan-certification, path: /tmp/plan/, if-no-files-found: error}
