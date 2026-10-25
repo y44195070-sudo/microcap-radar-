@@ -1,0 +1,38 @@
+name: Time Machine R6-R4-R Evaluator
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - timemachine/step8-r6-r4-r-trigger.txt
+permissions:
+  contents: read
+  actions: read
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download frozen inputs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api repos/${{ github.repository }}/actions/artifacts/12584079172/zip > /tmp/r6r4.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12583614872/zip > /tmp/r6r3.zip
+      - name: Verify inputs
+        run: |
+          echo 'e2a085c67ae942c1004cda341c5adb390038fe809f7d555ca565a80aeda259db  /tmp/r6r4.zip' | sha256sum -c -
+          echo '4a4b15c85c50f7034a692e92b77f8665af77ee40c22e2997b06981b8cd52dc51  /tmp/r6r3.zip' | sha256sum -c -
+      - name: Evaluate frozen evidence
+        run: python timemachine/src/step8_r6_r4_r_final_gate_evaluator_repair.py --r6r4 /tmp/r6r4.zip --r6r3 /tmp/r6r3.zip --out /tmp/r6r4r-out
+      - name: Protect production and STEP9
+        run: |
+          test -z "$(git diff HEAD^ HEAD -- v2/)"
+          test -z "$(git diff HEAD^ HEAD -- timemachine/src/step9*)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step8-r6-r4-r-final-gate-evaluator-repair
+          path: /tmp/r6r4r-out/
+          retention-days: 90
