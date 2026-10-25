@@ -1,0 +1,79 @@
+name: Time Machine STEP9-R6 Identity Contract Specification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'timemachine/triggers/step9-r6.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  R5_ARTIFACT_ID: '12589650461'
+  R5_SHA256: '7f9d230aebe1626f5968be06ad09fdb1f8c598c69afccaf0d0eff4c1f79cb302'
+  R6_BASE_SHA: '6f5a2669ae87f852ce71a1fd5ab5e1c3d2f2575d'
+
+jobs:
+  step9-r6:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download frozen R5 artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p .r6-input
+          gh api repos/${{ github.repository }}/actions/artifacts/${R5_ARTIFACT_ID}/zip > .r6-input/r5.zip
+
+      - name: Verify frozen R5 digest
+        run: |
+          test "$(sha256sum .r6-input/r5.zip | awk '{print $1}')" = "$R5_SHA256"
+
+      - name: Run STEP9-R6 specification and migration design
+        run: |
+          rm -rf timemachine/artifacts/step9-r6
+          python timemachine/src/step9_r6_identity_contract_specification.py \
+            --out timemachine/artifacts/step9-r6 \
+            --r5-zip .r6-input/r5.zip \
+            --base-sha "$R6_BASE_SHA" \
+            --head-sha "${{ github.sha }}"
+
+      - name: Verify specification-only protection
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('timemachine/artifacts/step9-r6/protected-output-integrity.json'))
+          assert p['PASS'], p
+          o=json.load(open('timemachine/artifacts/step9-r6/outcome-isolation-audit.json'))
+          assert o['outcome_access_count']==0 and o['outcome_calculations']==0
+          m=json.load(open('timemachine/artifacts/step9-r6/manifest.json'))
+          assert m['specification_only'] and not m['prediction_replay_changed'] and not m['snapshot_changed']
+          PY
+
+      - name: Upload diagnostic artifact regardless of verdict
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step9-r6-identity-contract-specification
+          path: timemachine/artifacts/step9-r6/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Enforce STEP9-R6 technical verdict
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          p='timemachine/artifacts/step9-r6/step9-r6-verdict.json'
+          v=json.load(open(p))
+          print(v)
+          assert v['verdict']=='STEP9_R6_IDENTITY_CONTRACT_PROPOSED', v
+          assert v['STEP9']=='STEP9_BLOCKED'
+          assert v['STEP10_GATE']=='BLOCKED'
+          PY
