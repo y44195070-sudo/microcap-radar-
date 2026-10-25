@@ -1,0 +1,56 @@
+name: Time Machine STEP9-R6F-R2D Historical Source Strategy Redesign
+on:
+  push:
+    branches: [main]
+    paths: ['timemachine/triggers/step9-r6f-r2d.txt']
+  workflow_dispatch:
+permissions: {contents: read, actions: read}
+jobs:
+  step9-r6f-r2d:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile preflight
+        run: python -m py_compile timemachine/src/step9_r6f_r2d_source_strategy.py
+      - name: Download and verify frozen R2C-REPAIR baseline
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          set -euo pipefail; mkdir -p /tmp/frozen
+          gh api repos/${{ github.repository }}/actions/artifacts/12598834536/zip > /tmp/frozen/repair-cert.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12598664830/zip > /tmp/frozen/repair-checkpoint.zip
+          echo 'f6069ac7ebd3838fba066e47a89db50023f7f9bcab0583ee715ea077f45cc42d  /tmp/frozen/repair-cert.zip' | sha256sum -c -
+          echo 'a6198b30ac1a4f9b0273497a8b847b98605a51a00e1bbca8484d3c6fbfab3205  /tmp/frozen/repair-checkpoint.zip' | sha256sum -c -
+      - name: Residual decomposition and alternative historical source acquisition
+        run: |
+          rm -rf /tmp/r2d && mkdir -p /tmp/r2d
+          python timemachine/src/step9_r6f_r2d_source_strategy.py --repair-cert /tmp/frozen/repair-cert.zip --repair-checkpoint /tmp/frozen/repair-checkpoint.zip --out /tmp/r2d --head-sha '${{ github.sha }}'
+      - name: Strict certification validation
+        run: |
+          python - <<'PY'
+          import json,hashlib,os
+          o='/tmp/r2d';m=json.load(open(o+'/manifest.json'));assert m['missing']==[]
+          for p,h in json.load(open(o+'/hashes.json')).items():assert hashlib.sha256(open(os.path.join(o,p),'rb').read()).hexdigest()==h,p
+          for p,h in json.load(open(o+'/raw_evidence_hashes.json')).items():assert hashlib.sha256(open(os.path.join(o,p),'rb').read()).hexdigest()==h,p
+          l=json.load(open(o+'/legacy_638_certification_audit.json'));assert [l['raw_evidence_packaged'],l['valid_SHA_chain'],l['valid_PIT'],l['independently_reproducible'],l['invalidated']]==[638,638,638,638,0]
+          p=json.load(open(o+'/r2d_provider_execution_audit.json'));assert p['SEC']['queries_attempted']>0;assert p['Exchange']['queries_attempted']>0 or p['CorporateAction']['queries_attempted']>0
+          d=json.load(open(o+'/determinism_audit.json'));assert d['disagreements']==0
+          s=json.load(open(o+'/secret_redaction_audit.json'));assert s['files_scanned']>0 and s['confirmed_secrets']==0
+          assert all(v==0 for v in json.load(open(o+'/nonmutation_audit.json')).values())
+          t=json.load(open(o+'/technical_verdict.json'));assert t['STEP9']=='BLOCKED' and t['STEP10_GATE']=='BLOCKED' and t['R6F_R3']=='NOT_ALLOWED';print(t)
+          PY
+      - name: Verify protected diff
+        run: |
+          git fetch --no-tags --depth=1 origin b7a8e237d8387ca5e5f6e74858586bf21134f2c3
+          python - <<'PY'
+          import subprocess
+          base='b7a8e237d8387ca5e5f6e74858586bf21134f2c3';files=subprocess.check_output(['git','diff','--name-only',base,'HEAD'],text=True).splitlines();print(files)
+          forbidden=[f for f in files if f.startswith('v2/') or f.startswith('timemachine/src/prediction') or 'snapshot' in f.lower() or 'context' in f.lower() or 'rule_engine' in f.lower()];assert not forbidden
+          allowed={'.github/workflows/timemachine-step9-r6f-r2d.yml','timemachine/src/step9_r6f_r2d_source_strategy.py','timemachine/triggers/step9-r6f-r2d.txt'};assert set(files)<=allowed
+          PY
+      - name: Upload R2D checkpoint
+        uses: actions/upload-artifact@v4
+        with: {name: timemachine-step9-r6f-r2d-checkpoint, path: /tmp/r2d/checkpoint.json, if-no-files-found: error}
+      - name: Upload R2D certification
+        uses: actions/upload-artifact@v4
+        with: {name: timemachine-step9-r6f-r2d-certification, path: /tmp/r2d/, if-no-files-found: error}
