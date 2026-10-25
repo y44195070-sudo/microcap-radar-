@@ -1,1 +1,1 @@
-STEP9-R6A trigger
+STEP9-R6A-R trigger: original artifact ZIP digest verification repair
