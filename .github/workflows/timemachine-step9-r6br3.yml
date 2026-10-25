@@ -1,0 +1,52 @@
+name: Time Machine STEP9-R6B-R3 Corrected Identity Evidence Baseline
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'timemachine/triggers/step9-r6br3.txt'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  step9-r6br3:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: mkdir -p /tmp/r6br3
+      - name: Download frozen original artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/12590918148/zip > /tmp/r2.zip
+          gh api repos/${GITHUB_REPOSITORY}/actions/artifacts/12583614872/zip > /tmp/context.zip
+      - name: Verify original ZIP digests
+        run: |
+          echo '22a29f1a4488af7faf1920f1a10ee367662fa2a2f228374b1e81b67c03ee16f8  /tmp/r2.zip' | sha256sum -c -
+          echo '4a4b15c85c50f7034a692e92b77f8665af77ee40c22e2997b06981b8cd52dc51  /tmp/context.zip' | sha256sum -c -
+      - name: Build versioned corrected evidence baseline
+        run: python timemachine/src/step9_r6br3_corrected_identity_evidence_baseline.py --r2 /tmp/r2.zip --context /tmp/context.zip --out /tmp/r6br3 --head-sha ${{ github.sha }}
+      - name: Verify protection and isolation
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('/tmp/r6br3/protected_diff_verification.json'));assert p['protected_diff_verdict']=='PASS',p
+          o=json.load(open('/tmp/r6br3/outcome_isolation.json'));assert o['outcome_access_count']==0 and o['outcome_calculations']==0,o
+          r=json.load(open('/tmp/r6br3/rule_engine_nonexecution.json'));assert not r['RULE_ENGINE_V1_executed'],r
+          PY
+      - name: Upload R6B-R3 evidence artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step9-r6br3-corrected-identity-evidence-baseline
+          path: /tmp/r6br3/
+          if-no-files-found: error
+          retention-days: 90
+      - name: Enforce R6B-R3 verdict
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/r6br3/technical_verdict.json'));assert x['technical_verdict']=='STEP9_R6BR3_PASS_CORRECTED_IDENTITY_EVIDENCE_BASELINE',x;assert x['STEP9']=='STEP9_BLOCKED' and x['STEP10_GATE']=='BLOCKED',x
+          PY
