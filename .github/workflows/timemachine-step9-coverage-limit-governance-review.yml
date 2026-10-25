@@ -1,0 +1,62 @@
+name: Time Machine STEP9 Coverage Limit Governance Review
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'timemachine/triggers/step9-coverage-limit-governance-review.txt'
+      - '.github/workflows/timemachine-step9-coverage-limit-governance-review.yml'
+      - 'timemachine/src/step9_coverage_limit_governance_review.py'
+permissions: {contents: read, actions: read}
+jobs:
+  coverage-limit-governance-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Compile
+        run: python -m py_compile timemachine/src/step9_coverage_limit_governance_review.py
+      - name: Download and verify frozen originals
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          mkdir -p /tmp/frozen
+          gh api repos/${{ github.repository }}/actions/artifacts/12601937820/zip > /tmp/frozen/v52-cert.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12601043953/zip > /tmp/frozen/v52-checkpoint.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12601229639/zip > /tmp/frozen/design-cert.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12601539319/zip > /tmp/frozen/design-checkpoint.zip
+          echo 'c3d33505bda316031e2944aed1cf5a2203f01849b65753baad902ed8f19eb165  /tmp/frozen/v52-cert.zip' | sha256sum -c -
+          echo '42a2b4905b05cd3bcae9d0de8662d37b80d6ba604d785ad789d6b23120a01357  /tmp/frozen/v52-checkpoint.zip' | sha256sum -c -
+          echo 'dad090de7b74209857bc6f7fde65e438e55d9f69c7bf38113cda2bc97864f677  /tmp/frozen/design-cert.zip' | sha256sum -c -
+          echo 'd7666e80febeafff6f509725cdf7fdc5450fcda24222886bc25c5308d941c184  /tmp/frozen/design-checkpoint.zip' | sha256sum -c -
+      - name: Run governance review
+        run: |
+          rm -rf /tmp/governance; mkdir -p /tmp/governance
+          python timemachine/src/step9_coverage_limit_governance_review.py --v52-cert /tmp/frozen/v52-cert.zip --v52-checkpoint /tmp/frozen/v52-checkpoint.zip --design-cert /tmp/frozen/design-cert.zip --design-checkpoint /tmp/frozen/design-checkpoint.zip --out /tmp/governance --head-sha '${{ github.sha }}' --base-sha '27d5572c90a8e3007ecb3e4b1a8c22e54097be6d'
+      - name: Strict validate governance review
+        run: |
+          python - <<'PY'
+          import json,hashlib,os
+          o='/tmp/governance'
+          g=json.load(open(o+'/governance_decision.json')); assert g['governance_decision'] in {'COVERAGE_LIMIT_GOVERNANCE_GO','COVERAGE_LIMIT_GOVERNANCE_CONDITIONAL_GO','COVERAGE_LIMIT_GOVERNANCE_NO_GO'}
+          p=json.load(open(o+'/population_governance_classification.json')); assert p['total']==5026 and sum(p['counts'].values())==5026 and p['counts']['CERTIFIED_IDENTITY']==638
+          r=json.load(open(o+'/residual_fail_closed_contract.json')); assert r['tested']==4388 and not r['fallback_allowed'] and not r['identity_dependent_downstream_allowed']
+          l=json.load(open(o+'/legacy_638_preservation.json')); assert l['tested']==638 and l['invalidated']==0 and l['existing_pred_id_changed']==0
+          m=json.load(open(o+'/multi_ticker_preservation.json')); assert m['audited']==19 and m['false_merges']==0 and m['synthetic_included']==0 and m['synthetic_excluded']==4
+          n=json.load(open(o+'/nonmutation.json')); assert n['PASS'] and sum(v for k,v in n.items() if k!='PASS')==0
+          s=json.load(open(o+'/secret_scan.json')); assert s['files_scanned']>0 and s['confirmed_secrets']==0 and s['credential_bearing_urls']==0 and s['authorization_headers_stored']==0
+          man=json.load(open(o+'/manifest.json'))
+          for p,h in man['files'].items(): assert hashlib.sha256(open(os.path.join(o,p),'rb').read()).hexdigest()==h,p
+          print(json.dumps(g,indent=2))
+          PY
+      - name: Protected diff audit
+        run: |
+          python - <<'PY'
+          import subprocess
+          fs=subprocess.check_output(['git','diff','--name-only','27d5572c90a8e3007ecb3e4b1a8c22e54097be6d','HEAD'],text=True).splitlines(); print(fs)
+          allowed={'.github/workflows/timemachine-step9-coverage-limit-governance-review.yml','timemachine/triggers/step9-coverage-limit-governance-review.txt','timemachine/src/step9_coverage_limit_governance_review.py'}
+          assert set(fs)<=allowed,fs
+          assert not any(f.startswith('v2/') or f.startswith('timemachine/src/prediction') or 'snapshot' in f.lower() or 'context' in f.lower() or 'rule_engine' in f.lower() for f in fs)
+          PY
+      - uses: actions/upload-artifact@v4
+        with: {name: step9-coverage-limit-governance-checkpoint, path: /tmp/governance/checkpoint.json, if-no-files-found: error}
+      - uses: actions/upload-artifact@v4
+        with: {name: step9-coverage-limit-governance-certification, path: /tmp/governance/, if-no-files-found: error}
