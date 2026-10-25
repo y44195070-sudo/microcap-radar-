@@ -1,0 +1,82 @@
+name: Time Machine STEP9-R6F-R2A Provider Acquisition Recovery
+on:
+  workflow_dispatch:
+    inputs:
+      phase:
+        description: Acquisition phase A or B
+        required: false
+        default: B
+  push:
+    paths: ['timemachine/triggers/step9-r6f-r2a.txt']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  step9-r6f-r2a:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Compile preflight
+        run: python -m py_compile timemachine/src/step9_r6f_r2a_provider_acquisition.py
+      - name: Download frozen R6F-R2 artifact
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          mkdir -p /tmp/in
+          gh api repos/${{ github.repository }}/actions/artifacts/12597304878/zip > /tmp/in/r6fr2.zip
+          echo '71ffb9b24a1a6babb619e92f30c6cf2c71af26c6386964834a498d6d23a692e7  /tmp/in/r6fr2.zip' | sha256sum -c -
+      - name: Discover persistent R2A checkpoint
+        id: resume
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          python - <<'PY'
+          import json,os,subprocess
+          repo=os.environ['GITHUB_REPOSITORY']; current=os.environ['GITHUB_RUN_ID']
+          data=json.loads(subprocess.check_output(['gh','api',f'repos/{repo}/actions/artifacts?name=timemachine-step9-r6f-r2a-checkpoint&per_page=100']))
+          xs=[x for x in data.get('artifacts',[]) if str(x.get('workflow_run',{}).get('id'))!=current and not x.get('expired')]
+          xs.sort(key=lambda x:x.get('created_at',''),reverse=True)
+          if xs:
+            aid=str(xs[0]['id']);open('/tmp/resume_id','w').write(aid);print('resume artifact discovered:',aid)
+          else: print('no prior checkpoint artifact')
+          PY
+          if [ -s /tmp/resume_id ]; then
+            mkdir -p /tmp/resume
+            gh api repos/${{ github.repository }}/actions/artifacts/$(cat /tmp/resume_id)/zip > /tmp/resume/checkpoint.zip
+            echo 'resume=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'resume=false' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Run bounded provider recovery
+        env: {MASSIVE_API_KEY: '${{ secrets.MASSIVE_API_KEY }}'}
+        run: |
+          PHASE="${{ github.event.inputs.phase }}"
+          if [ -z "$PHASE" ]; then PHASE=A; fi
+          mkdir -p /tmp/r2a
+          EXTRA=""
+          if [ "${{ steps.resume.outputs.resume }}" = "true" ]; then EXTRA="--resume-zip /tmp/resume/checkpoint.zip"; PHASE=B; fi
+          python timemachine/src/step9_r6f_r2a_provider_acquisition.py --r6fr2 /tmp/in/r6fr2.zip --out /tmp/r2a --head-sha "${{ github.sha }}" --phase "$PHASE" $EXTRA
+      - name: Validate artifact and secret canary
+        run: |
+          python - <<'PY'
+          import json,os
+          o='/tmp/r2a';m=json.load(open(o+'/manifest.json'));s=json.load(open(o+'/secret_redaction_audit.json'));c=json.load(open(o+'/search_completeness_classification.json'))
+          assert not m['missing'],m['missing'];assert s['leak_count']==0,s;assert sum(c.values())==5026
+          assert json.load(open(o+'/technical_verdict.json'))['STEP9']=='BLOCKED'
+          assert json.load(open(o+'/technical_verdict.json'))['STEP10_GATE']=='BLOCKED'
+          PY
+      - name: Upload persistent checkpoint
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step9-r6f-r2a-checkpoint
+          path: |
+            /tmp/r2a/checkpoint.json
+            /tmp/r2a/checkpoint_manifest.json
+            /tmp/r2a/checkpoint_hashes.json
+          retention-days: 90
+      - name: Upload R2A certification
+        uses: actions/upload-artifact@v4
+        with:
+          name: timemachine-step9-r6f-r2a-provider-acquisition
+          path: /tmp/r2a/
+          retention-days: 90
