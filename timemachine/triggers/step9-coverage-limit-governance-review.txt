@@ -1,0 +1,2 @@
+STEP9 COVERAGE_LIMIT_GOVERNANCE_REVIEW
+Certified-subset governance design only. No production mutation, no R6F-R3, STEP10, or STEP11 execution.
