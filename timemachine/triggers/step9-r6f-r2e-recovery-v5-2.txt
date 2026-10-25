@@ -1,0 +1,5 @@
+STEP9-R6F-R2E-REPAIR-RECOVERY-V5.2
+Purpose: isolate V5.1 strict-validation failure and certify the fail-closed provider outcome without weakening evidence gates.
+Base: 8974cb342d9f8e72d44f35f6d21c0ac67358f6c4
+V5.1 run: 40199753457
+Requirements: preserve frozen lineage, no /v2/ mutation, no Prediction Identity changes, new push-triggered run.
