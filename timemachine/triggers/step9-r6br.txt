@@ -1,0 +1,3 @@
+STEP9-R6B-R Residual Identity Evidence Closure & Upstream Source-Gap Certification
+trigger: 2026-10-25
+base: 6011d6e2526f3423856d97ca4e3feb8f7ab25c17
