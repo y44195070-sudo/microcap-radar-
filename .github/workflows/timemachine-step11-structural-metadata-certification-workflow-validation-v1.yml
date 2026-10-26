@@ -1,0 +1,54 @@
+name: Time Machine STEP11 Structural Metadata Certification Workflow Validation V1
+on:
+  push:
+    branches: [step11-pre-full638-structural-metadata-certification-workflow-v1]
+permissions:
+  contents: read
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Compile isolated
+        run: |
+          mkdir -p /tmp/compile /tmp/validation
+          python - <<'PY'
+          import py_compile
+          for i,p in enumerate(['timemachine/src/step11_pre_full638_metadata_certification.py','timemachine/src/step11_structural_metadata_acquisition_execution.py']): py_compile.compile(p,cfile=f'/tmp/compile/{i}.pyc',doraise=True)
+          PY
+      - name: Network disabled regression validation
+        run: python timemachine/src/step11_structural_metadata_acquisition_execution.py --mode validate --out /tmp/validation
+      - name: Static workflow audit
+        run: |
+          python - <<'PY'
+          import json,pathlib,re
+          s=pathlib.Path('.github/workflows/timemachine-step11-pre-full638-structural-metadata-acquisition-certification.yml').read_text()
+          c={'manual_only':'workflow_dispatch:' in s and not re.search(r'^  (push|pull_request|schedule):',s,re.M),'authority_first':s.index('Revalidate frozen authorities before SEC network')<s.index('Execute candidate-wide metadata-only certification'),'runner':'step11_structural_metadata_acquisition_execution.py --mode certification' in s,'artifact':'actions/upload-artifact@v4' in s}
+          assert all(c.values()),c
+          json.dump({'checks':c,'PASS':True},open('/tmp/validation/workflow_static_audit.json','w'),sort_keys=True)
+          PY
+      - name: Zero network assertion
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/validation/network_kill_switch_report.json')); assert x['PASS'] and x['sec_requests']==0 and x['live_certification_executions']==0
+          PY
+      - name: Protected diff
+        run: |
+          git diff --name-only bcf7a3f28eee042000700528d11453947854574b...HEAD > /tmp/validation/changed_files.txt
+          python - <<'PY'
+          import json,pathlib
+          allowed={'timemachine/src/step11_structural_metadata_acquisition_execution.py','.github/workflows/timemachine-step11-pre-full638-structural-metadata-acquisition-certification.yml','.github/workflows/timemachine-step11-structural-metadata-certification-workflow-validation-v1.yml'}
+          got={x for x in pathlib.Path('/tmp/validation/changed_files.txt').read_text().splitlines() if x}; assert got<=allowed and not any(x.startswith('v2/') for x in got)
+          json.dump({'changed_files':sorted(got),'PASS':True},open('/tmp/validation/protected_diff.json','w'),sort_keys=True)
+          PY
+      - name: Security scanner
+        run: python timemachine/src/step11_fixture_security_scan_v5.py --out /tmp/validation/security.json timemachine/src .github/workflows
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: step11-structural-metadata-certification-workflow-validation-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/validation
+          if-no-files-found: error
+          retention-days: 90
