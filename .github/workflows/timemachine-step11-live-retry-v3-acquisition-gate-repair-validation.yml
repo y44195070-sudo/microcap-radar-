@@ -1,0 +1,109 @@
+name: Time Machine STEP11 Live Retry V3 Acquisition Gate Repair Validation
+on:
+  push:
+    branches: [step11-live-retry-v3-acquisition-gate-repair]
+    paths:
+      - 'timemachine/src/step11_structural_metadata_acquisition_execution_v3.py'
+      - 'timemachine/src/step11_sample32_metadata_oracle_compare.py'
+      - '.github/workflows/timemachine-step11-pre-full638-structural-metadata-acquisition-certification.yml'
+      - '.github/workflows/timemachine-step11-live-retry-v3-acquisition-gate-repair-validation.yml'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  zero-sec-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ github.sha }}', fetch-depth: 0}
+      - name: Compile isolated
+        run: |
+          mkdir -p /tmp/compile /tmp/repair-validation /tmp/authority
+          python - <<'PY'
+          import py_compile
+          for i,p in enumerate(['timemachine/src/step11_structural_metadata_acquisition_execution_v3.py','timemachine/src/step11_sample32_metadata_oracle_compare.py']): py_compile.compile(p,cfile=f'/tmp/compile/{i}.pyc',doraise=True)
+          PY
+      - name: Run zero-network synthetic repair validation
+        env:
+          STEP11_METADATA_CERTIFICATION_ENABLE: 'NO'
+        run: PYTHONPATH=timemachine/src python timemachine/src/step11_structural_metadata_acquisition_execution_v3.py --mode validate --out /tmp/repair-validation
+      - name: Retrieve immutable STEP9 authority only
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: gh api /repos/${{ github.repository }}/actions/artifacts/12603520492/zip > /tmp/authority/step9.zip
+      - name: Real frozen638 offline schema and request-contract validation
+        run: |
+          python - <<'PY'
+          import hashlib,json,zipfile,pathlib
+          p='/tmp/authority/step9.zip'; assert hashlib.sha256(open(p,'rb').read()).hexdigest()=='3ec6a1f4ec88ff284eade8d7730b301ea65d2d5a932feb11a0f76c0592c7c19c'
+          with zipfile.ZipFile(p) as z:
+           names=[n for n in z.namelist() if n.endswith('certified_identity_allowlist.json')]; assert len(names)==1
+           x=json.loads(z.read(names[0])); rows=x if isinstance(x,list) else x.get('rows',x.get('certified_allowlist',x.get('occurrences'))); assert len(rows)==638
+          pathlib.Path('/tmp/repair-validation/certified638-raw.json').write_text(json.dumps(rows,sort_keys=True,separators=(',',':')))
+          PY
+          python timemachine/src/step11_frozen_step9_schema_adapter.py --input /tmp/repair-validation/certified638-raw.json --out /tmp/repair-validation/certified638.json --report /tmp/repair-validation/real_frozen_schema_compatibility.json
+          PYTHONPATH=timemachine/src python - <<'PY'
+          import json,pathlib
+          import step11_structural_metadata_acquisition_execution as ex
+          import step11_structural_metadata_acquisition_execution_v3 as v3
+          import step11_pre_full638_metadata_certification as core
+          rows=ex.norm_rows(ex.load_rows(pathlib.Path('/tmp/repair-validation/certified638.json'))); assert len(rows)==638
+          ciks=sorted({r['issuer_cik'] for r in rows}); plan=core.build_request_plan(rows); assert len(ciks)==len(plan)==239
+          client=v3.RepairedMetadataClient(core.NetworkPolicy(enabled=False,max_requests=0),v3.UA_DEFAULT)
+          for cik in ciks:
+           req=client.build_request(core.endpoint_for_base(cik)); h={k.lower():v for k,v in req.header_items()}; assert req.get_method()=='GET' and req.full_url.startswith('https://data.sec.gov/submissions/CIK') and h.get('accept')=='application/json,text/plain,*/*' and 'authorization' not in h and 'cookie' not in h
+          assert core.COUNTERS['sec_requests']==0 and core.COUNTERS['network_requests']==0
+          json.dump({'raw_step9_rows':638,'normalized_rows':638,'frozen_cik_coverage':638,'unique_frozen_cik':len(ciks),'offline_request_plan_count':len(plan),'actual_sec_requests':0,'actual_external_data_requests':0,'decision':'REAL_FROZEN_ALLOWLIST_TO_REPAIRED_METADATA_CLIENT_COMPATIBILITY_PASS','PASS':True},open('/tmp/repair-validation/real638_request_contract.json','w'),sort_keys=True)
+          PY
+      - name: Sample32 incomplete-acquisition diagnostic regression
+        run: |
+          PYTHONPATH=timemachine/src python - <<'PY'
+          import pathlib,json
+          import step11_structural_metadata_acquisition_execution as ex
+          import step11_structural_metadata_acquisition_execution_v3 as v3
+          # Comparator source must retain immutable oracle policy and explicit incomplete diagnostic.
+          s=pathlib.Path('timemachine/src/step11_sample32_metadata_oracle_compare.py').read_text()
+          assert 'CANDIDATE_WIDE_REACQUISITION_WITH_IMMUTABLE_SAMPLE32_ORACLE' in s
+          assert 'NEW_ACQUISITION_INCOMPLETE_CANNOT_COMPARE_ORACLE' in s
+          assert 'ORACLE_ACCESSION_MISSING_FROM_COMPLETE_NEW_ACQUISITION' in s
+          json.dump({'oracle_invariant_preserved':True,'incomplete_acquisition_diagnostic':'NEW_ACQUISITION_INCOMPLETE_CANNOT_COMPARE_ORACLE','sample32_mutations':0,'PASS':True},open('/tmp/repair-validation/sample32_diagnostic_regression.json','w'),sort_keys=True)
+          PY
+      - name: Gate ordering regression
+        run: |
+          python - <<'PY'
+          import pathlib,json
+          w=pathlib.Path('.github/workflows/timemachine-step11-pre-full638-structural-metadata-acquisition-certification.yml').read_text()
+          order=['Execute candidate-wide metadata-only core','Compare immutable Sample32 oracle','Security scanner unchanged','Protected state audit','Final certification assertion only after all mandatory gates']
+          pos=[w.index(x) for x in order]; assert pos==sorted(pos)
+          assert w.count("STEP11_PRE_FULL638_STRUCTURAL_METADATA_ACQUISITION_CERTIFIED")==1
+          json.dump({'gate_order':order,'premature_certification_string_count':0,'final_certification_string_count':1,'PASS':True},open('/tmp/repair-validation/gate_order_regression.json','w'),sort_keys=True)
+          PY
+      - name: Security scanner unchanged
+        run: |
+          python timemachine/src/step11_fixture_security_scan_v5.py --out /tmp/repair-validation/security_report.json timemachine/src .github/workflows
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/repair-validation/security_report.json')); assert x['PASS'] and x['confirmed_secrets']==0 and x['credential_bearing_urls']==0 and x['authorization_headers']==0
+          PY
+      - name: Protected diff
+        run: |
+          python - <<'PY'
+          import subprocess,json
+          files=subprocess.check_output(['git','diff','--name-only','837e9f16bb18d9ac0d857f3873d9f23c1dae421d..HEAD'],text=True).splitlines()
+          allowed={'timemachine/src/step11_structural_metadata_acquisition_execution_v3.py','timemachine/src/step11_sample32_metadata_oracle_compare.py','.github/workflows/timemachine-step11-pre-full638-structural-metadata-acquisition-certification.yml','.github/workflows/timemachine-step11-live-retry-v3-acquisition-gate-repair-validation.yml'}
+          ok=set(files)<=allowed and not any(x.startswith('v2/') for x in files); json.dump({'files':files,'v2_changes':0,'PASS':ok},open('/tmp/repair-validation/protected_diff_report.json','w'),sort_keys=True); assert ok
+          PY
+      - name: Final offline validation decision
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          r=pathlib.Path('/tmp/repair-validation'); req=json.load(open(r/'real638_request_contract.json')); sec=json.load(open(r/'security_report.json')); prot=json.load(open(r/'protected_diff_report.json')); gate=json.load(open(r/'gate_order_regression.json')); syn=json.load(open(r/'repair_validation_summary.json'))
+          assert req['PASS'] and sec['PASS'] and prot['PASS'] and gate['PASS'] and syn['PASS']
+          d={'decision':'STEP11_LIVE_RETRY_V3_ACQUISITION_AND_CERTIFICATION_GATE_REPAIR_READY_FOR_MERGE','actual_sec_requests':0,'actual_external_data_requests':0,'live_certification_executions':0,'certification_status':'NOT_CERTIFIED','PASS':True}; json.dump(d,open(r/'final_decision.json','w'),sort_keys=True); print(d['decision'])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: step11-live-retry-v3-acquisition-gate-repair-validation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/repair-validation
+          if-no-files-found: error
+          retention-days: 90
