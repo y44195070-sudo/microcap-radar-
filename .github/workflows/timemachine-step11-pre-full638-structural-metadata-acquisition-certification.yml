@@ -1,6 +1,11 @@
 name: Time Machine STEP11 Pre-Full638 Structural Metadata Acquisition Certification
 on:
   workflow_dispatch:
+    inputs:
+      approved_certification_head:
+        description: 'Separately approved exact merge HEAD for this live certification'
+        required: true
+        type: string
 permissions:
   contents: read
   actions: read
@@ -8,6 +13,18 @@ jobs:
   structural-metadata-certification:
     runs-on: ubuntu-latest
     steps:
+      - name: Exact approved HEAD guard before checkout or network
+        env:
+          ACTUAL_HEAD: '${{ github.sha }}'
+          APPROVED_HEAD: '${{ inputs.approved_certification_head }}'
+        run: |
+          python - <<'PY'
+          import os,re
+          actual=os.environ['ACTUAL_HEAD']; approved=os.environ.get('APPROVED_HEAD','')
+          if not re.fullmatch(r'[0-9a-f]{40}',approved) or actual != approved:
+              raise SystemExit('STEP11_METADATA_ACQUISITION_POST_MERGE_HEAD_MISMATCH')
+          print('STEP11_METADATA_ACQUISITION_EXACT_HEAD_GUARD_PASS')
+          PY
       - uses: actions/checkout@v4
         with: {ref: '${{ github.sha }}', fetch-depth: 0}
       - name: Compile isolated
@@ -15,7 +32,8 @@ jobs:
           mkdir -p /tmp/step11-compile-check /tmp/frozen-authorities /tmp/preflight-authority /tmp/step11-cert /tmp/sample32-oracle
           python - <<'PY'
           import py_compile
-          for i,p in enumerate(['timemachine/src/step11_pre_full638_metadata_certification.py','timemachine/src/step11_frozen_authority_revalidate.py','timemachine/src/step11_structural_metadata_acquisition_execution.py','timemachine/src/step11_sample32_metadata_oracle_compare.py']): py_compile.compile(p,cfile=f'/tmp/step11-compile-check/{i}.pyc',doraise=True)
+          files=['timemachine/src/step11_pre_full638_metadata_certification.py','timemachine/src/step11_frozen_authority_revalidate.py','timemachine/src/step11_structural_metadata_acquisition_execution.py','timemachine/src/step11_sample32_metadata_oracle_compare.py','timemachine/src/step11_frozen_step9_schema_adapter.py']
+          for i,p in enumerate(files): py_compile.compile(p,cfile=f'/tmp/step11-compile-check/{i}.pyc',doraise=True)
           PY
       - name: Download immutable authorities before SEC network
         env: {GH_TOKEN: '${{ github.token }}'}
@@ -51,12 +69,27 @@ jobs:
           import json,zipfile
           z=zipfile.ZipFile('/tmp/frozen-authorities/12603520492.zip'); c=[n for n in z.namelist() if n.endswith('certified_identity_allowlist.json')]; assert len(c)==1
           x=json.loads(z.read(c[0])); rows=x if isinstance(x,list) else x.get('rows',x.get('certified_allowlist',x.get('occurrences'))); assert isinstance(rows,list) and len(rows)==638
-          json.dump(rows,open('/tmp/step11-cert/certified638.json','w'),sort_keys=True,separators=(',',':'))
+          json.dump(rows,open('/tmp/step11-cert/certified638-raw.json','w'),sort_keys=True,separators=(',',':'))
           with zipfile.ZipFile('/tmp/frozen-authorities/12637078890.zip') as o: assert o.testzip() is None; o.extractall('/tmp/sample32-oracle')
+          PY
+      - name: Real immutable STEP9 schema compatibility gate before SEC network
+        run: |
+          python timemachine/src/step11_frozen_step9_schema_adapter.py --input /tmp/step11-cert/certified638-raw.json --out /tmp/step11-cert/certified638.json --report /tmp/step11-cert/real_schema_compatibility.json
+          PYTHONPATH=timemachine/src python - <<'PY'
+          import json
+          import step11_structural_metadata_acquisition_execution as live
+          import step11_pre_full638_metadata_certification as core
+          rows=live.norm_rows(live.load_rows(__import__('pathlib').Path('/tmp/step11-cert/certified638.json')))
+          assert len(rows)==638 and len({r['issuer_cik'] for r in rows})==239
+          plan=core.build_request_plan(rows); assert len(plan)==239
+          assert core.COUNTERS['sec_requests']==0
+          json.dump({'raw_rows':638,'normalized_rows':638,'normalized_issuer_cik_coverage':638,'unique_frozen_cik':239,'offline_request_plan_count':239,'sec_requests':0,'decision':'REAL_FROZEN_ALLOWLIST_TO_LIVE_RUNNER_SCHEMA_COMPATIBILITY_PASS'},open('/tmp/step11-cert/live_runner_schema_gate.json','w'),sort_keys=True)
           PY
       - name: Execute candidate-wide metadata-only certification
         env:
           STEP11_METADATA_CERTIFICATION_ENABLE: 'YES'
+          STEP11_APPROVED_CERTIFICATION_HEAD: '${{ inputs.approved_certification_head }}'
+          STEP11_ACTUAL_HEAD: '${{ github.sha }}'
           SEC_USER_AGENT: 'MicrocapRadarTimeMachine/1.0 y44195070-sudo GitHub research contact'
         run: python timemachine/src/step11_structural_metadata_acquisition_execution.py --mode certification --input638 /tmp/step11-cert/certified638.json --out /tmp/step11-cert/execution
       - name: Compare immutable Sample32 oracle
