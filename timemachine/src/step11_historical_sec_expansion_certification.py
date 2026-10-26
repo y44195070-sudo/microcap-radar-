@@ -118,7 +118,9 @@ def main():
     if ffrom<=cutoff<=fto or fto<=cutoff:
      hq=c.get('https://data.sec.gov/submissions/'+f['name'],oid,f'history{j}')
      if hq['status']!='SUCCESS': status='PARTIAL';continue
-     try: filings.extend(rows_from_recent(json.loads(hq['body'])); status='COMPLETE_FOR_DEFINED_SCOPE' if any(aware(x['acceptance_timestamp'])<=cutoff for x in filings if x.get('acceptance_timestamp')) else status
+     try:
+      filings.extend(rows_from_recent(json.loads(hq['body'])))
+      status='COMPLETE_FOR_DEFINED_SCOPE' if any(aware(x['acceptance_timestamp'])<=cutoff for x in filings if x.get('acceptance_timestamp')) else status
      except: status='PARTIAL'
      if status=='COMPLETE_FOR_DEFINED_SCOPE': break
   occurrences[oid]={'source_completeness':status,'filings':filings,'request_status':'SUCCESS'}
