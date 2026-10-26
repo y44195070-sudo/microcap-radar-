@@ -177,7 +177,7 @@ jobs:
           if report is not None and rc is not None:
            pass_field=report.get('PASS');prohibited=prohibited_count>0;semantic_consistency=((rc==0 and pass_field is True and not prohibited) or (rc!=0 and pass_field is False and prohibited))
           execution={'schema_version':'STEP11_SCANNER_EXECUTION_METADATA_V1','repository_head':os.environ['GITHUB_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],'run_attempt':os.environ['GITHUB_RUN_ATTEMPT'],'original_scanner_exit_code':rc,'scanner_state':state,'scanner_report_exists':raw_exists,'scanner_report_parse_error':parse_error,'original_report_sha256':raw_sha,'original_report_size_bytes':raw_size,'input_integrity_pass':input_integrity,'source_authority_pass':source_authority_ok,'security_state_consistent':semantic_consistency};(F/'scanner_execution_metadata.json').write_text(json.dumps(execution,sort_keys=True,indent=2)+'\n')
-          required=['security_scan_report_redacted.json','scanner_input_manifest.json','scanner_input_postscan_manifest.json','scanner_execution_metadata.json','generated_evidence_inventory.json','protected_diff_report.json'];fm_entries=[]
+          required=['security_scan_report_redacted.json','scanner_input_manifest.json','scanner_input_postscan_manifest.json','scanner_execution_metadata.json','generated_evidence_inventory.json','protected_diff_report.json','original_scanner_exit_code.txt'];fm_entries=[]
           for name in required:
            p=F/name
            if p.is_file(): fm_entries.append({'path':name,'size_bytes':p.stat().st_size,'sha256':sha_file(p)})
@@ -214,6 +214,10 @@ jobs:
            for e in m['entries']: assert hashlib.sha256(z.read(e['path'])).hexdigest()==e['sha256']
            assert m['repository_head']==os.environ['GITHUB_SHA'] and str(m['run_id'])==os.environ['GITHUB_RUN_ID'] and str(m['run_attempt'])==os.environ['GITHUB_RUN_ATTEMPT']
            pre=json.loads(z.read('scanner_input_manifest.json'));post=json.loads(z.read('scanner_input_postscan_manifest.json'));meta=json.loads(z.read('scanner_execution_metadata.json'));red=json.loads(z.read('security_scan_report_redacted.json'))
+           raw_exit=z.read('original_scanner_exit_code.txt')
+           if re.fullmatch(rb'[0-9]+\n?',raw_exit) is None: raise SystemExit('SECURITY_STATE_INCONSISTENT')
+           txt_exit_code=int(raw_exit.rstrip(b'\n'))
+           if type(meta.get('original_scanner_exit_code')) is not int or type(m.get('scanner_exit_code')) is not int or txt_exit_code!=meta['original_scanner_exit_code'] or txt_exit_code!=m['scanner_exit_code']: raise SystemExit('SECURITY_STATE_INCONSISTENT')
            for x in (pre,post): payload={k:v for k,v in x.items() if k!='manifest_sha256'};assert hashlib.sha256(json.dumps(payload,sort_keys=True,separators=(',',':')).encode()).hexdigest()==x['manifest_sha256']
            sig=lambda x:[(e['input_root'],e['relative_path'],e['size_bytes'],e['sha256']) for e in x['entries']];assert pre['total_input_files']==post['total_input_files'] and sig(pre)==sig(post);assert meta['input_integrity_pass'] is True and meta['source_authority_pass'] is True and meta['security_state_consistent'] is True;assert red['scanner_state']==meta['scanner_state'];agg=red['certification_scan'];findings=red['findings'];assert agg['matches_found']==len(findings);assert agg['prohibited_findings']==sum(1 for f in findings if f['scanner_classification'] in {'REAL_SECRET','CREDENTIAL_BEARING_URL','AUTHORIZATION_HEADER_EXPOSURE'});assert red['security_regression']['PASS'] and red['security_regression']['safe_cases']==15 and red['security_regression']['safe_pass']==15 and red['security_regression']['unsafe_cases']==14 and red['security_regression']['unsafe_fail_closed']==14
           print(json.dumps({'forensic_artifact_id':os.environ['FORENSIC_ID'],'forensic_upload_digest':os.environ['FORENSIC_DIGEST'],'forensic_independent_sha256':archive_sha,'FORENSIC_ARTIFACT_VERIFIED':True},sort_keys=True))
