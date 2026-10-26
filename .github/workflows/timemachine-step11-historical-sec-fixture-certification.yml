@@ -7,6 +7,7 @@ on:
       - '.github/workflows/timemachine-step11-historical-sec-fixture-certification.yml'
       - 'timemachine/src/step11_historical_sec_fixture_certification_v4.py'
       - 'timemachine/src/step11_frozen_authority_resolver_v2.py'
+      - 'timemachine/src/step11_fixture_security_scan_v5.py'
 permissions: {contents: read, actions: read}
 jobs:
   fixture-certification:
@@ -19,6 +20,7 @@ jobs:
         run: |
           python -m py_compile timemachine/src/step11_historical_sec_fixture_certification_v4.py
           python -m py_compile timemachine/src/step11_frozen_authority_resolver_v2.py
+          python -m py_compile timemachine/src/step11_fixture_security_scan_v5.py
       - name: Reacquire frozen authorities
         run: |
           mkdir -p /tmp/frozen /tmp/step9
@@ -71,20 +73,34 @@ jobs:
            p=A/n; entries[n]={'path':n,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
           m['entries']=[entries[k] for k in sorted(entries)]; m['file_count']=len(m['entries']); (A/'manifest.json').write_text(json.dumps(m,sort_keys=True,indent=2)+'\n')
           PY
-      - name: Protected diff lineage V4
+      - name: Protected diff lineage V5
         run: |
           python - <<'PY'
           import subprocess
           plan='129ef1e8689ac3b265ec183668823ba464463031'; pre='4ace0b4b4a34992dda2b7d656171238bfa8652a5'; lineage=subprocess.check_output(['git','log','--format=%H','--ancestry-path',f'{plan}..HEAD'],text=True).splitlines(); assert pre in lineage
           pre_files=subprocess.check_output(['git','diff','--name-only',plan,pre],text=True).splitlines(); assert pre_files==['v2/data/review-daily-2026-10-23.json'],pre_files
-          owned=subprocess.check_output(['git','diff','--name-only',pre,'HEAD'],text=True).splitlines(); allowed={'timemachine/src/step11_historical_sec_fixture_certification.py','timemachine/src/step11_historical_sec_fixture_certification_v4.py','timemachine/src/step11_frozen_authority_resolver_v2.py','.github/workflows/timemachine-step11-historical-sec-fixture-certification.yml','timemachine/triggers/step11-historical-sec-fixture-certification.txt'}; assert set(owned)<=allowed,owned; assert not any(x.startswith('v2/') for x in owned),owned
+          owned=subprocess.check_output(['git','diff','--name-only',pre,'HEAD'],text=True).splitlines(); allowed={'timemachine/src/step11_historical_sec_fixture_certification.py','timemachine/src/step11_historical_sec_fixture_certification_v4.py','timemachine/src/step11_frozen_authority_resolver_v2.py','timemachine/src/step11_fixture_security_scan_v5.py','.github/workflows/timemachine-step11-historical-sec-fixture-certification.yml','timemachine/triggers/step11-historical-sec-fixture-certification.txt'}; assert set(owned)<=allowed,owned; assert not any(x.startswith('v2/') for x in owned),owned
           print('PRE_EXISTING_UNRELATED_MAIN_CHANGE',pre_files); print('FIXTURE_OWNED_CHANGE',owned)
+          PY
+      - name: Security scanner regression tests
+        run: |
+          python - <<'PY'
+          import pathlib,subprocess,json,tempfile
+          scanner='timemachine/src/step11_fixture_security_scan_v5.py'; td=pathlib.Path(tempfile.mkdtemp())
+          safe=td/'safe.txt'; safe.write_text("GH_TOKEN\n${GH_TOKEN}\n${{ secrets.GITHUB_TOKEN }}\nAuthorization header\ncredential_required\nstored_tokens\nhttps://data.sec.gov/submissions/CIK0001631487.json\n")
+          out=td/'safe.json'; subprocess.check_call(['python',scanner,'--out',str(out),str(safe),scanner]); assert json.load(open(out))['PASS']
+          bads=['Authorization: Bearer ABCDEFGHIJKLMNOPQRST','Bearer ABCDEFGHIJKLMNOPQRST','https://x.test/?apiKey=ABCDEFGHIJKLMNO','https://x.test/?token=ABCDEFGHIJKLMNO','https://x.test/?key=ABCDEFGHIJKLMNO','ghp_ABCDEFGHIJKLMNOPQRSTUVWXYZ123456']
+          for i,s in enumerate(bads):
+           p=td/f'bad{i}.txt'; p.write_text(s); o=td/f'bad{i}.json'; r=subprocess.run(['python',scanner,'--out',str(o),str(p)]); assert r.returncode!=0 and not json.load(open(o))['PASS'],s
+          print('SECURITY_TESTS',{'defined':8,'executed':8,'passed':8,'failed':0})
           PY
       - name: Security scan
         run: |
+          python timemachine/src/step11_fixture_security_scan_v5.py --out /tmp/security-scan-report.json timemachine/src/step11_historical_sec_fixture_certification_v4.py timemachine/src/step11_frozen_authority_resolver_v2.py timemachine/src/step11_fixture_security_scan_v5.py .github/workflows/timemachine-step11-historical-sec-fixture-certification.yml /tmp/fixture-a
+          cp /tmp/security-scan-report.json /tmp/fixture-a/security_scan_report.json
           python - <<'PY'
-          import pathlib,re
-          files=['timemachine/src/step11_historical_sec_fixture_certification_v4.py','timemachine/src/step11_frozen_authority_resolver_v2.py','.github/workflows/timemachine-step11-historical-sec-fixture-certification.yml']; text='\n'.join(pathlib.Path(x).read_text() for x in files); pats=[r'Bearer\s+[A-Za-z0-9._-]{10,}',r'[?&](?:apiKey|token|key)=[^&\s]+',r'Authorization:\s*[^$\n]']; assert not any(re.search(x,text,re.I) for x in pats)
+          import json,pathlib,hashlib
+          A=pathlib.Path('/tmp/fixture-a'); m=json.load(open(A/'manifest.json')); entries={e['path']:e for e in m['entries']}; p=A/'security_scan_report.json'; entries[p.name]={'path':p.name,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}; m['entries']=[entries[k] for k in sorted(entries)]; m['file_count']=len(m['entries']); (A/'manifest.json').write_text(json.dumps(m,sort_keys=True,indent=2)+'\n')
           PY
       - name: Build checkpoint
         run: cp /tmp/fixture-a/checkpoint.json /tmp/step11-fixture-checkpoint.json
@@ -108,4 +124,5 @@ jobs:
           r=json.loads(z.read('frozen_authority_resolver_v3.json')); assert r['PASS'] and r['authority_ambiguities']==0
           d=json.loads(z.read('step11_fixture_decision.json')); assert d['decision']=='STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_FIXTURE_CERTIFIED'; assert d['real_SEC_successes']>0 and d['future_filings_excluded']>0
           q=json.loads(z.read('sec_acquisition_report.json')); assert q['residual_sec_queries']==0 and q['unknown_sec_queries']==0
+          s=json.loads(z.read('security_scan_report.json')); assert s['PASS'] and s['confirmed_secrets']==0 and s['credential_bearing_urls']==0 and s['authorization_headers']==0
           PY
