@@ -19,9 +19,29 @@ jobs:
           ref: ${{ github.sha }}
           fetch-depth: 0
       - name: Compile
-        run: |
-          python -m py_compile timemachine/src/step11_historical_sec_expansion_certification.py
-          python -m py_compile timemachine/src/step11_fixture_security_scan_v5.py
+         run: |
+          python - <<'PY'
+          import pathlib
+          import py_compile
+
+          out = pathlib.Path("/tmp/step11-compile-check")
+          out.mkdir(parents=True, exist_ok=True)
+
+          sources = [
+              pathlib.Path("timemachine/src/step11_historical_sec_expansion_certification.py"),
+              pathlib.Path("timemachine/src/step11_fixture_security_scan_v5.py"),
+          ]
+
+          for src in sources:
+              dst = out / (src.name + "c")
+              py_compile.compile(
+                  str(src),
+                  cfile=str(dst),
+                  doraise=True,
+              )
+
+          print("ISOLATED_COMPILE_PASS")
+          PY
       - name: Reacquire frozen authorities
         env:
           GH_TOKEN: ${{ github.token }}
