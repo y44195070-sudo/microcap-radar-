@@ -1,0 +1,2 @@
+STEP11 Historical SEC Expansion Certification Plan trigger.
+PLAN ONLY. No Expansion SEC acquisition, no full 638 backfill, no residual identity recovery, no /v2/ mutation.
