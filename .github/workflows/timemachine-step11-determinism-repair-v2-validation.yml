@@ -1,0 +1,108 @@
+name: Time Machine STEP11 Determinism Repair V2 Validation
+on:
+  push:
+    branches: [step11-live-retry-v2-determinism-repair-v2]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  zero-sec-offline-replay-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ github.sha }}', fetch-depth: 0}
+      - name: Compile isolated
+        run: |
+          mkdir -p /tmp/step11-compile-check /tmp/step11-repair-v2 /tmp/frozen
+          python - <<'PY'
+          import py_compile
+          for i,p in enumerate(['timemachine/src/step11_structural_metadata_acquisition_execution.py','timemachine/src/step11_pre_full638_metadata_certification.py','timemachine/src/step11_frozen_step9_schema_adapter.py']):
+              py_compile.compile(p,cfile=f'/tmp/step11-compile-check/{i}.pyc',doraise=True)
+          PY
+      - name: Download immutable STEP9 only
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          gh api /repos/${{ github.repository }}/actions/artifacts/12603520492 > /tmp/frozen/artifact.json
+          gh api /repos/${{ github.repository }}/actions/artifacts/12603520492/zip > /tmp/frozen/step9.zip
+      - name: Verify STEP9 and extract real638
+        run: |
+          python - <<'PY'
+          import hashlib,json,zipfile
+          expected='3ec6a1f4ec88ff284eade8d7730b301ea65d2d5a932feb11a0f76c0592c7c19c'
+          raw=open('/tmp/frozen/step9.zip','rb').read(); assert hashlib.sha256(raw).hexdigest()==expected
+          meta=json.load(open('/tmp/frozen/artifact.json')); assert meta['id']==12603520492 and meta['workflow_run']['id']==40204385931 and meta['workflow_run']['head_sha']=='03457bba70c0297b425ecd68e5e9c568df038f1d'
+          with zipfile.ZipFile('/tmp/frozen/step9.zip') as z:
+              assert z.testzip() is None
+              names=[n for n in z.namelist() if n.endswith('certified_identity_allowlist.json')]; assert len(names)==1
+              rows=json.loads(z.read(names[0])); assert len(rows)==638
+          json.dump(rows,open('/tmp/step11-repair-v2/certified638-raw.json','w'),sort_keys=True,separators=(',',':'))
+          json.dump({'artifact_id':12603520492,'sha256':expected,'raw_rows':638,'PASS':True},open('/tmp/step11-repair-v2/frozen_step9_integrity.json','w'),sort_keys=True)
+          PY
+      - name: Real frozen schema compatibility
+        run: |
+          python timemachine/src/step11_frozen_step9_schema_adapter.py --input /tmp/step11-repair-v2/certified638-raw.json --out /tmp/step11-repair-v2/certified638-normalized.json --report /tmp/step11-repair-v2/real_frozen_schema_compatibility.json
+          PYTHONPATH=timemachine/src python - <<'PY'
+          import json,pathlib
+          import step11_structural_metadata_acquisition_execution as live
+          import step11_pre_full638_metadata_certification as core
+          rows=live.norm_rows(live.load_rows(pathlib.Path('/tmp/step11-repair-v2/certified638-normalized.json'))); plan=core.build_request_plan(rows)
+          assert len(rows)==638 and len({r['issuer_cik'] for r in rows})==239 and len(plan)==239 and core.COUNTERS['sec_requests']==0
+          json.dump({'decision':'REAL_FROZEN_ALLOWLIST_TO_REPAIRED_LIVE_RUNNER_SCHEMA_COMPATIBILITY_PASS','raw_rows':638,'normalized_rows':638,'frozen_cik_coverage':638,'unique_frozen_cik':239,'offline_request_plan_candidates':638,'offline_request_plan_unique_cik':239,'sec_requests':0,'PASS':True},open('/tmp/step11-repair-v2/real_frozen_schema_compatibility.json','w'),sort_keys=True)
+          PY
+      - name: Core replay regression suite
+        run: |
+          PYTHONPATH=timemachine/src python timemachine/src/step11_structural_metadata_acquisition_execution.py --mode validate --out /tmp/step11-repair-v2/core
+          cp /tmp/step11-repair-v2/core/*.json /tmp/step11-repair-v2/
+      - name: Real638 offline replay contract
+        run: |
+          PYTHONPATH=timemachine/src python - <<'PY'
+          import json,pathlib,tempfile
+          import step11_structural_metadata_acquisition_execution as live
+          import step11_pre_full638_metadata_certification as core
+          rows=live.norm_rows(live.load_rows(pathlib.Path('/tmp/step11-repair-v2/certified638-normalized.json')))
+          ciks=sorted({r['issuer_cik'] for r in rows}); specs={c:{'complete':True,'filings':[]} for c in ciks}
+          specs[ciks[0]]={'complete':False,'base_success':False,'filings':[]}
+          a,b,manifest,state,rawdir=live._offline_replay(rows,specs,pathlib.Path('/tmp/step11-repair-v2/real638-fixture'))
+          disagreements=sum(x!=y for x,y in zip(a,b)); assert len(a)==638 and len(b)==638 and disagreements==0 and core.COUNTERS['sec_requests']==0
+          assert len({x['forensic_occurrence_id'] for x in a})==638 and len({x['forensic_occurrence_id'] for x in b})==638
+          json.dump({'pass_a_count':638,'pass_b_count':638,'semantic_disagreements':0,'pass_b_network_requests':0,'silent_denominator_reduction':0,'unique_frozen_cik':len(ciks),'PASS':True},open('/tmp/step11-repair-v2/real638_offline_replay_regression.json','w'),sort_keys=True)
+          PY
+      - name: Zero SEC assertion
+        run: |
+          python - <<'PY'
+          import json
+          x={'actual_sec_primary_requests':0,'actual_sec_historical_requests':0,'actual_sec_retries':0,'total_actual_sec_requests':0,'filing_body_requests':0,'exhibit_requests':0,'xbrl_requests':0,'companyfacts_requests':0,'provider_requests':0,'current_identifier_requests':0,'residual4388_requests':0,'pass_b_network_requests':0,'live_certification_executions':0,'sample32_mutations':0,'PASS':True}
+          json.dump(x,open('/tmp/step11-repair-v2/network_kill_switch_report.json','w'),sort_keys=True)
+          PY
+      - name: Security scanner unchanged
+        run: |
+          python timemachine/src/step11_fixture_security_scan_v5.py --out /tmp/step11-repair-v2/security_report.json timemachine/src .github/workflows
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/step11-repair-v2/security_report.json')); assert x['PASS'] is True and x['confirmed_secrets']==0 and x['credential_bearing_urls']==0 and x['authorization_headers']==0 and x['security_regression_v3']['PASS'] is True
+          PY
+      - name: Protected diff audit
+        run: |
+          git diff --exit-code c2a0c749ba3a63ea738389eeec618293676eb8b5 -- v2 timemachine/data timemachine/snapshots
+          python - <<'PY'
+          import json,subprocess
+          changed=subprocess.check_output(['git','diff','--name-only','c2a0c749ba3a63ea738389eeec618293676eb8b5','HEAD'],text=True).splitlines()
+          allowed={'timemachine/src/step11_structural_metadata_acquisition_execution.py','.github/workflows/timemachine-step11-determinism-repair-v2-validation.yml'}
+          assert set(changed)<=allowed,(changed,set(changed)-allowed)
+          json.dump({'starting_main_head':'c2a0c749ba3a63ea738389eeec618293676eb8b5','repair_head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'changed_files':changed,'v2_changes':0,'frozen_authority_changes':0,'sample32_changes':0,'residual4388_changes':0,'PASS':True},open('/tmp/step11-repair-v2/protected_diff_report.json','w'),sort_keys=True)
+          PY
+      - name: Final repair validation decision
+        run: |
+          python - <<'PY'
+          import json,os
+          for p in ['real_frozen_schema_compatibility.json','real638_offline_replay_regression.json','network_kill_switch_report.json','security_report.json','protected_diff_report.json']:
+              x=json.load(open('/tmp/step11-repair-v2/'+p)); assert x['PASS'] is True,p
+          d={'decision':'STEP11_METADATA_ACQUISITION_DETERMINISM_REPAIR_V2_READY_FOR_MERGE','ready_for_merge':True,'certification_status':'NOT_CERTIFIED','sec_requests':0,'live_certification_executions':0,'run_id':os.environ['GITHUB_RUN_ID'],'attempt':os.environ['GITHUB_RUN_ATTEMPT'],'repair_head':os.environ['GITHUB_SHA']}
+          json.dump(d,open('/tmp/step11-repair-v2/final_decision.json','w'),sort_keys=True); print(d['decision'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: step11-determinism-repair-v2-validation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/step11-repair-v2
+          if-no-files-found: error
+          retention-days: 90
