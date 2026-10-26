@@ -1,3 +1,4 @@
 STEP11 Historical SEC Backfill & Event Classification Expansion Certification
 Bounded deterministic 32-occurrence certified-only expansion.
 No /v2/ mutation. No full 638 backfill. No residual identity recovery.
+Repair V3: semantic security scanner recertification trigger only.
