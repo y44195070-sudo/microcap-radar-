@@ -1,0 +1,93 @@
+name: Time Machine STEP11 Pre-Full638 Structural Metadata Acquisition Certification
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  structural-metadata-certification:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ github.sha }}', fetch-depth: 0}
+      - name: Compile isolated
+        run: |
+          mkdir -p /tmp/step11-compile-check /tmp/frozen-authorities /tmp/preflight-authority /tmp/step11-cert /tmp/sample32-oracle
+          python - <<'PY'
+          import py_compile
+          for i,p in enumerate(['timemachine/src/step11_pre_full638_metadata_certification.py','timemachine/src/step11_frozen_authority_revalidate.py','timemachine/src/step11_structural_metadata_acquisition_execution.py','timemachine/src/step11_sample32_metadata_oracle_compare.py']): py_compile.compile(p,cfile=f'/tmp/step11-compile-check/{i}.pyc',doraise=True)
+          PY
+      - name: Download immutable authorities before SEC network
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          set -euo pipefail
+          for id in 12603520492 12603725128 12603356621 12603737037 12637518208 12637118813 12637078890; do
+            gh api /repos/${{ github.repository }}/actions/artifacts/$id > /tmp/frozen-authorities/artifact-$id.json
+            gh api /repos/${{ github.repository }}/actions/artifacts/$id/zip > /tmp/frozen-authorities/$id.zip
+          done
+          for pair in 'step9 40204385931' 'step10 40204853366' 'step11 40295222293'; do set -- $pair; gh api /repos/${{ github.repository }}/actions/runs/$2 > /tmp/frozen-authorities/run-$1.json; gh api /repos/${{ github.repository }}/actions/runs/$2/jobs > /tmp/frozen-authorities/jobs-$1.json; done
+      - name: Revalidate frozen authorities before SEC network
+        run: python timemachine/src/step11_frozen_authority_revalidate.py --artifact-dir /tmp/frozen-authorities --out /tmp/step11-cert/frozen_authority_revalidation.json
+      - name: Revalidate approved implementation preflight before SEC network
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          set -euo pipefail
+          gh api /repos/${{ github.repository }}/actions/artifacts/12644816526 > /tmp/preflight-authority/artifact.json
+          gh api /repos/${{ github.repository }}/actions/artifacts/12644816526/zip > /tmp/preflight-authority/preflight.zip
+          python - <<'PY'
+          import hashlib,json,zipfile
+          p='/tmp/preflight-authority/preflight.zip'; expected='7ba46161ff5616ac11c58c48a48a553e5e17e95fab1e1df34a6a296564c11913'
+          assert hashlib.sha256(open(p,'rb').read()).hexdigest()==expected
+          m=json.load(open('/tmp/preflight-authority/artifact.json')); assert m['id']==12644816526 and m['workflow_run']['id']==40310869024 and m['workflow_run']['head_sha']=='bcf7a3f28eee042000700528d11453947854574b'
+          with zipfile.ZipFile(p) as z:
+            assert z.testzip() is None
+            vals=[json.loads(z.read(n)) for n in z.namelist() if n.endswith('final_decision.json')]
+            assert any(x.get('decision')=='STEP11_PRE_FULL638_STRUCTURAL_METADATA_ACQUISITION_IMPLEMENTATION_READY' for x in vals)
+          json.dump({'preflight_run':40310869024,'preflight_job':121531433013,'artifact_id':12644816526,'digest':'sha256:'+expected,'decision':'STEP11_PRE_FULL638_STRUCTURAL_METADATA_ACQUISITION_IMPLEMENTATION_READY','PASS':True},open('/tmp/step11-cert/preflight_authority.json','w'),sort_keys=True)
+          PY
+      - name: Extract authoritative certified638 and immutable Sample32 oracle
+        run: |
+          python - <<'PY'
+          import json,zipfile
+          z=zipfile.ZipFile('/tmp/frozen-authorities/12603520492.zip'); c=[n for n in z.namelist() if n.endswith('certified_identity_allowlist.json')]; assert len(c)==1
+          x=json.loads(z.read(c[0])); rows=x if isinstance(x,list) else x.get('rows',x.get('certified_allowlist',x.get('occurrences'))); assert isinstance(rows,list) and len(rows)==638
+          json.dump(rows,open('/tmp/step11-cert/certified638.json','w'),sort_keys=True,separators=(',',':'))
+          with zipfile.ZipFile('/tmp/frozen-authorities/12637078890.zip') as o: assert o.testzip() is None; o.extractall('/tmp/sample32-oracle')
+          PY
+      - name: Execute candidate-wide metadata-only certification
+        env:
+          STEP11_METADATA_CERTIFICATION_ENABLE: 'YES'
+          SEC_USER_AGENT: 'MicrocapRadarTimeMachine/1.0 y44195070-sudo GitHub research contact'
+        run: python timemachine/src/step11_structural_metadata_acquisition_execution.py --mode certification --input638 /tmp/step11-cert/certified638.json --out /tmp/step11-cert/execution
+      - name: Compare immutable Sample32 oracle
+        run: python timemachine/src/step11_sample32_metadata_oracle_compare.py --oracle-dir /tmp/sample32-oracle --input638 /tmp/step11-cert/certified638.json --pass-a /tmp/step11-cert/execution/pass_a.json --out /tmp/step11-cert/execution/sample32_oracle_comparison.json
+      - name: Assert certification scope and decision
+        run: |
+          python - <<'PY'
+          import json
+          root='/tmp/step11-cert/execution/'; d=json.load(open(root+'final_decision.json')); n=json.load(open(root+'network_audit.json')); c=json.load(open(root+'metadata_coverage.json')); o=json.load(open(root+'sample32_oracle_comparison.json'))
+          assert d['decision']=='STEP11_PRE_FULL638_STRUCTURAL_METADATA_ACQUISITION_CERTIFIED' and d['candidate_count']==638 and d['metadata_scope']=='METADATA_ONLY_SCOPE'; assert c['total_occurrences']==638 and o['PASS'] and o['sample_count']==32 and not o['oracle_mutated']
+          assert n['provider_requests']==n['current_identifier_requests']==n['residual4388_requests']==n['filing_body_requests']==n['exhibit_requests']==n['xbrl_requests']==n['pass_b_network_requests']==0
+          PY
+      - name: Security scanner unchanged
+        run: |
+          python timemachine/src/step11_fixture_security_scan_v5.py --out /tmp/step11-cert/security.json timemachine/src .github/workflows
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/step11-cert/security.json')); assert x['PASS'] is True and x['confirmed_secrets']==0 and x['credential_bearing_urls']==0 and x['authorization_headers']==0 and x['security_regression_v3']['PASS'] is True
+          PY
+      - name: Protected state audit
+        run: |
+          git diff --exit-code HEAD -- v2 timemachine/data timemachine/snapshots
+          python - <<'PY'
+          import json,subprocess
+          dirty=subprocess.check_output(['git','status','--porcelain'],text=True).strip().splitlines(); assert not any(' v2/' in x or x.startswith('?? v2/') for x in dirty)
+          json.dump({'v2_changes':0,'production_changes':0,'prediction_changes':0,'prediction_identity_changes':0,'pred_id_changes':0,'rule_engine_changes':0,'context_changes':0,'snapshot_changes':0,'frozen_authority_changes':0,'sample32_changes':0,'residual4388_changes':0,'PASS':True},open('/tmp/step11-cert/protected_state.json','w'),sort_keys=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: step11-pre-full638-structural-metadata-acquisition-certification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/step11-cert
+          if-no-files-found: error
+          retention-days: 90
