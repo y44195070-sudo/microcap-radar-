@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - 'timemachine/src/step11_historical_sec_expansion_certification.py'
+      - 'timemachine/src/step11_fixture_security_scan_v5.py'
       - '.github/workflows/timemachine-step11-historical-sec-expansion-certification.yml'
       - 'timemachine/triggers/step11-historical-sec-expansion-certification.txt'
 permissions:
@@ -18,7 +19,9 @@ jobs:
           ref: ${{ github.sha }}
           fetch-depth: 0
       - name: Compile
-        run: python -m py_compile timemachine/src/step11_historical_sec_expansion_certification.py
+        run: |
+          python -m py_compile timemachine/src/step11_historical_sec_expansion_certification.py
+          python -m py_compile timemachine/src/step11_fixture_security_scan_v5.py
       - name: Reacquire frozen authorities
         env:
           GH_TOKEN: ${{ github.token }}
@@ -74,28 +77,47 @@ jobs:
           python - <<'PY'
           import subprocess
           files=subprocess.check_output(['git','diff','--name-only','1b5a5e8ed41f655249acc4f157d42dd6ea6fe60b..HEAD'],text=True).splitlines()
-          allowed={'timemachine/src/step11_historical_sec_expansion_certification.py','.github/workflows/timemachine-step11-historical-sec-expansion-certification.yml','timemachine/triggers/step11-historical-sec-expansion-certification.txt'}
+          allowed={'timemachine/src/step11_historical_sec_expansion_certification.py','timemachine/src/step11_fixture_security_scan_v5.py','.github/workflows/timemachine-step11-historical-sec-expansion-certification.yml','timemachine/triggers/step11-historical-sec-expansion-certification.txt'}
           assert set(files)<=allowed,files;assert not any(x.startswith('v2/') for x in files);print(files)
           PY
-      - name: Security scanner regression V2
+      - name: Security scanner regression V3
         run: |
           python - <<'PY'
           import pathlib,subprocess,json,tempfile
           scanner='timemachine/src/step11_fixture_security_scan_v5.py'; td=pathlib.Path(tempfile.mkdtemp())
-          safe_lines=["api_key", "access_token", "REDACTED", "NONE", "${{ secrets.SOMETHING }}", "${GH_TOKEN}", "?api_key=", "Authorization detection regex definition"]
-          safe=td/'safe.txt';safe.write_text('\n'.join(safe_lines)+'\n');out=td/'safe.json';subprocess.check_call(['python',scanner,'--out',str(out),str(safe),scanner]);assert json.load(open(out))['PASS']
+          safe_lines=[
+           "api_key", "access_token", "${{ secrets.SOMETHING }}", "${GH_TOKEN}", "REDACTED", "NONE", "placeholder",
+           "?api_key=", "Authorization detection regex definition", "re.compile(r'[?&](apiKey|token|key)=')",
+           "PATTERNS credential token scanner source", "synthetic_security_test_vector token=FAKE", "SAFE_PLACEHOLDER",
+           "invalid=['a'*63,a+'?token=x']", "invalid = ['digest?key=x']"]
+          safe=td/'safe.txt';safe.write_text('\n'.join(safe_lines)+'\n');out=td/'safe.json';subprocess.check_call(['python',scanner,'--out',str(out),str(safe),scanner]);sr=json.load(open(out));assert sr['PASS']
           fixture=td/'fixture.json';subprocess.check_call(['python',scanner,'--out',str(fixture),'.github/workflows/timemachine-step11-historical-sec-fixture-certification.yml']);fr=json.load(open(fixture));assert fr['PASS'] and fr['confirmed_secrets']==0 and fr['credential_bearing_urls']==0 and fr['authorization_headers']==0
-          bads=['https://x.test/?apiKey=SYNTHETIC_CREDENTIAL_1234567890','https://x.test/?token=SYNTHETIC_TOKEN_1234567890','Authorization: Bearer SYNTHETICBEARERTOKEN1234567890','Bearer SYNTHETICBEARERTOKEN1234567890','https://data.sec.gov/submissions/x.json?key=SYNTHETIC_SEC_CREDENTIAL_1234567890','ghp_ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890']
+          plan=td/'plan.json';subprocess.check_call(['python',scanner,'--out',str(plan),'.github/workflows/timemachine-step11-historical-sec-expansion-certification-plan.yml']);pr=json.load(open(plan));assert pr['PASS'] and pr['credential_bearing_urls']==0
+          bads=[
+           'https://x.test/?apiKey=SYNTHETIC_CREDENTIAL_1234567890',
+           'https://x.test/?token=SYNTHETIC_TOKEN_1234567890',
+           'Authorization: Bearer SYNTHETICBEARERTOKEN1234567890',
+           'Bearer SYNTHETICBEARERTOKEN1234567890',
+           'https://data.sec.gov/submissions/x.json?key=SYNTHETIC_SEC_CREDENTIAL_1234567890',
+           'ghp_ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
+           'https://x.test/path?a=1&token=SYNTHETIC_QUERY_ORDER_1234567890',
+           'https://x.test/?token=SYNTHETIC%5FTOKEN%5F1234567890',
+           'https://x.test/?ToKeN=SYNTHETIC_MIXED_CASE_1234567890',
+           '{"url":"https://x.test/?key=SYNTHETIC_JSON_KEY_1234567890"}',
+           'url: https://x.test/?apiKey=SYNTHETIC_YAML_KEY_1234567890',
+           '{"authorization":"Bearer SYNTHETICJSONBEARER1234567890"}',
+           'artifact_url=https://x.test/?token=SYNTHETIC_ARTIFACT_TOKEN_1234567890',
+           'https://x.test/?token=REDACTEX1234567890']
           for i,s in enumerate(bads):
            p=td/f'bad{i}.txt';p.write_text(s);o=td/f'bad{i}.json';r=subprocess.run(['python',scanner,'--out',str(o),str(p)]);assert r.returncode!=0 and not json.load(open(o))['PASS'],s
-          print(json.dumps({'safe_cases':len(safe_lines)+2,'unsafe_cases':len(bads),'fixture_workflow_false_positive':0,'PASS':True},sort_keys=True))
+          print(json.dumps({'safe_cases':len(safe_lines)+3,'safe_pass':True,'unsafe_cases':len(bads),'unsafe_fail_closed':True,'fixture_workflow_false_positive':0,'expansion_plan_digest_test_false_positive':0,'realistic_synthetic_credential_detection':'PASS','PASS':True},sort_keys=True))
           PY
       - name: Security regression
         run: |
-          python timemachine/src/step11_fixture_security_scan_v5.py --out /tmp/expansion-security-v2.json /tmp/expansion-cert timemachine/src .github/workflows
+          python timemachine/src/step11_fixture_security_scan_v5.py --out /tmp/expansion-security-v3.json /tmp/expansion-cert timemachine/src .github/workflows
           python - <<'PY'
           import json
-          r=json.load(open('/tmp/expansion-security-v2.json'));assert r['PASS'] and r['confirmed_secrets']==0 and r['credential_bearing_urls']==0 and r['authorization_headers']==0 and r['api_keys']==0 and r['tokens']==0
+          r=json.load(open('/tmp/expansion-security-v3.json'));assert r['PASS'] and r['confirmed_secrets']==0 and r['credential_bearing_urls']==0 and r['authorization_headers']==0 and r['api_keys']==0 and r['tokens']==0
           s=json.load(open('/tmp/expansion-cert/security_scan_report.json'));assert s['PASS'] and s['confirmed_secrets']==0 and s['credential_bearing_urls']==0 and s['authorization_headers']==0 and s['api_keys']==0 and s['tokens']==0
           print('SECURITY_PASS')
           PY
