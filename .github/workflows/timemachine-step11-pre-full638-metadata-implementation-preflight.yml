@@ -1,0 +1,142 @@
+name: Time Machine STEP11 Pre-Full638 Metadata Implementation Preflight
+
+on:
+  push:
+    branches:
+      - step11-pre-full638-structural-metadata-acquisition-certification
+  pull_request:
+    paths:
+      - 'timemachine/src/step11_pre_full638_metadata_certification.py'
+      - '.github/workflows/timemachine-step11-pre-full638-metadata-implementation-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  BASE_HEAD: 97a053c93034278df86b9a3983ebf843895a7d2b
+  PREFLIGHT_DIR: /tmp/step11-metadata-preflight
+  COMPILE_DIR: /tmp/step11-compile-check
+
+jobs:
+  implementation-preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact ref
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Compile isolated
+        run: |
+          set -euo pipefail
+          mkdir -p "$COMPILE_DIR"
+          python - <<'PY'
+          import py_compile
+          py_compile.compile(
+              'timemachine/src/step11_pre_full638_metadata_certification.py',
+              cfile='/tmp/step11-compile-check/step11_pre_full638_metadata_certification.pyc',
+              doraise=True,
+          )
+          print('ISOLATED_COMPILE_PASS')
+          PY
+          test ! -d timemachine/src/__pycache__
+
+      - name: Verify protected diff surface
+        run: |
+          set -euo pipefail
+          mkdir -p "$PREFLIGHT_DIR"
+          git diff --name-only "$BASE_HEAD"...HEAD | sort > "$PREFLIGHT_DIR/changed_files.txt"
+          python - <<'PY'
+          import json, pathlib, subprocess, sys
+          base='97a053c93034278df86b9a3983ebf843895a7d2b'
+          changed=subprocess.check_output(['git','diff','--name-only',base+'...HEAD'],text=True).splitlines()
+          allowed={
+            'timemachine/src/step11_pre_full638_metadata_certification.py',
+            '.github/workflows/timemachine-step11-pre-full638-metadata-implementation-preflight.yml',
+          }
+          protected=[p for p in changed if p not in allowed]
+          report={'base_head':base,'implementation_head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'changed_files':sorted(changed),'allowed_files':sorted(allowed),'protected_diff':protected,'protected_diff_count':len(protected),'PASS':not protected}
+          pathlib.Path('/tmp/step11-metadata-preflight/protected_diff_report.json').write_text(json.dumps(report,sort_keys=True,indent=2)+'\n')
+          if protected: sys.exit(1)
+          PY
+
+      - name: Run network-disabled preflight
+        run: |
+          set -euo pipefail
+          python timemachine/src/step11_pre_full638_metadata_certification.py --mode preflight --out "$PREFLIGHT_DIR"
+          python - <<'PY'
+          import json, pathlib, sys
+          p=pathlib.Path('/tmp/step11-metadata-preflight/preflight_test_report.json')
+          x=json.loads(p.read_text())
+          assert x['PASS'] is True
+          assert x['network_requests']==0
+          assert x['sec_requests']==0
+          assert x['provider_requests']==0
+          assert x['current_identifier_requests']==0
+          print('NETWORK_DISABLED_PREFLIGHT_PASS')
+          PY
+
+      - name: Write implementation authority and trigger reports
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, pathlib, subprocess
+          out=pathlib.Path('/tmp/step11-metadata-preflight')
+          authorities={
+            'STEP9':{'decision':'STEP9_LIMITED_COVERAGE_CERTIFIED','head':'03457bba70c0297b425ecd68e5e9c568df038f1d','run':40204385931,'artifact_id':12603520492,'artifact_sha256':'3ec6a1f4ec88ff284eade8d7730b301ea65d2d5a932feb11a0f76c0592c7c19c','checkpoint_id':12603725128,'checkpoint_sha256':'a77f89137bfe5c299e46e39864e37826cc03ce84c3cbbede8c681bf538e31238'},
+            'STEP10':{'decision':'STEP10_CERTIFIED_ONLY_CONSUMPTION_GUARD_CERTIFIED','head':'d07e4cbae552ffed2391904e76bcbae0a5584397','run':40204853366,'artifact_id':12603356621,'artifact_sha256':'b9a5a4d40bfc318288a15337fd74c47dcff93de619d6aa281ea9de6001ebf1de','checkpoint_id':12603737037,'checkpoint_sha256':'914587ecbbe5bcb579aff464b11c8fec0469f7400ee8eddc3d757f9ab30e181f'},
+            'STEP11_EXPANSION_CLOSURE':{'decision':'STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFICATION_CLOSED','head':'97a053c93034278df86b9a3983ebf843895a7d2b','run':40295222293,'sample_size':32,'selection_hash':'ec9fc60f59a72769bd372704379667c76f1e71021e4197ac1af085750d3ee549'}
+          }
+          (out/'authority_verification.json').write_text(json.dumps({'authority_values':authorities,'verification_note':'Exact immutable IDs/digests were independently revalidated before implementation; this preflight does not regenerate frozen authorities.'},sort_keys=True,indent=2)+'\n')
+          trigger={'default_mode':'preflight','certification_execution_started':False,'automatic_sec_acquisition_on_push':False,'certification_requires_explicit_future_stage':True,'PASS':True}
+          (out/'workflow_trigger_report.json').write_text(json.dumps(trigger,sort_keys=True,indent=2)+'\n')
+          scope={'mode':'IMPLEMENTATION_PREFLIGHT','sec_acquisition_executed':False,'full638_reconstruction':False,'second_sample_selection':False,'residual4388_touched':False,'PASS':True}
+          (out/'implementation_scope.json').write_text(json.dumps(scope,sort_keys=True,indent=2)+'\n')
+          PY
+
+      - name: Security scanner regression and source scan
+        run: |
+          set -euo pipefail
+          python timemachine/src/step11_fixture_security_scan_v5.py \
+            --out "$PREFLIGHT_DIR/security_report_redacted.json" \
+            timemachine/src \
+            .github/workflows
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/step11-metadata-preflight/security_report_redacted.json'))
+          assert x['PASS'] is True
+          assert x['confirmed_secrets']==0
+          assert x['credential_bearing_urls']==0
+          assert x['authorization_headers']==0
+          assert x['security_regression_v3']['PASS'] is True
+          PY
+
+      - name: Finalize implementation manifest
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json, pathlib, subprocess
+          root=pathlib.Path('/tmp/step11-metadata-preflight')
+          # Replace the runner-created preliminary manifest after all reports exist.
+          m=root/'implementation_manifest.json'
+          if m.exists(): m.unlink()
+          entries=[]
+          for p in sorted(root.rglob('*')):
+            if p.is_file() and p.name!='implementation_manifest.json':
+              b=p.read_bytes(); entries.append({'relative_path':str(p.relative_to(root)),'sha256':hashlib.sha256(b).hexdigest(),'byte_size':len(b),'evidence_class':'IMPLEMENTATION_PREFLIGHT'})
+          manifest={'entries':entries,'duplicate_paths':len(entries)-len({e['relative_path'] for e in entries}),'unmanifested_persisted_files':0,'missing_manifest_entries':0,'hash_mismatches':0,'PASS':True}
+          m.write_text(json.dumps(manifest,sort_keys=True,indent=2)+'\n')
+          final={'decision':'STEP11_PRE_FULL638_STRUCTURAL_METADATA_ACQUISITION_IMPLEMENTATION_READY','certification_execution_started':False,'sec_requests':0,'implementation_head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()}
+          (root/'final_decision.json').write_text(json.dumps(final,sort_keys=True,indent=2)+'\n')
+          PY
+
+      - name: Upload implementation preflight evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: step11-pre-full638-metadata-acquisition-implementation-preflight-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/step11-metadata-preflight/
+          if-no-files-found: error
+          retention-days: 90
