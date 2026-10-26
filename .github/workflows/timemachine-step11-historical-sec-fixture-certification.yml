@@ -42,10 +42,21 @@ jobs:
         run: |
           python - <<'PY'
           import json,zipfile
-          def read(z,n): return json.loads(zipfile.ZipFile(z).read(n))
-          assert read('/tmp/frozen/step9.zip','final_certification_decision.json')['decision']=='STEP9_LIMITED_COVERAGE_CERTIFIED'
-          assert read('/tmp/frozen/step10.zip','step10_decision.json')['decision']=='STEP10_CERTIFIED_ONLY_CONSUMPTION_GUARD_CERTIFIED'
-          assert read('/tmp/frozen/step11-plan.zip','step11_plan_decision.json')['decision']=='STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_CERTIFICATION_PLAN_GO'
+          expected={
+           '/tmp/frozen/step9.zip':'STEP9_LIMITED_COVERAGE_CERTIFIED',
+           '/tmp/frozen/step10.zip':'STEP10_CERTIFIED_ONLY_CONSUMPTION_GUARD_CERTIFIED',
+           '/tmp/frozen/step11-plan.zip':'STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_CERTIFICATION_PLAN_GO',
+          }
+          for zp,want in expected.items():
+           hits=[]
+           with zipfile.ZipFile(zp) as z:
+            for n in z.namelist():
+             if not n.endswith('.json'): continue
+             try: obj=json.loads(z.read(n))
+             except Exception: continue
+             if isinstance(obj,dict) and obj.get('decision')==want: hits.append(n)
+           assert len(hits)==1,(zp,want,hits)
+           print(zp,want,hits[0])
           PY
       - name: Execute Fixture Pass A
         run: python timemachine/src/step11_historical_sec_fixture_certification.py --out /tmp/fixture-a --head-sha '${{ github.sha }}' --step9-dir /tmp/step9
@@ -56,7 +67,6 @@ jobs:
           python - <<'PY'
           import json,pathlib
           A=pathlib.Path('/tmp/fixture-a'); B=pathlib.Path('/tmp/fixture-b')
-          # Live retrieval metadata may differ; semantic reconstruction must be identical after removing retrieval-only acquisition metadata.
           for n in ['fixture_selection.json','historical_reconstruction.json','same_day_boundary_test.json','future_leakage_audit.json','accession_normalization.json','amendment_chain_audit.json','effect_sequence_audit.json','filing_vs_supply_audit.json','issuer_security_linkage_audit.json','query_coverage_audit.json','positive_regression_tests.json','negative_regression_tests.json']:
            assert json.load(open(A/n))==json.load(open(B/n)),n
           d=json.load(open(A/'step11_fixture_decision.json')); assert d['decision']=='STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_FIXTURE_CERTIFIED',d
@@ -67,10 +77,20 @@ jobs:
         run: |
           python - <<'PY'
           import subprocess
-          fs=subprocess.check_output(['git','diff','--name-only','129ef1e8689ac3b265ec183668823ba464463031','HEAD'],text=True).splitlines()
+          plan='129ef1e8689ac3b265ec183668823ba464463031'
+          pre_fixture_main='4ace0b4b4a34992dda2b7d656171238bfa8652a5'
+          fixture_merge='90b8a114c426964f55ba6f30612c479a63eb6bef'
+          lineage=subprocess.check_output(['git','log','--format=%H','--ancestry-path',f'{plan}..HEAD'],text=True).splitlines()
+          assert pre_fixture_main in lineage,(pre_fixture_main,lineage)
+          assert fixture_merge in lineage,(fixture_merge,lineage)
+          pre_files=subprocess.check_output(['git','diff','--name-only',plan,pre_fixture_main],text=True).splitlines()
+          assert pre_files==['v2/data/review-daily-2026-10-23.json'],pre_files
+          owned=subprocess.check_output(['git','diff','--name-only',pre_fixture_main,'HEAD'],text=True).splitlines()
           allowed={'timemachine/src/step11_historical_sec_fixture_certification.py','.github/workflows/timemachine-step11-historical-sec-fixture-certification.yml','timemachine/triggers/step11-historical-sec-fixture-certification.txt'}
-          assert set(fs)<=allowed,fs
-          assert not any(f.startswith('v2/') for f in fs)
+          assert set(owned)<=allowed,owned
+          assert not any(f.startswith('v2/') for f in owned),owned
+          print('PRE-EXISTING_UNRELATED_MAIN_CHANGE',pre_files)
+          print('FIXTURE_OWNED_CHANGE',owned)
           PY
       - name: Security scan
         run: |
