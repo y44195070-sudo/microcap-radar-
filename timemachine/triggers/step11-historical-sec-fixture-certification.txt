@@ -1,3 +1,4 @@
-STEP11_HISTORICAL_SEC_BACKFILL_EVENT_CLASSIFICATION_FIXTURE_CERTIFICATION_V1
+STEP11_HISTORICAL_SEC_BACKFILL_EVENT_CLASSIFICATION_FIXTURE_CERTIFICATION_REPAIR_V1
 bounded-real-data-only; certified-638 boundary; residual SEC lookup forbidden
-trigger: 2026-10-26T05:55:00+09:00
+authority-schema discovery repaired; protected-diff lineage split from pre-existing main changes
+trigger: 2026-10-26T12:28:00+09:00
