@@ -1,0 +1,128 @@
+name: Time Machine STEP11 Historical SEC Expansion Certification Plan
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'timemachine/src/step11_historical_sec_expansion_certification_plan.py'
+      - '.github/workflows/timemachine-step11-historical-sec-expansion-certification-plan.yml'
+      - 'timemachine/triggers/step11-historical-sec-expansion-certification-plan.txt'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  expansion-plan-certification:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - name: Compile
+        run: python -m py_compile timemachine/src/step11_historical_sec_expansion_certification_plan.py
+      - name: Reacquire frozen certification authorities
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/authority
+          gh api repos/${{ github.repository }}/actions/artifacts/12628717168/zip > /tmp/authority/fixture.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12628926725/zip > /tmp/authority/checkpoint.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12603520492/zip > /tmp/authority/step9.zip
+      - name: Verify original ZIP digests and authority
+        run: |
+          python - <<'PY'
+          import hashlib,zipfile,json
+          expected={'/tmp/authority/fixture.zip':'918d7996396c746b342570a977baed14f6da5dc1cd707d2d4904df8a5a5cf8a8','/tmp/authority/checkpoint.zip':'88533d473fe85d28ea4e71f043859b8d6866cd976e69c6c506d942f8be4cbddc','/tmp/authority/step9.zip':'3ec6a1f4ec88ff284eade8d7730b301ea65d2d5a932feb11a0f76c0592c7c19c'}
+          for p,h in expected.items():
+              assert hashlib.sha256(open(p,'rb').read()).hexdigest()==h
+              with zipfile.ZipFile(p) as z: assert z.testzip() is None
+          with zipfile.ZipFile('/tmp/authority/fixture.zip') as z:
+              assert json.loads(z.read('step11_fixture_decision.json'))['decision']=='STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_FIXTURE_CERTIFIED'
+              assert json.loads(z.read('security_scan_report.json'))['PASS'] is True
+          PY
+      - name: Build Expansion Certification Plan only
+        run: |
+          rm -rf /tmp/expansion-plan /tmp/expansion-checkpoint
+          mkdir -p /tmp/expansion-plan /tmp/expansion-checkpoint
+          python timemachine/src/step11_historical_sec_expansion_certification_plan.py --fixture /tmp/authority/fixture.zip --checkpoint /tmp/authority/checkpoint.zip --step9 /tmp/authority/step9.zip --out /tmp/expansion-plan --head '${{ github.sha }}' --run '${{ github.run_id }}'
+          python - <<'PY'
+          import json,os
+          d=json.load(open('/tmp/expansion-plan/final_decision.json'))
+          assert d['decision']=='STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFICATION_PLAN_GO'
+          assert d['certified_candidate_universe']==638 and d['residual_candidate_universe']==0 and d['expansion_SEC_requests']==0
+          cp={'decision':d['decision'],'next_step':d['NEXT_STEP'],'source_head':os.environ['GITHUB_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],'selection_hash':d['selection_hash'],'recommended_expansion_sample_size':d['recommended_expansion_sample_size'],'version':'STEP11_EXPANSION_PLAN_V1'}
+          open('/tmp/expansion-checkpoint/step11-expansion-plan-checkpoint.json','w').write(json.dumps(cp,indent=2,sort_keys=True)+'\n')
+          PY
+      - name: Determinism and plan invariant recalculation
+        run: |
+          rm -rf /tmp/expansion-plan-b
+          python timemachine/src/step11_historical_sec_expansion_certification_plan.py --fixture /tmp/authority/fixture.zip --checkpoint /tmp/authority/checkpoint.zip --step9 /tmp/authority/step9.zip --out /tmp/expansion-plan-b --head '${{ github.sha }}' --run '${{ github.run_id }}'
+          python - <<'PY'
+          import json,hashlib,pathlib
+          A=pathlib.Path('/tmp/expansion-plan');B=pathlib.Path('/tmp/expansion-plan-b')
+          for n in ['expansion_selected_occurrences.json','expansion_selection_hash.json','expansion_selection_algorithm.json','final_decision.json']:
+              assert hashlib.sha256((A/n).read_bytes()).hexdigest()==hashlib.sha256((B/n).read_bytes()).hexdigest(),n
+          d=json.load(open(A/'final_decision.json')); assert d['positive_regression_categories']>=30 and d['negative_regression_categories']>=60
+          s=json.load(open(A/'security_plan.json')); assert all(s[k]==0 for k in ['confirmed_secrets_tolerance','credential_bearing_urls_tolerance','stored_authorization_headers_tolerance','stored_api_keys_tolerance','stored_tokens_tolerance','SEC_private_credentials'])
+          p=json.load(open(A/'protected_diff.json')); assert p['PASS'] and p['v2_changes']==0 and p['expansion_SEC_queries']==0 and p['full_638_backfill']==0
+          PY
+      - name: Protected diff
+        run: |
+          python - <<'PY'
+          import subprocess
+          files=subprocess.check_output(['git','diff','--name-only','8128ae8247f1f5743fc6b8855162e5df06469077..HEAD'],text=True).splitlines()
+          allowed={'timemachine/src/step11_historical_sec_expansion_certification_plan.py','.github/workflows/timemachine-step11-historical-sec-expansion-certification-plan.yml','timemachine/triggers/step11-historical-sec-expansion-certification-plan.txt'}
+          assert set(files)<=allowed,files
+          assert not any(f.startswith('v2/') for f in files)
+          print(files)
+          PY
+      - name: Security regression
+        run: |
+          python - <<'PY'
+          import json,re,pathlib,zipfile
+          with zipfile.ZipFile('/tmp/authority/fixture.zip') as z: r=json.loads(z.read('security_scan_report.json'))
+          assert r['PASS'] and r['confirmed_secrets']==0 and r['credential_bearing_urls']==0 and r['authorization_headers']==0 and r['api_keys']==0 and r['tokens']==0
+          bad=[]; q=re.compile(r'https?://[^\s"\']+[?&](?:api[_-]?key|token|key|sig|signature)=',re.I); auth=re.compile(r'"authorization"\s*:\s*"(?!NONE|REDACTED)',re.I)
+          for p in pathlib.Path('/tmp/expansion-plan').glob('*.json'):
+              t=p.read_text()
+              if q.search(t) or auth.search(t): bad.append(p.name)
+          assert not bad,bad
+          print(json.dumps({'PASS':True,'fixture_v5_regression':True,'plan_staging_findings':0}))
+          PY
+      - name: Upload Plan Checkpoint
+        id: upload_checkpoint
+        uses: actions/upload-artifact@v4
+        with:
+          name: step11-historical-sec-backfill-event-classification-expansion-certification-plan-checkpoint
+          path: /tmp/expansion-checkpoint
+          if-no-files-found: error
+      - name: Upload Plan Certification
+        id: upload_cert
+        uses: actions/upload-artifact@v4
+        with:
+          name: step11-historical-sec-backfill-event-classification-expansion-certification-plan
+          path: /tmp/expansion-plan
+          if-no-files-found: error
+      - name: Independent original ZIP verification and semantic recalculation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CERT_ID: ${{ steps.upload_cert.outputs.artifact-id }}
+          CERT_DIGEST: ${{ steps.upload_cert.outputs.artifact-digest }}
+          CP_ID: ${{ steps.upload_checkpoint.outputs.artifact-id }}
+          CP_DIGEST: ${{ steps.upload_checkpoint.outputs.artifact-digest }}
+        run: |
+          gh api repos/${{ github.repository }}/actions/artifacts/$CERT_ID/zip > /tmp/original-cert.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/$CP_ID/zip > /tmp/original-cp.zip
+          python - <<'PY'
+          import os,hashlib,zipfile,json
+          def h(p): return 'sha256:'+hashlib.sha256(open(p,'rb').read()).hexdigest()
+          assert h('/tmp/original-cert.zip')==os.environ['CERT_DIGEST']; assert h('/tmp/original-cp.zip')==os.environ['CP_DIGEST']
+          with zipfile.ZipFile('/tmp/original-cert.zip') as z:
+              assert z.testzip() is None and len(z.namelist())==len(set(z.namelist()))
+              m=json.loads(z.read('manifest.json')); names=set(z.namelist())
+              for e in m['entries']: assert e['path'] in names and hashlib.sha256(z.read(e['path'])).hexdigest()==e['sha256']
+              d=json.loads(z.read('final_decision.json')); assert d['decision']=='STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFICATION_PLAN_GO'; assert d['certified_candidate_universe']==638 and d['residual_candidate_universe']==0 and d['expansion_SEC_requests']==0; assert d['positive_regression_categories']>=30 and d['negative_regression_categories']>=60
+          with zipfile.ZipFile('/tmp/original-cp.zip') as z:
+              assert z.testzip() is None and len(z.namelist())==1
+              c=json.loads(z.read(z.namelist()[0])); assert c['source_head']==os.environ['GITHUB_SHA'] and str(c['run_id'])==os.environ['GITHUB_RUN_ID']; assert c['decision']=='STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFICATION_PLAN_GO'
+          print('STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFICATION_PLAN_GO')
+          PY
