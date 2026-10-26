@@ -77,18 +77,25 @@ jobs:
           allowed={'timemachine/src/step11_historical_sec_expansion_certification.py','.github/workflows/timemachine-step11-historical-sec-expansion-certification.yml','timemachine/triggers/step11-historical-sec-expansion-certification.txt'}
           assert set(files)<=allowed,files;assert not any(x.startswith('v2/') for x in files);print(files)
           PY
-      - name: Security regression
+      - name: Security scanner regression V2
         run: |
           python - <<'PY'
-          import pathlib,re,json
-          bad=[];urlq=re.compile(r'https?://[^\s"\']+[?&](?:api[_-]?key|token|key|sig|signature)=',re.I);auth=re.compile(r'authorization\s*[":=]+\s*(?!NONE|REDACTED)',re.I);tok=re.compile(r'(?i)(?:api[_-]?key|access[_-]?token|secret)\s*[":=]+\s*["\']?[A-Za-z0-9_\-]{16,}')
-          for base in [pathlib.Path('/tmp/expansion-cert'),pathlib.Path('timemachine/src'),pathlib.Path('.github/workflows')]:
-           for p in base.rglob('*'):
-            if not p.is_file(): continue
-            try:t=p.read_text(errors='ignore')
-            except:continue
-            if urlq.search(t) or tok.search(t): bad.append(str(p))
-          assert not bad,bad
+          import pathlib,subprocess,json,tempfile
+          scanner='timemachine/src/step11_fixture_security_scan_v5.py'; td=pathlib.Path(tempfile.mkdtemp())
+          safe_lines=["api_key", "access_token", "REDACTED", "NONE", "${{ secrets.SOMETHING }}", "${GH_TOKEN}", "?api_key=", "Authorization detection regex definition"]
+          safe=td/'safe.txt';safe.write_text('\n'.join(safe_lines)+'\n');out=td/'safe.json';subprocess.check_call(['python',scanner,'--out',str(out),str(safe),scanner]);assert json.load(open(out))['PASS']
+          fixture=td/'fixture.json';subprocess.check_call(['python',scanner,'--out',str(fixture),'.github/workflows/timemachine-step11-historical-sec-fixture-certification.yml']);fr=json.load(open(fixture));assert fr['PASS'] and fr['confirmed_secrets']==0 and fr['credential_bearing_urls']==0 and fr['authorization_headers']==0
+          bads=['https://x.test/?apiKey=SYNTHETIC_CREDENTIAL_1234567890','https://x.test/?token=SYNTHETIC_TOKEN_1234567890','Authorization: Bearer SYNTHETICBEARERTOKEN1234567890','Bearer SYNTHETICBEARERTOKEN1234567890','https://data.sec.gov/submissions/x.json?key=SYNTHETIC_SEC_CREDENTIAL_1234567890','ghp_ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890']
+          for i,s in enumerate(bads):
+           p=td/f'bad{i}.txt';p.write_text(s);o=td/f'bad{i}.json';r=subprocess.run(['python',scanner,'--out',str(o),str(p)]);assert r.returncode!=0 and not json.load(open(o))['PASS'],s
+          print(json.dumps({'safe_cases':len(safe_lines)+2,'unsafe_cases':len(bads),'fixture_workflow_false_positive':0,'PASS':True},sort_keys=True))
+          PY
+      - name: Security regression
+        run: |
+          python timemachine/src/step11_fixture_security_scan_v5.py --out /tmp/expansion-security-v2.json /tmp/expansion-cert timemachine/src .github/workflows
+          python - <<'PY'
+          import json
+          r=json.load(open('/tmp/expansion-security-v2.json'));assert r['PASS'] and r['confirmed_secrets']==0 and r['credential_bearing_urls']==0 and r['authorization_headers']==0 and r['api_keys']==0 and r['tokens']==0
           s=json.load(open('/tmp/expansion-cert/security_scan_report.json'));assert s['PASS'] and s['confirmed_secrets']==0 and s['credential_bearing_urls']==0 and s['authorization_headers']==0 and s['api_keys']==0 and s['tokens']==0
           print('SECURITY_PASS')
           PY
