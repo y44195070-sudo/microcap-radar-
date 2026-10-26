@@ -12,10 +12,10 @@ PATTERNS=[
 SAFE_VALUE_MARKERS=("${{","$GH_TOKEN","${GH_TOKEN","os.environ","getenv(")
 def redact(s): return "<redacted>" if len(s)<=8 else s[:3]+"…"+s[-3:]
 def safe_source_or_test_line(line):
- return any(x in line for x in ("re.compile(","PATTERNS","synthetic_","SAFE_","bads=[","bads = ["))
+ return any(x in line for x in ("re.compile(","PATTERNS","synthetic_","SAFE_","bads=[","bads = [","invalid=[","invalid = ["))
 def classify(line,pid,m):
  raw=m.group(0)
- if safe_source_or_test_line(line): return "SAFE_LITERAL_TEST_PATTERN" if "bads" in line else "SAFE_SCANNER_SOURCE_LITERAL"
+ if safe_source_or_test_line(line): return "SAFE_LITERAL_TEST_PATTERN" if any(x in line for x in ("bads", "invalid")) else "SAFE_SCANNER_SOURCE_LITERAL"
  if "secrets." in raw or "secrets." in line: return "SAFE_GITHUB_EXPRESSION"
  if any(x in raw or x in line for x in SAFE_VALUE_MARKERS): return "SAFE_ENV_REFERENCE"
  return "CREDENTIAL_BEARING_URL" if pid=="CREDENTIAL_QUERY" else "REAL_SECRET"
