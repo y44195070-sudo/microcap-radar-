@@ -37,7 +37,7 @@ jobs:
         run: |
           python - <<'PY'
           import hashlib,zipfile
-          exp={'step9.zip':'3ec6a1f4ec88ff284eade8d7730b301ea65d2d5a932feb11a0f76c0592c7c19c','step9-checkpoint.zip':'a77f89137bfe5c299e46e39864e37826cc03ce84c3bbedee8c681bf538e31238','step10.zip':'b9a5a4d40bfc318288a15337fd74c47dcff93de619d6aa281ea9de6001ebf1de','step10-checkpoint.zip':'914587ecbbe5bcb579aff464b11c8fec0469f7400ee8eddc3d757f9ab30e181f','step11-plan.zip':'7f010552c35fb944121ea7fc44c46333b9584a5ae453443533955a7d231a7802','step11-plan-checkpoint.zip':'e9429bf127a38a8dbd1f0c6e13088eaefc9eddd005ddc1b41672975e52c5cf77','governance.zip':'5e256090278d2fdbfb76b190d965c64e7e3251ac2e67a061c55b8a76cd7549c4','governance-checkpoint.zip':'b6543ba219317b0beac67a683fea9ec4b6711a2677ed0c16467133ed2b94da64','step9-plan.zip':'d6c4e4703a8614907631345f6312933da06bd2c55e9f09a008759d606a51cd50','step9-plan-checkpoint.zip':'fbc1852d688859f41d543853ac45e798a8df89f378949bcb82f2f0caeaccf65e'}
+          exp={'step9.zip':'3ec6a1f4ec88ff284eade8d7730b301ea65d2d5a932feb11a0f76c0592c7c19c','step9-checkpoint.zip':'a77f89137bfe5c299e46e39864e37826cc03ce84c3cbbede8c681bf538e31238','step10.zip':'b9a5a4d40bfc318288a15337fd74c47dcff93de619d6aa281ea9de6001ebf1de','step10-checkpoint.zip':'914587ecbbe5bcb579aff464b11c8fec0469f7400ee8eddc3d757f9ab30e181f','step11-plan.zip':'7f010552c35fb944121ea7fc44c46333b9584a5ae453443533955a7d231a7802','step11-plan-checkpoint.zip':'e9429bf127a38a8dbd1f0c6e13088eaefc9eddd005ddc1b41672975e52c5cf77','governance.zip':'5e256090278d2fdbfb76b190d965c64e7e3251ac2e67a061c55b8a76cd7549c4','governance-checkpoint.zip':'b6543ba219317b0beac67a683fea9ec4b6711a2677ed0c16467133ed2b94da64','step9-plan.zip':'d6c4e4703a8614907631345f6312933da06bd2c55e9f09a008759d606a51cd50','step9-plan-checkpoint.zip':'fbc1852d688859f41d543853ac45e798a8df89f378949bcb82f2f0caeaccf65e'}
           for n,want in exp.items():
            p='/tmp/frozen/'+n; got=hashlib.sha256(open(p,'rb').read()).hexdigest(); assert got==want,(n,got,want); assert zipfile.ZipFile(p).testzip() is None
           PY
@@ -49,8 +49,7 @@ jobs:
           import urllib.request,json,hashlib,datetime
           u='https://data.sec.gov/submissions/CIK0001631487.json'; req=urllib.request.Request(u,headers={'User-Agent':'MicrocapRadar historical-fixture-certification/4.0 contact: repository-owner','Accept-Encoding':'identity'})
           with urllib.request.urlopen(req,timeout=30) as r: b=r.read(); assert r.status==200 and b
-          d={'endpoint_class':'SEC_SUBMISSIONS','request_timestamp':datetime.datetime.now(datetime.timezone.utc).isoformat(),'http_status':200,'response_bytes':len(b),'content_type':'application/json','response_sha256':hashlib.sha256(b).hexdigest(),'credential_required':False,'user_agent_valid':True,'infrastructure_capable':True}
-          open('/tmp/sec-connectivity-probe.json','w').write(json.dumps(d,sort_keys=True,indent=2)+'\n')
+          d={'endpoint_class':'SEC_SUBMISSIONS','request_timestamp':datetime.datetime.now(datetime.timezone.utc).isoformat(),'http_status':200,'response_bytes':len(b),'content_type':'application/json','response_sha256':hashlib.sha256(b).hexdigest(),'credential_required':False,'user_agent_valid':True,'infrastructure_capable':True}; open('/tmp/sec-connectivity-probe.json','w').write(json.dumps(d,sort_keys=True,indent=2)+'\n')
           PY
       - name: Execute Fixture Pass A and acquire SEC once
         run: python timemachine/src/step11_historical_sec_fixture_certification_v4.py --out /tmp/fixture-a --head-sha '${{ github.sha }}' --step9-dir /tmp/step9
@@ -76,8 +75,7 @@ jobs:
         run: |
           python - <<'PY'
           import subprocess
-          plan='129ef1e8689ac3b265ec183668823ba464463031'; pre='4ace0b4b4a34992dda2b7d656171238bfa8652a5'
-          lineage=subprocess.check_output(['git','log','--format=%H','--ancestry-path',f'{plan}..HEAD'],text=True).splitlines(); assert pre in lineage
+          plan='129ef1e8689ac3b265ec183668823ba464463031'; pre='4ace0b4b4a34992dda2b7d656171238bfa8652a5'; lineage=subprocess.check_output(['git','log','--format=%H','--ancestry-path',f'{plan}..HEAD'],text=True).splitlines(); assert pre in lineage
           pre_files=subprocess.check_output(['git','diff','--name-only',plan,pre],text=True).splitlines(); assert pre_files==['v2/data/review-daily-2026-10-23.json'],pre_files
           owned=subprocess.check_output(['git','diff','--name-only',pre,'HEAD'],text=True).splitlines(); allowed={'timemachine/src/step11_historical_sec_fixture_certification.py','timemachine/src/step11_historical_sec_fixture_certification_v4.py','timemachine/src/step11_frozen_authority_resolver_v2.py','.github/workflows/timemachine-step11-historical-sec-fixture-certification.yml','timemachine/triggers/step11-historical-sec-fixture-certification.txt'}; assert set(owned)<=allowed,owned; assert not any(x.startswith('v2/') for x in owned),owned
           print('PRE_EXISTING_UNRELATED_MAIN_CHANGE',pre_files); print('FIXTURE_OWNED_CHANGE',owned)
