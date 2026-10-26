@@ -15,7 +15,7 @@ jobs:
           mkdir -p /tmp/compile /tmp/validation
           python - <<'PY'
           import py_compile
-          for i,p in enumerate(['timemachine/src/step11_pre_full638_metadata_certification.py','timemachine/src/step11_structural_metadata_acquisition_execution.py','timemachine/src/step11_structural_metadata_workflow_tests.py']): py_compile.compile(p,cfile=f'/tmp/compile/{i}.pyc',doraise=True)
+          for i,p in enumerate(['timemachine/src/step11_pre_full638_metadata_certification.py','timemachine/src/step11_structural_metadata_acquisition_execution.py','timemachine/src/step11_structural_metadata_workflow_tests.py','timemachine/src/step11_sample32_metadata_oracle_compare.py']): py_compile.compile(p,cfile=f'/tmp/compile/{i}.pyc',doraise=True)
           PY
       - name: Network disabled implementation validation
         run: python timemachine/src/step11_structural_metadata_acquisition_execution.py --mode validate --out /tmp/validation
@@ -26,7 +26,7 @@ jobs:
           python - <<'PY'
           import json,pathlib,re
           s=pathlib.Path('.github/workflows/timemachine-step11-pre-full638-structural-metadata-acquisition-certification.yml').read_text()
-          c={'manual_only':'workflow_dispatch:' in s and not re.search(r'^  (push|pull_request|schedule):',s,re.M),'authority_first':s.index('Revalidate frozen authorities before SEC network')<s.index('Execute candidate-wide metadata-only certification'),'preflight_first':s.index('Revalidate approved implementation preflight before SEC network')<s.index('Execute candidate-wide metadata-only certification'),'runner':'step11_structural_metadata_acquisition_execution.py --mode certification' in s,'artifact':'actions/upload-artifact@v4' in s,'metadata_only':'METADATA_ONLY' in s or 'metadata-only' in s}
+          c={'manual_only':'workflow_dispatch:' in s and not re.search(r'^  (push|pull_request|schedule):',s,re.M),'authority_first':s.index('Revalidate frozen authorities before SEC network')<s.index('Execute candidate-wide metadata-only certification'),'preflight_first':s.index('Revalidate approved implementation preflight before SEC network')<s.index('Execute candidate-wide metadata-only certification'),'runner':'step11_structural_metadata_acquisition_execution.py --mode certification' in s,'sample32_oracle':'step11_sample32_metadata_oracle_compare.py' in s,'artifact':'actions/upload-artifact@v4' in s,'metadata_only':'METADATA_ONLY' in s or 'metadata-only' in s,'protected_diff_fail_closed':'git diff --exit-code HEAD -- v2 timemachine/data timemachine/snapshots\n' in s}
           assert all(c.values()),c
           json.dump({'checks':c,'PASS':True},open('/tmp/validation/workflow_static_audit.json','w'),sort_keys=True)
           PY
@@ -41,7 +41,7 @@ jobs:
           git diff --name-only bcf7a3f28eee042000700528d11453947854574b...HEAD > /tmp/validation/changed_files.txt
           python - <<'PY'
           import json,pathlib
-          allowed={'timemachine/src/step11_structural_metadata_acquisition_execution.py','timemachine/src/step11_structural_metadata_workflow_tests.py','.github/workflows/timemachine-step11-pre-full638-structural-metadata-acquisition-certification.yml','.github/workflows/timemachine-step11-structural-metadata-certification-workflow-validation-v1.yml'}
+          allowed={'timemachine/src/step11_structural_metadata_acquisition_execution.py','timemachine/src/step11_structural_metadata_workflow_tests.py','timemachine/src/step11_sample32_metadata_oracle_compare.py','.github/workflows/timemachine-step11-pre-full638-structural-metadata-acquisition-certification.yml','.github/workflows/timemachine-step11-structural-metadata-certification-workflow-validation-v1.yml'}
           got={x for x in pathlib.Path('/tmp/validation/changed_files.txt').read_text().splitlines() if x}; assert got<=allowed and not any(x.startswith('v2/') for x in got),(got-allowed)
           json.dump({'changed_files':sorted(got),'v2_changes':0,'frozen_authority_changes':0,'sample32_changes':0,'residual4388_changes':0,'PASS':True},open('/tmp/validation/protected_diff.json','w'),sort_keys=True)
           PY
