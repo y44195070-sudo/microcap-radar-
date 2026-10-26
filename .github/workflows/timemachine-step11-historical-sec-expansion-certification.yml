@@ -50,8 +50,8 @@ jobs:
           PY
       - name: Execute bounded 32-occurrence SEC acquisition and reconstruction
         run: |
-          rm -rf /tmp/expansion-cert /tmp/expansion-checkpoint
-          mkdir -p /tmp/expansion-cert /tmp/expansion-checkpoint
+          rm -rf /tmp/expansion-cert /tmp/expansion-checkpoint /tmp/security-forensic
+          mkdir -p /tmp/expansion-cert /tmp/expansion-checkpoint /tmp/security-forensic
           python timemachine/src/step11_historical_sec_expansion_certification.py --plan /tmp/authority/plan.zip --step9 /tmp/authority/step9.zip --out /tmp/expansion-cert --head '${{ github.sha }}' --run '${{ github.run_id }}'
       - name: Verify frozen sample, guard, PIT, determinism and regressions
         run: |
@@ -70,29 +70,182 @@ jobs:
       - name: Protected diff
         run: |
           python - <<'PY'
-          import subprocess
+          import subprocess,json,pathlib
           files=subprocess.check_output(['git','diff','--name-only','1b5a5e8ed41f655249acc4f157d42dd6ea6fe60b..HEAD'],text=True).splitlines()
           allowed={'timemachine/src/step11_historical_sec_expansion_certification.py','timemachine/src/step11_fixture_security_scan_v5.py','.github/workflows/timemachine-step11-historical-sec-expansion-certification.yml','timemachine/triggers/step11-historical-sec-expansion-certification.txt'}
-          assert set(files)<=allowed,files;assert not any(x.startswith('v2/') for x in files);print(files)
+          ok=set(files)<=allowed and not any(x.startswith('v2/') for x in files)
+          pathlib.Path('/tmp/security-forensic').mkdir(parents=True,exist_ok=True)
+          pathlib.Path('/tmp/security-forensic/protected_diff_report.json').write_text(json.dumps({'base':'1b5a5e8ed41f655249acc4f157d42dd6ea6fe60b','head':'HEAD','files':files,'allowed':sorted(allowed),'PASS':ok},sort_keys=True,indent=2)+'\n')
+          assert ok,files
+          print(files)
           PY
-      - name: Security scanner regression V3 and repository scan
+      - name: Freeze scanner inputs and build PRE-SCAN manifest
+        id: pre_manifest
         run: |
-          python timemachine/src/step11_fixture_security_scan_v5.py --out /tmp/expansion-security-v3.json /tmp/expansion-cert timemachine/src .github/workflows
           python - <<'PY'
-          import json
-          r=json.load(open('/tmp/expansion-security-v3.json'));v=r['security_regression_v3']
-          assert v['PASS'] and v['safe_cases']==15 and v['safe_pass']==15 and v['unsafe_cases']==14 and v['unsafe_fail_closed']==14
-          assert r['PASS'] and r['confirmed_secrets']==0 and r['credential_bearing_urls']==0 and r['authorization_headers']==0 and r['api_keys']==0 and r['tokens']==0
-          s=json.load(open('/tmp/expansion-cert/security_scan_report.json'));assert s['PASS'] and s['confirmed_secrets']==0 and s['credential_bearing_urls']==0 and s['authorization_headers']==0 and s['api_keys']==0 and s['tokens']==0
-          print(json.dumps({'security_regression_v3':'PASS','safe_pass':15,'unsafe_fail_closed':14,'repository_scan':'PASS'},sort_keys=True))
+          import hashlib,json,os,pathlib,subprocess
+          roots=[('GENERATED_EXPANSION_EVIDENCE',pathlib.Path('/tmp/expansion-cert')),('REPOSITORY_SOURCE',pathlib.Path('timemachine/src')),('WORKFLOW_SOURCE',pathlib.Path('.github/workflows'))]
+          def sha_file(p):
+           h=hashlib.sha256()
+           with open(p,'rb') as f:
+            for b in iter(lambda:f.read(1024*1024),b''): h.update(b)
+           return h.hexdigest()
+          entries=[]
+          for root_name,root in roots:
+           if not root.is_dir(): raise SystemExit('missing scanner root: '+str(root))
+           for p in sorted((x for x in root.rglob('*') if x.is_file()),key=lambda x:str(x)):
+            entries.append({'input_root':root_name,'relative_path':p.relative_to(root).as_posix(),'source_class':root_name,'size_bytes':p.stat().st_size,'sha256':sha_file(p),'included_in_scan':True})
+          scanner=pathlib.Path('timemachine/src/step11_fixture_security_scan_v5.py');workflow=pathlib.Path('.github/workflows/timemachine-step11-historical-sec-expansion-certification.yml')
+          payload={'schema_version':'STEP11_SECURITY_INPUT_MANIFEST_V1','repository_head':os.environ['GITHUB_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],'run_attempt':os.environ['GITHUB_RUN_ATTEMPT'],'scanner_path':str(scanner),'scanner_sha256':sha_file(scanner),'scanner_git_blob_sha':subprocess.check_output(['git','rev-parse','HEAD:'+str(scanner)],text=True).strip(),'workflow_path':str(workflow),'workflow_sha256':sha_file(workflow),'workflow_git_blob_sha':subprocess.check_output(['git','rev-parse','HEAD:'+str(workflow)],text=True).strip(),'total_input_files':len(entries),'files_by_root':{k:sum(e['input_root']==k for e in entries) for k,_ in roots},'entries':entries,'phase':'PRE_SCAN'}
+          payload['manifest_sha256']=hashlib.sha256(json.dumps(payload,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+          pathlib.Path('/tmp/security-forensic/scanner_input_manifest.json').write_text(json.dumps(payload,sort_keys=True,indent=2)+'\n')
+          assert subprocess.check_output(['git','hash-object',str(scanner)],text=True).strip()==payload['scanner_git_blob_sha']
+          assert subprocess.check_output(['git','hash-object',str(workflow)],text=True).strip()==payload['workflow_git_blob_sha']
+          print(json.dumps({'total_input_files':payload['total_input_files'],'files_by_root':payload['files_by_root'],'manifest_sha256':payload['manifest_sha256']},sort_keys=True))
+          PY
+      - name: Execute security scanner and capture original exit code
+        id: security_scan
+        shell: bash
+        run: |
+          set +e
+          python timemachine/src/step11_fixture_security_scan_v5.py --out /tmp/expansion-security-v4.json /tmp/expansion-cert timemachine/src .github/workflows
+          scanner_rc=$?
+          set -e
+          echo "scanner_exit_code=$scanner_rc" >> "$GITHUB_OUTPUT"
+          printf '%s\n' "$scanner_rc" > /tmp/security-forensic/original_scanner_exit_code.txt
+          if [ -f /tmp/expansion-security-v4.json ]; then echo "report_exists=true" >> "$GITHUB_OUTPUT"; else echo "report_exists=false" >> "$GITHUB_OUTPUT"; fi
+          exit 0
+      - name: Build POST-SCAN manifest and redacted forensic bundle
+        id: build_forensic
+        if: always()
+        env:
+          ORIGINAL_SCANNER_EXIT_CODE: ${{ steps.security_scan.outputs.scanner_exit_code }}
+          SCANNER_REPORT_EXISTS: ${{ steps.security_scan.outputs.report_exists }}
+        run: |
+          python - <<'PY'
+          import hashlib,json,os,pathlib,subprocess
+          F=pathlib.Path('/tmp/security-forensic');F.mkdir(parents=True,exist_ok=True)
+          def sha_file(p):
+           h=hashlib.sha256()
+           with open(p,'rb') as f:
+            for b in iter(lambda:f.read(1024*1024),b''): h.update(b)
+           return h.hexdigest()
+          roots=[('GENERATED_EXPANSION_EVIDENCE',pathlib.Path('/tmp/expansion-cert')),('REPOSITORY_SOURCE',pathlib.Path('timemachine/src')),('WORKFLOW_SOURCE',pathlib.Path('.github/workflows'))]
+          pre_path=F/'scanner_input_manifest.json';pre=json.loads(pre_path.read_text()) if pre_path.exists() else None
+          entries=[];missing_roots=[]
+          for root_name,root in roots:
+           if not root.is_dir(): missing_roots.append(str(root));continue
+           for p in sorted((x for x in root.rglob('*') if x.is_file()),key=lambda x:str(x)):
+            entries.append({'input_root':root_name,'relative_path':p.relative_to(root).as_posix(),'source_class':root_name,'size_bytes':p.stat().st_size,'sha256':sha_file(p),'included_in_scan':True})
+          scanner=pathlib.Path('timemachine/src/step11_fixture_security_scan_v5.py');workflow=pathlib.Path('.github/workflows/timemachine-step11-historical-sec-expansion-certification.yml')
+          post={'schema_version':'STEP11_SECURITY_INPUT_MANIFEST_V1','repository_head':os.environ['GITHUB_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],'run_attempt':os.environ['GITHUB_RUN_ATTEMPT'],'scanner_path':str(scanner),'scanner_sha256':sha_file(scanner) if scanner.exists() else None,'scanner_git_blob_sha':subprocess.check_output(['git','rev-parse','HEAD:'+str(scanner)],text=True).strip() if scanner.exists() else None,'workflow_path':str(workflow),'workflow_sha256':sha_file(workflow) if workflow.exists() else None,'workflow_git_blob_sha':subprocess.check_output(['git','rev-parse','HEAD:'+str(workflow)],text=True).strip() if workflow.exists() else None,'total_input_files':len(entries),'files_by_root':{k:sum(e['input_root']==k for e in entries) for k,_ in roots},'entries':entries,'phase':'POST_SCAN','missing_roots':missing_roots}
+          post['manifest_sha256']=hashlib.sha256(json.dumps(post,sort_keys=True,separators=(',',':')).encode()).hexdigest();(F/'scanner_input_postscan_manifest.json').write_text(json.dumps(post,sort_keys=True,indent=2)+'\n')
+          def sig(m): return [(e['input_root'],e['relative_path'],e['size_bytes'],e['sha256']) for e in m.get('entries',[])]
+          input_integrity=bool(pre) and not missing_roots and pre.get('total_input_files')==post['total_input_files'] and sig(pre)==sig(post)
+          raw=pathlib.Path('/tmp/expansion-security-v4.json');raw_exists=raw.is_file();raw_sha=sha_file(raw) if raw_exists else None;raw_size=raw.stat().st_size if raw_exists else None
+          report=None;parse_error=None
+          if raw_exists:
+           try: report=json.loads(raw.read_text(errors='replace'))
+           except Exception as e: parse_error=type(e).__name__
+          try: rc=int(os.environ.get('ORIGINAL_SCANNER_EXIT_CODE',''))
+          except Exception: rc=None
+          state='SCANNER_CRASHED_OR_REPORT_MISSING'
+          if rc is not None and report is not None: state='SCANNER_COMPLETED_PASS' if rc==0 else 'SCANNER_COMPLETED_FAIL'
+          findings=[]
+          for i,f in enumerate((report or {}).get('findings',[]),1):
+           raw_file=str(f.get('file',''))
+           if raw_file.startswith('/tmp/expansion-cert/'): root='GENERATED_EXPANSION_EVIDENCE';rel=raw_file[len('/tmp/expansion-cert/'):]
+           elif raw_file.startswith('timemachine/src/'): root='REPOSITORY_SOURCE';rel=raw_file[len('timemachine/src/'):]
+           elif raw_file.startswith('.github/workflows/'): root='WORKFLOW_SOURCE';rel=raw_file[len('.github/workflows/'):]
+           else: root='UNKNOWN';rel=raw_file
+           ent=next((e for e in entries if e['input_root']==root and e['relative_path']==rel),None);line=int(f.get('line') or 0);context_hash=None
+           try:
+            base={'GENERATED_EXPANSION_EVIDENCE':pathlib.Path('/tmp/expansion-cert'),'REPOSITORY_SOURCE':pathlib.Path('timemachine/src'),'WORKFLOW_SOURCE':pathlib.Path('.github/workflows')}[root];lines=(base/rel).read_text(errors='replace').splitlines()
+            if 1<=line<=len(lines): context_hash=hashlib.sha256(lines[line-1].encode()).hexdigest()
+           except Exception: pass
+           classification=str(f.get('classification','UNKNOWN'));prohibited=classification in {'REAL_SECRET','CREDENTIAL_BEARING_URL','AUTHORIZATION_HEADER_EXPOSURE'};fid=hashlib.sha256(f"{root}|{rel}|{line}|{f.get('pattern_id')}|{i}".encode()).hexdigest()[:24]
+           findings.append({'finding_id':fid,'input_root':root,'relative_path':rel,'line_number':line,'pattern_name':f.get('pattern_id'),'scanner_classification':classification,'source_type':root,'runtime_reachability':'UNKNOWN','redacted_match':'[REDACTED]','context_hash':context_hash,'file_sha256':ent['sha256'] if ent else None,'security_severity':'HIGH' if prohibited else 'INFO'})
+          keys=('files_scanned','matches_found','false_positives','confirmed_secrets','credential_bearing_urls','authorization_headers','api_keys','tokens','PASS');aggregate={k:(report or {}).get(k) for k in keys};regression=(report or {}).get('security_regression_v3');prohibited_count=sum(1 for f in (report or {}).get('findings',[]) if f.get('classification') in {'REAL_SECRET','CREDENTIAL_BEARING_URL','AUTHORIZATION_HEADER_EXPOSURE'})
+          redacted={'schema_version':'STEP11_SECURITY_REDACTED_REPORT_V1','repository_head':os.environ['GITHUB_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],'run_attempt':os.environ['GITHUB_RUN_ATTEMPT'],'scanner_state':state,'original_report_sha256':raw_sha,'original_report_size_bytes':raw_size,'security_regression':regression,'certification_scan':{**aggregate,'prohibited_findings':prohibited_count},'findings':findings,'report_parse_error':parse_error};(F/'security_scan_report_redacted.json').write_text(json.dumps(redacted,sort_keys=True,indent=2)+'\n')
+          inventory=[];generated=pathlib.Path('/tmp/expansion-cert')
+          if generated.is_dir():
+           for p in sorted((x for x in generated.rglob('*') if x.is_file()),key=lambda x:str(x)): inventory.append({'relative_path':p.relative_to(generated).as_posix(),'size_bytes':p.stat().st_size,'sha256':sha_file(p),'retention_class':'HASH_ONLY_SENSITIVE_OR_UNREVIEWED'})
+          (F/'generated_evidence_inventory.json').write_text(json.dumps({'schema_version':'STEP11_GENERATED_EVIDENCE_INVENTORY_V1','files':inventory},sort_keys=True,indent=2)+'\n')
+          source_authority_ok=False
+          if scanner.exists() and workflow.exists(): source_authority_ok=(subprocess.check_output(['git','hash-object',str(scanner)],text=True).strip()==post['scanner_git_blob_sha'] and subprocess.check_output(['git','hash-object',str(workflow)],text=True).strip()==post['workflow_git_blob_sha'])
+          semantic_consistency=False
+          if report is not None and rc is not None:
+           pass_field=report.get('PASS');prohibited=prohibited_count>0;semantic_consistency=((rc==0 and pass_field is True and not prohibited) or (rc!=0 and pass_field is False and prohibited))
+          execution={'schema_version':'STEP11_SCANNER_EXECUTION_METADATA_V1','repository_head':os.environ['GITHUB_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],'run_attempt':os.environ['GITHUB_RUN_ATTEMPT'],'original_scanner_exit_code':rc,'scanner_state':state,'scanner_report_exists':raw_exists,'scanner_report_parse_error':parse_error,'original_report_sha256':raw_sha,'original_report_size_bytes':raw_size,'input_integrity_pass':input_integrity,'source_authority_pass':source_authority_ok,'security_state_consistent':semantic_consistency};(F/'scanner_execution_metadata.json').write_text(json.dumps(execution,sort_keys=True,indent=2)+'\n')
+          required=['security_scan_report_redacted.json','scanner_input_manifest.json','scanner_input_postscan_manifest.json','scanner_execution_metadata.json','generated_evidence_inventory.json','protected_diff_report.json'];fm_entries=[]
+          for name in required:
+           p=F/name
+           if p.is_file(): fm_entries.append({'path':name,'size_bytes':p.stat().st_size,'sha256':sha_file(p)})
+          fm={'schema_version':'STEP11_SECURITY_FORENSIC_MANIFEST_V1','repository_head':os.environ['GITHUB_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],'run_attempt':os.environ['GITHUB_RUN_ATTEMPT'],'scanner_exit_code':rc,'scanner_result':state,'input_manifest_sha256':pre.get('manifest_sha256') if pre else None,'postscan_manifest_sha256':post['manifest_sha256'],'entries':fm_entries};fm['manifest_sha256']=hashlib.sha256(json.dumps(fm,sort_keys=True,separators=(',',':')).encode()).hexdigest();(F/'forensic_manifest.json').write_text(json.dumps(fm,sort_keys=True,indent=2)+'\n')
+          print(json.dumps({'scanner_state':state,'input_integrity_pass':input_integrity,'source_authority_pass':source_authority_ok,'security_state_consistent':semantic_consistency,'persistent_findings':len(findings),'forensic_manifest_sha256':fm['manifest_sha256']},sort_keys=True))
+          PY
+      - name: Upload Security Forensic Artifact
+        id: upload_forensic
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: step11-expansion-security-forensic-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/security-forensic
+          if-no-files-found: error
+      - name: Independently verify Security Forensic Artifact
+        id: verify_forensic
+        if: always() && steps.upload_forensic.outcome == 'success'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FORENSIC_ID: ${{ steps.upload_forensic.outputs.artifact-id }}
+          FORENSIC_DIGEST: ${{ steps.upload_forensic.outputs.artifact-digest }}
+        run: |
+          test -n "$FORENSIC_ID"; test -n "$FORENSIC_DIGEST"
+          gh api repos/${{ github.repository }}/actions/artifacts/$FORENSIC_ID/zip > /tmp/original-security-forensic.zip
+          python - <<'PY'
+          import hashlib,json,os,re,zipfile
+          def norm(v):
+           v=v.strip().lower();v=v[7:] if v.startswith('sha256:') else v;assert re.fullmatch(r'[0-9a-f]{64}',v),v;return v
+          b=open('/tmp/original-security-forensic.zip','rb').read();archive_sha=hashlib.sha256(b).hexdigest();assert archive_sha==norm(os.environ['FORENSIC_DIGEST'])
+          with zipfile.ZipFile('/tmp/original-security-forensic.zip') as z:
+           assert z.testzip() is None;names=z.namelist();assert len(names)==len(set(names));assert 'forensic_manifest.json' in names;m=json.loads(z.read('forensic_manifest.json'));payload={k:v for k,v in m.items() if k!='manifest_sha256'};assert hashlib.sha256(json.dumps(payload,sort_keys=True,separators=(',',':')).encode()).hexdigest()==m['manifest_sha256'];expected={e['path'] for e in m['entries']}|{'forensic_manifest.json'};assert set(names)==expected,(set(names)-expected,expected-set(names))
+           for e in m['entries']: assert hashlib.sha256(z.read(e['path'])).hexdigest()==e['sha256']
+           assert m['repository_head']==os.environ['GITHUB_SHA'] and str(m['run_id'])==os.environ['GITHUB_RUN_ID'] and str(m['run_attempt'])==os.environ['GITHUB_RUN_ATTEMPT']
+           pre=json.loads(z.read('scanner_input_manifest.json'));post=json.loads(z.read('scanner_input_postscan_manifest.json'));meta=json.loads(z.read('scanner_execution_metadata.json'));red=json.loads(z.read('security_scan_report_redacted.json'))
+           for x in (pre,post): payload={k:v for k,v in x.items() if k!='manifest_sha256'};assert hashlib.sha256(json.dumps(payload,sort_keys=True,separators=(',',':')).encode()).hexdigest()==x['manifest_sha256']
+           sig=lambda x:[(e['input_root'],e['relative_path'],e['size_bytes'],e['sha256']) for e in x['entries']];assert pre['total_input_files']==post['total_input_files'] and sig(pre)==sig(post);assert meta['input_integrity_pass'] is True and meta['source_authority_pass'] is True and meta['security_state_consistent'] is True;assert red['scanner_state']==meta['scanner_state'];agg=red['certification_scan'];findings=red['findings'];assert agg['matches_found']==len(findings);assert agg['prohibited_findings']==sum(1 for f in findings if f['scanner_classification'] in {'REAL_SECRET','CREDENTIAL_BEARING_URL','AUTHORIZATION_HEADER_EXPOSURE'});assert red['security_regression']['PASS'] and red['security_regression']['safe_cases']==15 and red['security_regression']['safe_pass']==15 and red['security_regression']['unsafe_cases']==14 and red['security_regression']['unsafe_fail_closed']==14
+          print(json.dumps({'forensic_artifact_id':os.environ['FORENSIC_ID'],'forensic_upload_digest':os.environ['FORENSIC_DIGEST'],'forensic_independent_sha256':archive_sha,'FORENSIC_ARTIFACT_VERIFIED':True},sort_keys=True))
+          PY
+      - name: Enforce preserved security result
+        if: always()
+        env:
+          UPLOAD_OUTCOME: ${{ steps.upload_forensic.outcome }}
+          VERIFY_OUTCOME: ${{ steps.verify_forensic.outcome }}
+        run: |
+          python - <<'PY'
+          import json,os,pathlib
+          if os.environ.get('UPLOAD_OUTCOME')!='success': raise SystemExit('EVIDENCE_PRESERVATION_FAILURE: forensic upload did not succeed')
+          if os.environ.get('VERIFY_OUTCOME')!='success': raise SystemExit('EVIDENCE_PRESERVATION_FAILURE: forensic independent verification did not succeed')
+          p=pathlib.Path('/tmp/security-forensic/scanner_execution_metadata.json')
+          if not p.is_file(): raise SystemExit('INDETERMINATE_FAIL_CLOSED: scanner execution metadata missing')
+          m=json.loads(p.read_text());rc=m.get('original_scanner_exit_code')
+          if rc is None: raise SystemExit('INDETERMINATE_FAIL_CLOSED: scanner exit code missing')
+          if not m.get('input_integrity_pass'): raise SystemExit('INPUT_INTEGRITY_FAILURE')
+          if not m.get('source_authority_pass'): raise SystemExit('SOURCE_AUTHORITY_FAILURE')
+          if not m.get('security_state_consistent'): raise SystemExit('SECURITY_STATE_INCONSISTENT')
+          if rc!=0: raise SystemExit('SECURITY_SCANNER_FAIL_PRESERVED: original scanner exit code='+str(rc))
+          r=json.loads(pathlib.Path('/tmp/security-forensic/security_scan_report_redacted.json').read_text());c=r['certification_scan']
+          if c.get('PASS') is not True or c.get('prohibited_findings')!=0: raise SystemExit('SECURITY_STATE_INCONSISTENT')
+          print('SECURITY_FORENSIC_GATE_PASS')
           PY
       - name: Build checkpoint and validate decision
         run: |
           python - <<'PY'
           import json,os,pathlib
           R=pathlib.Path('/tmp/expansion-cert');d=json.load(open(R/'final_decision.json'));assert d['decision']=='STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFIED',d
-          cp={'version':'STEP11_SEC_EXPANSION_V1','source_head':os.environ['GITHUB_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],'decision':d['decision'],'next_step':d['NEXT_STEP'],'selection_hash':d['selection_hash'],'selected_occurrences':32,'SEC_requests':d['SEC_requests'],'source_states':d['source_states'],'full_638_promotion_gate':d['full_638_promotion_gate']}
-          pathlib.Path('/tmp/expansion-checkpoint/step11-expansion-certification-checkpoint.json').write_text(json.dumps(cp,indent=2,sort_keys=True)+'\n')
+          cp={'version':'STEP11_SEC_EXPANSION_V1','source_head':os.environ['GITHUB_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],'decision':d['decision'],'next_step':d['NEXT_STEP'],'selection_hash':d['selection_hash'],'selected_occurrences':32,'SEC_requests':d['SEC_requests'],'source_states':d['source_states'],'full_638_promotion_gate':d['full_638_promotion_gate']};pathlib.Path('/tmp/expansion-checkpoint/step11-expansion-certification-checkpoint.json').write_text(json.dumps(cp,indent=2,sort_keys=True)+'\n')
           PY
       - name: Upload Expansion Checkpoint
         id: upload_checkpoint
@@ -122,15 +275,12 @@ jobs:
           import os,re,hashlib,zipfile,json
           def norm(v):
            v=v.strip().lower();v=v[7:] if v.startswith('sha256:') else v;assert re.fullmatch(r'[0-9a-f]{64}',v);return v
-          def h(p):return hashlib.sha256(open(p,'rb').read()).hexdigest()
-          ch=h('/tmp/original-expansion-cert.zip');ph=h('/tmp/original-expansion-cp.zip');assert norm(ch)==norm(os.environ['CERT_DIGEST']);assert norm(ph)==norm(os.environ['CP_DIGEST'])
+          h=lambda p:hashlib.sha256(open(p,'rb').read()).hexdigest();ch=h('/tmp/original-expansion-cert.zip');ph=h('/tmp/original-expansion-cp.zip');assert norm(ch)==norm(os.environ['CERT_DIGEST']);assert norm(ph)==norm(os.environ['CP_DIGEST'])
           with zipfile.ZipFile('/tmp/original-expansion-cert.zip') as z:
            assert z.testzip() is None and len(z.namelist())==len(set(z.namelist()));names=set(z.namelist());m=json.loads(z.read('manifest.json'))
-           for e in m['entries']:assert e['path'] in names and hashlib.sha256(z.read(e['path'])).hexdigest()==e['sha256']
-           d=json.loads(z.read('final_decision.json'));assert d['decision']=='STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFIED';assert d['selected_occurrences']==32 and d['selection_hash']=='ec9fc60f59a72769bd372704379667c76f1e71021e4197ac1af085750d3ee549';assert d['future_leakage']==0 and d['semantic_disagreements']==0 and d['pass_b_network_requests']==0
-           assert json.loads(z.read('security_scan_report.json'))['PASS'];assert json.loads(z.read('protected_diff.json'))['PASS'];assert json.loads(z.read('positive_regression_report.json'))['failed']==0;assert json.loads(z.read('negative_regression_report.json'))['failed']==0
+           for e in m['entries']: assert e['path'] in names and hashlib.sha256(z.read(e['path'])).hexdigest()==e['sha256']
+           d=json.loads(z.read('final_decision.json'));assert d['decision']=='STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFIED';assert d['selected_occurrences']==32 and d['selection_hash']=='ec9fc60f59a72769bd372704379667c76f1e71021e4197ac1af085750d3ee549';assert d['future_leakage']==0 and d['semantic_disagreements']==0 and d['pass_b_network_requests']==0;assert json.loads(z.read('security_scan_report.json'))['PASS'];assert json.loads(z.read('protected_diff.json'))['PASS'];assert json.loads(z.read('positive_regression_report.json'))['failed']==0;assert json.loads(z.read('negative_regression_report.json'))['failed']==0
           with zipfile.ZipFile('/tmp/original-expansion-cp.zip') as z:
            assert z.testzip() is None and len(z.namelist())==1;c=json.loads(z.read(z.namelist()[0]));assert c['source_head']==os.environ['GITHUB_SHA'] and str(c['run_id'])==os.environ['GITHUB_RUN_ID'];assert c['decision']=='STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFIED'
-          print(json.dumps({'artifact_count':2,'cert_id':os.environ['CERT_ID'],'cert_upload_digest_raw':os.environ['CERT_DIGEST'],'cert_independent_sha256':ch,'checkpoint_id':os.environ['CP_ID'],'checkpoint_upload_digest_raw':os.environ['CP_DIGEST'],'checkpoint_independent_sha256':ph,'independent_verification':'PASS'},sort_keys=True))
-          print('STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFIED')
+          print(json.dumps({'artifact_count':3,'cert_id':os.environ['CERT_ID'],'cert_upload_digest_raw':os.environ['CERT_DIGEST'],'cert_independent_sha256':ch,'checkpoint_id':os.environ['CP_ID'],'checkpoint_upload_digest_raw':os.environ['CP_DIGEST'],'checkpoint_independent_sha256':ph,'independent_verification':'PASS'},sort_keys=True));print('STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFIED')
           PY
