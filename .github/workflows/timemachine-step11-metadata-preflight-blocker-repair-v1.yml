@@ -1,0 +1,67 @@
+name: Time Machine STEP11 Metadata Preflight Blocker Repair V1
+on:
+  push:
+    branches: [step11-pre-full638-metadata-preflight-blocker-repair-v1]
+    paths:
+      - 'timemachine/src/step11_pre_full638_metadata_repair_guard.py'
+      - 'timemachine/src/step11_frozen_authority_revalidate.py'
+      - '.github/workflows/timemachine-step11-metadata-preflight-blocker-repair-v1.yml'
+      - '.github/workflows/timemachine-step11-metadata-preflight-retry.yml'
+  pull_request:
+    paths:
+      - 'timemachine/src/step11_pre_full638_metadata_repair_guard.py'
+      - 'timemachine/src/step11_frozen_authority_revalidate.py'
+      - '.github/workflows/timemachine-step11-metadata-preflight-blocker-repair-v1.yml'
+      - '.github/workflows/timemachine-step11-metadata-preflight-retry.yml'
+permissions:
+  contents: read
+jobs:
+  repair-static-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Compile outside source tree
+        run: |
+          mkdir -p /tmp/step11-compile-check
+          python - <<'PY'
+          import py_compile
+          for i,p in enumerate(['timemachine/src/step11_pre_full638_metadata_repair_guard.py','timemachine/src/step11_frozen_authority_revalidate.py']):
+              py_compile.compile(p,cfile=f'/tmp/step11-compile-check/{i}.pyc',doraise=True)
+          PY
+      - name: Repair synthetic tests only
+        run: python timemachine/src/step11_pre_full638_metadata_repair_guard.py --out /tmp/repair-evidence
+      - name: Protected diff
+        run: |
+          git diff --name-only 00675e0e089d169894b3a0fe435d525c69dc138a...HEAD | tee /tmp/changed.txt
+          python - <<'PY'
+          from pathlib import Path
+          allowed={
+          'timemachine/src/step11_pre_full638_metadata_repair_guard.py',
+          'timemachine/src/step11_frozen_authority_revalidate.py',
+          '.github/workflows/timemachine-step11-metadata-preflight-blocker-repair-v1.yml',
+          '.github/workflows/timemachine-step11-metadata-preflight-retry.yml'}
+          got={x for x in Path('/tmp/changed.txt').read_text().splitlines() if x}
+          extra=got-allowed
+          assert not extra, f'PROTECTED_MUTATION:{sorted(extra)}'
+          PY
+      - name: Zero SEC acquisition assertion
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('/tmp/repair-evidence/network_request_audit.json'))
+          assert x['actual_sec_requests']==0
+          assert x['actual_provider_requests']==0
+          assert x['actual_current_identifier_requests']==0
+          assert x['certification_execution']==0
+          PY
+      - name: Existing security scanner
+        run: python timemachine/src/step11_fixture_security_scan_v5.py --root . --out /tmp/security-scan.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: step11-pre-full638-metadata-preflight-blocker-repair-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/repair-evidence
+            /tmp/changed.txt
+            /tmp/security-scan.json
