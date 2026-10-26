@@ -49,6 +49,8 @@ jobs:
           d=json.load(open('/tmp/expansion-plan/final_decision.json'))
           assert d['decision']=='STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFICATION_PLAN_GO'
           assert d['certified_candidate_universe']==638 and d['residual_candidate_universe']==0 and d['expansion_SEC_requests']==0
+          assert d['recommended_expansion_sample_size']==32
+          assert d['selection_hash']=='ec9fc60f59a72769bd372704379667c76f1e71021e4197ac1af085750d3ee549'
           cp={'decision':d['decision'],'next_step':d['NEXT_STEP'],'source_head':os.environ['GITHUB_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],'selection_hash':d['selection_hash'],'recommended_expansion_sample_size':d['recommended_expansion_sample_size'],'version':'STEP11_EXPANSION_PLAN_V1'}
           open('/tmp/expansion-checkpoint/step11-expansion-plan-checkpoint.json','w').write(json.dumps(cp,indent=2,sort_keys=True)+'\n')
           PY
@@ -62,8 +64,33 @@ jobs:
           for n in ['expansion_selected_occurrences.json','expansion_selection_hash.json','expansion_selection_algorithm.json','final_decision.json']:
               assert hashlib.sha256((A/n).read_bytes()).hexdigest()==hashlib.sha256((B/n).read_bytes()).hexdigest(),n
           d=json.load(open(A/'final_decision.json')); assert d['positive_regression_categories']>=30 and d['negative_regression_categories']>=60
+          assert d['recommended_expansion_sample_size']==32
+          assert d['selection_hash']=='ec9fc60f59a72769bd372704379667c76f1e71021e4197ac1af085750d3ee549'
           s=json.load(open(A/'security_plan.json')); assert all(s[k]==0 for k in ['confirmed_secrets_tolerance','credential_bearing_urls_tolerance','stored_authorization_headers_tolerance','stored_api_keys_tolerance','stored_tokens_tolerance','SEC_private_credentials'])
           p=json.load(open(A/'protected_diff.json')); assert p['PASS'] and p['v2_changes']==0 and p['expansion_SEC_queries']==0 and p['full_638_backfill']==0
+          PY
+      - name: Digest normalization regression
+        run: |
+          python - <<'PY'
+          import re,hashlib,tempfile
+          def norm(v):
+              v=v.strip().lower()
+              if v.startswith('sha256:'): v=v[7:]
+              assert re.fullmatch(r'[0-9a-f]{64}',v),('invalid sha256 representation',v)
+              return v
+          a='a'*64; b='b'*64
+          positives=[(a,a),('sha256:'+a,a),(a,'sha256:'+a),('sha256:'+a,'sha256:'+a),(a.upper(),a),('  '+a+'\n',a)]
+          for x,y in positives: assert norm(x)==norm(y)
+          with tempfile.NamedTemporaryFile() as f:
+              f.write(b'digest-regression'); f.flush(); h=hashlib.sha256(open(f.name,'rb').read()).hexdigest(); assert norm(h)==norm('sha256:'+h)
+          invalid=['a'*63,'a'*65,'g'*64,'md5:'+a,'sha1:'+a,'other:'+a,'','abc','sha256::'+a,a+'suffix',a+'?token=x']
+          for v in invalid:
+              try: norm(v)
+              except AssertionError: pass
+              else: raise AssertionError(('accepted invalid digest',v))
+          assert norm(a)!=norm(b)
+          assert not (a in b or b in a)
+          print({'PASS':True,'positive_cases':7,'negative_cases':14})
           PY
       - name: Protected diff
         run: |
@@ -113,16 +140,30 @@ jobs:
           gh api repos/${{ github.repository }}/actions/artifacts/$CERT_ID/zip > /tmp/original-cert.zip
           gh api repos/${{ github.repository }}/actions/artifacts/$CP_ID/zip > /tmp/original-cp.zip
           python - <<'PY'
-          import os,hashlib,zipfile,json
-          def h(p): return 'sha256:'+hashlib.sha256(open(p,'rb').read()).hexdigest()
-          assert h('/tmp/original-cert.zip')==os.environ['CERT_DIGEST']; assert h('/tmp/original-cp.zip')==os.environ['CP_DIGEST']
+          import os,hashlib,zipfile,json,re
+          def normalize_sha256(v):
+              raw=v
+              v=v.strip().lower()
+              if v.startswith('sha256:'): v=v[7:]
+              assert re.fullmatch(r'[0-9a-f]{64}',v),('invalid sha256 representation',raw)
+              return v
+          def file_sha256(p): return hashlib.sha256(open(p,'rb').read()).hexdigest()
+          cert_local=file_sha256('/tmp/original-cert.zip'); cp_local=file_sha256('/tmp/original-cp.zip')
+          assert normalize_sha256(cert_local)==normalize_sha256(os.environ['CERT_DIGEST'])
+          assert normalize_sha256(cp_local)==normalize_sha256(os.environ['CP_DIGEST'])
+          print(json.dumps({'digest_normalization':'PASS','cert_upload_raw':os.environ['CERT_DIGEST'],'cert_independent_raw':cert_local,'cert_normalized':normalize_sha256(cert_local),'checkpoint_upload_raw':os.environ['CP_DIGEST'],'checkpoint_independent_raw':cp_local,'checkpoint_normalized':normalize_sha256(cp_local)},sort_keys=True))
           with zipfile.ZipFile('/tmp/original-cert.zip') as z:
               assert z.testzip() is None and len(z.namelist())==len(set(z.namelist()))
               m=json.loads(z.read('manifest.json')); names=set(z.namelist())
               for e in m['entries']: assert e['path'] in names and hashlib.sha256(z.read(e['path'])).hexdigest()==e['sha256']
-              d=json.loads(z.read('final_decision.json')); assert d['decision']=='STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFICATION_PLAN_GO'; assert d['certified_candidate_universe']==638 and d['residual_candidate_universe']==0 and d['expansion_SEC_requests']==0; assert d['positive_regression_categories']>=30 and d['negative_regression_categories']>=60
+              d=json.loads(z.read('final_decision.json'))
+              assert d['decision']=='STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFICATION_PLAN_GO'
+              assert d['certified_candidate_universe']==638 and d['residual_candidate_universe']==0 and d['expansion_SEC_requests']==0
+              assert d['recommended_expansion_sample_size']==32
+              assert d['selection_hash']=='ec9fc60f59a72769bd372704379667c76f1e71021e4197ac1af085750d3ee549'
+              assert d['positive_regression_categories']>=30 and d['negative_regression_categories']>=60
           with zipfile.ZipFile('/tmp/original-cp.zip') as z:
               assert z.testzip() is None and len(z.namelist())==1
-              c=json.loads(z.read(z.namelist()[0])); assert c['source_head']==os.environ['GITHUB_SHA'] and str(c['run_id'])==os.environ['GITHUB_RUN_ID']; assert c['decision']=='STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFICATION_PLAN_GO'
+              c=json.loads(z.read(z.namelist()[0])); assert c['source_head']==os.environ['GITHUB_SHA'] and str(c['run_id'])==os.environ['GITHUB_RUN_ID']; assert c['decision']=='STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFICATION_PLAN_GO'; assert c['selection_hash']=='ec9fc60f59a72769bd372704379667c76f1e71021e4197ac1af085750d3ee549'
           print('STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFICATION_PLAN_GO')
           PY
