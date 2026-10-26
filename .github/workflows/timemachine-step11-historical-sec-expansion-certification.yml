@@ -1,0 +1,143 @@
+name: Time Machine STEP11 Historical SEC Expansion Certification
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'timemachine/src/step11_historical_sec_expansion_certification.py'
+      - '.github/workflows/timemachine-step11-historical-sec-expansion-certification.yml'
+      - 'timemachine/triggers/step11-historical-sec-expansion-certification.txt'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  expansion-certification:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - name: Compile
+        run: python -m py_compile timemachine/src/step11_historical_sec_expansion_certification.py
+      - name: Reacquire frozen authorities
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/authority
+          gh api repos/${{ github.repository }}/actions/artifacts/12628473313/zip > /tmp/authority/plan.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12629071114/zip > /tmp/authority/plan-checkpoint.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12628717168/zip > /tmp/authority/fixture.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12628926725/zip > /tmp/authority/fixture-checkpoint.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/12603520492/zip > /tmp/authority/step9.zip
+      - name: Verify frozen authority ZIPs and semantics
+        run: |
+          python - <<'PY'
+          import hashlib,zipfile,json
+          expected={
+           '/tmp/authority/plan.zip':'2e7263ebdcf27e82d50b7c35921f9e39b0b51bf9eb5cd0e62ee198edaef1797f',
+           '/tmp/authority/plan-checkpoint.zip':'e0c1d55328ca1f6e1233cf5f50bdbc79eb5b8e4ea7346dc8a51d5c96284af33c',
+           '/tmp/authority/fixture.zip':'918d7996396c746b342570a977baed14f6da5dc1cd707d2d4904df8a5a5cf8a8',
+           '/tmp/authority/fixture-checkpoint.zip':'88533d473fe85d28ea4e71f043859b8d6866cd976e69c6c506d942f8be4cbddc',
+           '/tmp/authority/step9.zip':'3ec6a1f4ec88ff284eade8d7730b301ea65d2d5a932feb11a0f76c0592c7c19c'}
+          for p,h in expected.items():
+           assert hashlib.sha256(open(p,'rb').read()).hexdigest()==h,p
+           with zipfile.ZipFile(p) as z: assert z.testzip() is None
+          with zipfile.ZipFile('/tmp/authority/plan.zip') as z:
+           d=json.loads(z.read('final_decision.json'));assert d['decision']=='STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFICATION_PLAN_GO';assert d['recommended_expansion_sample_size']==32;assert d['selection_hash']=='ec9fc60f59a72769bd372704379667c76f1e71021e4197ac1af085750d3ee549';assert d['positive_regression_categories']==30 and d['negative_regression_categories']==61
+           m=json.loads(z.read('manifest.json'));names=set(z.namelist());
+           for e in m['entries']: assert e['path'] in names and hashlib.sha256(z.read(e['path'])).hexdigest()==e['sha256']
+          with zipfile.ZipFile('/tmp/authority/fixture.zip') as z:
+           assert json.loads(z.read('step11_fixture_decision.json'))['decision']=='STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_FIXTURE_CERTIFIED';assert json.loads(z.read('security_scan_report.json'))['PASS']
+          print('FROZEN_AUTHORITIES_PASS')
+          PY
+      - name: Execute bounded 32-occurrence SEC acquisition and reconstruction
+        run: |
+          rm -rf /tmp/expansion-cert /tmp/expansion-checkpoint
+          mkdir -p /tmp/expansion-cert /tmp/expansion-checkpoint
+          python timemachine/src/step11_historical_sec_expansion_certification.py --plan /tmp/authority/plan.zip --step9 /tmp/authority/step9.zip --out /tmp/expansion-cert --head '${{ github.sha }}' --run '${{ github.run_id }}'
+      - name: Verify frozen sample, guard, PIT, determinism and regressions
+        run: |
+          python - <<'PY'
+          import json,pathlib,hashlib
+          R=pathlib.Path('/tmp/expansion-cert');d=json.load(open(R/'final_decision.json'))
+          assert d['selected_occurrences']==32 and d['selection_hash']=='ec9fc60f59a72769bd372704379667c76f1e71021e4197ac1af085750d3ee549'
+          assert d['STEP9_certified_membership']==32 and d['STEP10_allowed']==32 and d['residual_contamination']==0 and d['unknown_contamination']==0 and d['fallback_attempts']==0
+          assert d['future_leakage']==0 and d['pass_b_network_requests']==0 and d['semantic_disagreements']==0 and d['full_638_backfill_executed'] is False
+          p=json.load(open(R/'positive_regression_report.json'));n=json.load(open(R/'negative_regression_report.json'));assert p['categories']==30 and p['failed']==0 and p['PASS'];assert n['categories']==61 and n['failed']==0 and n['PASS']
+          q=json.load(open(R/'query_coverage_report.json'));assert q['requested']==32 and q['certified_eligible']==32 and q['silent_denominator_reductions']==0
+          inv=json.load(open(R/'raw_evidence_inventory.json'));assert inv['frozen'] and inv['hash_mismatches']==0
+          for e in inv['files']: assert hashlib.sha256((R/e['path']).read_bytes()).hexdigest()==e['sha256']
+          print(json.dumps({'decision':d['decision'],'SEC_requests':d['SEC_requests'],'source_states':d['source_states'],'future_excluded':d['future_filings_excluded'],'promotion_gate':d['full_638_promotion_gate']},sort_keys=True))
+          PY
+      - name: Protected diff
+        run: |
+          python - <<'PY'
+          import subprocess
+          files=subprocess.check_output(['git','diff','--name-only','1b5a5e8ed41f655249acc4f157d42dd6ea6fe60b..HEAD'],text=True).splitlines()
+          allowed={'timemachine/src/step11_historical_sec_expansion_certification.py','.github/workflows/timemachine-step11-historical-sec-expansion-certification.yml','timemachine/triggers/step11-historical-sec-expansion-certification.txt'}
+          assert set(files)<=allowed,files;assert not any(x.startswith('v2/') for x in files);print(files)
+          PY
+      - name: Security regression
+        run: |
+          python - <<'PY'
+          import pathlib,re,json
+          bad=[];urlq=re.compile(r'https?://[^\s"\']+[?&](?:api[_-]?key|token|key|sig|signature)=',re.I);auth=re.compile(r'authorization\s*[":=]+\s*(?!NONE|REDACTED)',re.I);tok=re.compile(r'(?i)(?:api[_-]?key|access[_-]?token|secret)\s*[":=]+\s*["\']?[A-Za-z0-9_\-]{16,}')
+          for base in [pathlib.Path('/tmp/expansion-cert'),pathlib.Path('timemachine/src'),pathlib.Path('.github/workflows')]:
+           for p in base.rglob('*'):
+            if not p.is_file(): continue
+            try:t=p.read_text(errors='ignore')
+            except:continue
+            if urlq.search(t) or tok.search(t): bad.append(str(p))
+          assert not bad,bad
+          s=json.load(open('/tmp/expansion-cert/security_scan_report.json'));assert s['PASS'] and s['confirmed_secrets']==0 and s['credential_bearing_urls']==0 and s['authorization_headers']==0 and s['api_keys']==0 and s['tokens']==0
+          print('SECURITY_PASS')
+          PY
+      - name: Build checkpoint and validate decision
+        run: |
+          python - <<'PY'
+          import json,os,pathlib
+          R=pathlib.Path('/tmp/expansion-cert');d=json.load(open(R/'final_decision.json'))
+          assert d['decision']=='STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFIED',d
+          cp={'version':'STEP11_SEC_EXPANSION_V1','source_head':os.environ['GITHUB_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],'decision':d['decision'],'next_step':d['NEXT_STEP'],'selection_hash':d['selection_hash'],'selected_occurrences':32,'SEC_requests':d['SEC_requests'],'source_states':d['source_states'],'full_638_promotion_gate':d['full_638_promotion_gate']}
+          pathlib.Path('/tmp/expansion-checkpoint/step11-expansion-certification-checkpoint.json').write_text(json.dumps(cp,indent=2,sort_keys=True)+'\n')
+          PY
+      - name: Upload Expansion Checkpoint
+        id: upload_checkpoint
+        uses: actions/upload-artifact@v4
+        with:
+          name: step11-historical-sec-backfill-event-classification-expansion-certification-checkpoint
+          path: /tmp/expansion-checkpoint
+          if-no-files-found: error
+      - name: Upload Expansion Certification
+        id: upload_cert
+        uses: actions/upload-artifact@v4
+        with:
+          name: step11-historical-sec-backfill-event-classification-expansion-certification
+          path: /tmp/expansion-cert
+          if-no-files-found: error
+      - name: Independent original ZIP verification and semantic recalculation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CERT_ID: ${{ steps.upload_cert.outputs.artifact-id }}
+          CERT_DIGEST: ${{ steps.upload_cert.outputs.artifact-digest }}
+          CP_ID: ${{ steps.upload_checkpoint.outputs.artifact-id }}
+          CP_DIGEST: ${{ steps.upload_checkpoint.outputs.artifact-digest }}
+        run: |
+          gh api repos/${{ github.repository }}/actions/artifacts/$CERT_ID/zip > /tmp/original-expansion-cert.zip
+          gh api repos/${{ github.repository }}/actions/artifacts/$CP_ID/zip > /tmp/original-expansion-cp.zip
+          python - <<'PY'
+          import os,re,hashlib,zipfile,json
+          def norm(v):
+           v=v.strip().lower();v=v[7:] if v.startswith('sha256:') else v;assert re.fullmatch(r'[0-9a-f]{64}',v);return v
+          def h(p):return hashlib.sha256(open(p,'rb').read()).hexdigest()
+          ch=h('/tmp/original-expansion-cert.zip');ph=h('/tmp/original-expansion-cp.zip');assert norm(ch)==norm(os.environ['CERT_DIGEST']);assert norm(ph)==norm(os.environ['CP_DIGEST'])
+          with zipfile.ZipFile('/tmp/original-expansion-cert.zip') as z:
+           assert z.testzip() is None and len(z.namelist())==len(set(z.namelist()));names=set(z.namelist());m=json.loads(z.read('manifest.json'))
+           for e in m['entries']:assert e['path'] in names and hashlib.sha256(z.read(e['path'])).hexdigest()==e['sha256']
+           d=json.loads(z.read('final_decision.json'));assert d['decision']=='STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFIED';assert d['selected_occurrences']==32 and d['selection_hash']=='ec9fc60f59a72769bd372704379667c76f1e71021e4197ac1af085750d3ee549';assert d['future_leakage']==0 and d['semantic_disagreements']==0 and d['pass_b_network_requests']==0
+           assert json.loads(z.read('security_scan_report.json'))['PASS'];assert json.loads(z.read('protected_diff.json'))['PASS'];assert json.loads(z.read('positive_regression_report.json'))['failed']==0;assert json.loads(z.read('negative_regression_report.json'))['failed']==0
+          with zipfile.ZipFile('/tmp/original-expansion-cp.zip') as z:
+           assert z.testzip() is None and len(z.namelist())==1;c=json.loads(z.read(z.namelist()[0]));assert c['source_head']==os.environ['GITHUB_SHA'] and str(c['run_id'])==os.environ['GITHUB_RUN_ID'];assert c['decision']=='STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFIED'
+          print(json.dumps({'artifact_count':2,'cert_id':os.environ['CERT_ID'],'cert_upload_digest_raw':os.environ['CERT_DIGEST'],'cert_independent_sha256':ch,'checkpoint_id':os.environ['CP_ID'],'checkpoint_upload_digest_raw':os.environ['CP_DIGEST'],'checkpoint_independent_sha256':ph,'independent_verification':'PASS'},sort_keys=True))
+          print('STEP11_HISTORICAL_SEC_BACKFILL_AND_EVENT_CLASSIFICATION_EXPANSION_CERTIFIED')
+          PY
