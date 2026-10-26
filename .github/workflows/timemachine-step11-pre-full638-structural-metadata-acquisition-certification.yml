@@ -32,7 +32,7 @@ jobs:
           mkdir -p /tmp/step11-compile-check /tmp/frozen-authorities /tmp/preflight-authority /tmp/step11-cert /tmp/sample32-oracle
           python - <<'PY'
           import py_compile
-          files=['timemachine/src/step11_pre_full638_metadata_certification.py','timemachine/src/step11_frozen_authority_revalidate.py','timemachine/src/step11_structural_metadata_acquisition_execution.py','timemachine/src/step11_sample32_metadata_oracle_compare.py','timemachine/src/step11_frozen_step9_schema_adapter.py']
+          files=['timemachine/src/step11_pre_full638_metadata_certification.py','timemachine/src/step11_frozen_authority_revalidate.py','timemachine/src/step11_structural_metadata_acquisition_execution.py','timemachine/src/step11_structural_metadata_acquisition_execution_v3.py','timemachine/src/step11_sample32_metadata_oracle_compare.py','timemachine/src/step11_frozen_step9_schema_adapter.py']
           for i,p in enumerate(files): py_compile.compile(p,cfile=f'/tmp/step11-compile-check/{i}.pyc',doraise=True)
           PY
       - name: Download immutable authorities before SEC network
@@ -76,30 +76,32 @@ jobs:
         run: |
           python timemachine/src/step11_frozen_step9_schema_adapter.py --input /tmp/step11-cert/certified638-raw.json --out /tmp/step11-cert/certified638.json --report /tmp/step11-cert/real_schema_compatibility.json
           PYTHONPATH=timemachine/src python - <<'PY'
-          import json
+          import json,pathlib
           import step11_structural_metadata_acquisition_execution as live
           import step11_pre_full638_metadata_certification as core
-          rows=live.norm_rows(live.load_rows(__import__('pathlib').Path('/tmp/step11-cert/certified638.json')))
+          rows=live.norm_rows(live.load_rows(pathlib.Path('/tmp/step11-cert/certified638.json')))
           assert len(rows)==638 and len({r['issuer_cik'] for r in rows})==239
-          plan=core.build_request_plan(rows); assert len(plan)==239
-          assert core.COUNTERS['sec_requests']==0
+          plan=core.build_request_plan(rows); assert len(plan)==239 and core.COUNTERS['sec_requests']==0
           json.dump({'raw_rows':638,'normalized_rows':638,'normalized_issuer_cik_coverage':638,'unique_frozen_cik':239,'offline_request_plan_count':239,'sec_requests':0,'decision':'REAL_FROZEN_ALLOWLIST_TO_LIVE_RUNNER_SCHEMA_COMPATIBILITY_PASS'},open('/tmp/step11-cert/live_runner_schema_gate.json','w'),sort_keys=True)
           PY
-      - name: Execute candidate-wide metadata-only certification
+      - name: Execute candidate-wide metadata-only core
         env:
           STEP11_METADATA_CERTIFICATION_ENABLE: 'YES'
           STEP11_APPROVED_CERTIFICATION_HEAD: '${{ inputs.approved_certification_head }}'
           STEP11_ACTUAL_HEAD: '${{ github.sha }}'
-          SEC_USER_AGENT: 'MicrocapRadarTimeMachine/1.0 y44195070-sudo GitHub research contact'
-        run: python timemachine/src/step11_structural_metadata_acquisition_execution.py --mode certification --input638 /tmp/step11-cert/certified638.json --out /tmp/step11-cert/execution
+          SEC_USER_AGENT: 'MicrocapRadar historical-expansion-certification/1.0 contact: repository-owner'
+        run: python timemachine/src/step11_structural_metadata_acquisition_execution_v3.py --mode certification --input638 /tmp/step11-cert/certified638.json --out /tmp/step11-cert/execution
       - name: Compare immutable Sample32 oracle
-        run: python timemachine/src/step11_sample32_metadata_oracle_compare.py --oracle-dir /tmp/sample32-oracle --input638 /tmp/step11-cert/certified638.json --pass-a /tmp/step11-cert/execution/pass_a.json --out /tmp/step11-cert/execution/sample32_oracle_comparison.json
-      - name: Assert certification scope and decision
+        run: python timemachine/src/step11_sample32_metadata_oracle_compare.py --oracle-dir /tmp/sample32-oracle --input638 /tmp/step11-cert/certified638.json --pass-a /tmp/step11-cert/execution/pass_a.json --acquisition-state /tmp/step11-cert/execution/acquisition_state_manifest.json --out /tmp/step11-cert/execution/sample32_oracle_comparison.json
+      - name: Assert core and Sample32 before security
         run: |
           python - <<'PY'
           import json
-          root='/tmp/step11-cert/execution/'; d=json.load(open(root+'final_decision.json')); n=json.load(open(root+'network_audit.json')); c=json.load(open(root+'metadata_coverage.json')); o=json.load(open(root+'sample32_oracle_comparison.json'))
-          assert d['decision']=='STEP11_PRE_FULL638_STRUCTURAL_METADATA_ACQUISITION_CERTIFIED' and d['candidate_count']==638 and d['metadata_scope']=='METADATA_ONLY_SCOPE'; assert c['total_occurrences']==638 and o['PASS'] and o['sample_count']==32 and not o['oracle_mutated']
+          r='/tmp/step11-cert/execution/'
+          c=json.load(open(r+'core_decision.json')); e=json.load(open(r+'acquisition_eligibility.json')); o=json.load(open(r+'sample32_oracle_comparison.json')); n=json.load(open(r+'network_audit.json'))
+          assert c['decision']=='CORE_METADATA_REPLAY_VALIDATED' and c['candidate_count']==638
+          assert e['status']=='PASS' and e['incomplete_frozen_cik']==0 and e['source_acquisition_incomplete_candidates']==0
+          assert o['PASS'] and o['sample_count']==32 and not o['oracle_mutated']
           assert n['provider_requests']==n['current_identifier_requests']==n['residual4388_requests']==n['filing_body_requests']==n['exhibit_requests']==n['xbrl_requests']==n['pass_b_network_requests']==0
           PY
       - name: Security scanner unchanged
@@ -116,6 +118,17 @@ jobs:
           import json,subprocess
           dirty=subprocess.check_output(['git','status','--porcelain'],text=True).strip().splitlines(); assert not any(' v2/' in x or x.startswith('?? v2/') for x in dirty)
           json.dump({'v2_changes':0,'production_changes':0,'prediction_changes':0,'prediction_identity_changes':0,'pred_id_changes':0,'rule_engine_changes':0,'context_changes':0,'snapshot_changes':0,'frozen_authority_changes':0,'sample32_changes':0,'residual4388_changes':0,'PASS':True},open('/tmp/step11-cert/protected_state.json','w'),sort_keys=True)
+          PY
+      - name: Final certification assertion only after all mandatory gates
+        run: |
+          python - <<'PY'
+          import json
+          r='/tmp/step11-cert/execution/'
+          e=json.load(open(r+'acquisition_eligibility.json')); o=json.load(open(r+'sample32_oracle_comparison.json')); s=json.load(open('/tmp/step11-cert/security.json')); p=json.load(open('/tmp/step11-cert/protected_state.json'))
+          assert e['status']=='PASS' and o['PASS'] and s['PASS'] and p['PASS']
+          d={'decision':'STEP11_PRE_FULL638_STRUCTURAL_METADATA_ACQUISITION_CERTIFIED','metadata_scope':'METADATA_ONLY_SCOPE','candidate_count':638,'acquisition_eligibility':'PASS','sample32_oracle':'PASS','security':'PASS','protected_state':'PASS'}
+          json.dump(d,open(r+'final_decision.json','w'),sort_keys=True,separators=(',',':'))
+          print(d['decision'])
           PY
       - uses: actions/upload-artifact@v4
         if: always()
