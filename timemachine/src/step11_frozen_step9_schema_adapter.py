@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
-"""Explicit, zero-network adapter for immutable STEP9 certified allowlist schema.
+"""Explicit zero-network adapter for immutable STEP9 certified allowlist schema.
 
-Authority path is fixed to source_evidence_reference.issuer_cik. This module never
-performs identity lookup and never mutates the immutable source artifact.
+The immutable authority remains the original STEP9 row. Only exact, versioned
+source_evidence_reference paths are projected into the derived execution row.
+No heuristic aliases or identity lookup are permitted.
 """
 from __future__ import annotations
 import argparse, json, pathlib, re
 
-SCHEMA_VERSION = "STEP9_CERTIFIED_ALLOWLIST_V1_NESTED_SOURCE_EVIDENCE_CIK"
+SCHEMA_VERSION = "STEP9_CERTIFIED_ALLOWLIST_V1_NESTED_SOURCE_EVIDENCE"
 FROZEN_CIK_PATH = "source_evidence_reference.issuer_cik"
 PROVENANCE = "FROZEN_STEP9_SOURCE_EVIDENCE_REFERENCE"
 CIK_RE = re.compile(r"^[0-9]{1,10}$")
+EXECUTION_SOURCE_FIELDS = ("issuer_cik", "exchange", "instrument_type", "security_title")
 
 class FrozenSchemaError(RuntimeError):
     pass
@@ -25,6 +27,14 @@ def canonical_cik(value):
         raise FrozenSchemaError("FROZEN_CIK_MALFORMED")
     return s.zfill(10)
 
+def _required_text(src, field):
+    if field not in src:
+        raise FrozenSchemaError("FROZEN_SOURCE_FIELD_MISSING:" + field)
+    value = src.get(field)
+    if value is None or not str(value).strip():
+        raise FrozenSchemaError("FROZEN_SOURCE_FIELD_EMPTY:" + field)
+    return str(value).strip()
+
 def normalize_row(row):
     if not isinstance(row, dict):
         raise FrozenSchemaError("FROZEN_ROW_NOT_OBJECT")
@@ -33,17 +43,26 @@ def normalize_row(row):
         raise FrozenSchemaError("FROZEN_SOURCE_EVIDENCE_REFERENCE_MISSING")
     if "issuer_cik" not in src:
         raise FrozenSchemaError("FROZEN_CIK_MISSING")
-    nested = canonical_cik(src.get("issuer_cik"))
+    nested_cik = canonical_cik(src.get("issuer_cik"))
     if "issuer_cik" in row:
         direct = canonical_cik(row.get("issuer_cik"))
-        if direct != nested:
+        if direct != nested_cik:
             raise FrozenSchemaError("FROZEN_CIK_SCHEMA_AMBIGUITY")
     out = dict(row)
-    out["issuer_cik"] = nested
-    out["normalized_issuer_cik_provenance"] = {
+    projections = {
+        "issuer_cik": nested_cik,
+        "exchange": _required_text(src, "exchange"),
+        "instrument_type": _required_text(src, "instrument_type"),
+        "security_title": _required_text(src, "security_title"),
+    }
+    for field, value in projections.items():
+        if field in row and field != "issuer_cik" and str(row[field]).strip() != value:
+            raise FrozenSchemaError("FROZEN_SOURCE_FIELD_AMBIGUITY:" + field)
+        out[field] = value
+    out["normalized_execution_provenance"] = {
         "schema_version": SCHEMA_VERSION,
-        "source_path": FROZEN_CIK_PATH,
         "source_authority": PROVENANCE,
+        "field_paths": {field: "source_evidence_reference." + field for field in EXECUTION_SOURCE_FIELDS},
     }
     return out
 
@@ -76,6 +95,7 @@ def main():
         "schema_version": SCHEMA_VERSION,
         "frozen_cik_path": FROZEN_CIK_PATH,
         "normalized_issuer_cik_source": PROVENANCE,
+        "execution_source_fields": list(EXECUTION_SOURCE_FIELDS),
         "raw_rows": len(rows),
         "normalized_rows": len(normalized),
         "raw_frozen_cik_coverage": sum(isinstance(r.get("source_evidence_reference"), dict) and bool(r["source_evidence_reference"].get("issuer_cik")) for r in rows),
