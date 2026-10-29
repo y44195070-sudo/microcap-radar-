@@ -15,7 +15,7 @@ def req_json(url, ua, retries=3):
     last = None
     for i in range(retries):
         REQUESTS += 1
-        r = urllib.request.Request(url, headers={"User-Agent": ua, "Accept-Encoding": "gzip, deflate", "Host": "data.sec.gov"})
+        r = urllib.request.Request(url, headers={"User-Agent": ua, "Host": "data.sec.gov"})
         try:
             with urllib.request.urlopen(r, timeout=30) as x:
                 code = x.status; STATUS[str(code)] = STATUS.get(str(code), 0) + 1
