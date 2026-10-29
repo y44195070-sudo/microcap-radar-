@@ -1,0 +1,24 @@
+{
+  "stage": "B2",
+  "status": "FROZEN",
+  "source_artifact": 12882618389,
+  "classification": {
+    "name": "B2_V2_1_CLASSIFICATION_FROZEN",
+    "sha256": "2f2c0eb8a8fe9913104e92613f3983e627bdcef8e27e08d17d01c7a5158d793e"
+  },
+  "numeric": {
+    "name": "B2_NUMERIC_V2_DETERMINISTIC",
+    "sha256": "65b269395ce55ad777f370d4b07d4b14895adf30f509fc33c24df282b029c7c8",
+    "reproducer": "timemachine/src/b2_numeric_v2.py",
+    "reproducer_sha256": "a892a474666bd655d248d882fc66a8e36f7061f38134d7f4ffac8bc85c79a307",
+    "gross_proceeds_candidates": 31,
+    "gross_proceeds_linked": 22,
+    "shares_issued_candidates": 12,
+    "shares_issued_linked": 2,
+    "price_per_share_candidates": 6,
+    "price_per_share_linked": 0,
+    "llm_rejudgment_used": false,
+    "invariant": "raw in evidence_span in normalized source for every linked value"
+  },
+  "declaration": "B2 classification + deterministic numeric evidence are frozen together. Changes require a new version and revalidation."
+}
