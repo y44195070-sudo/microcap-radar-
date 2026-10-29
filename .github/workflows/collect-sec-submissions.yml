@@ -1,0 +1,26 @@
+name: Collect SEC submissions
+on:
+  workflow_dispatch:
+    inputs:
+      issuers_file:
+        description: 'Repository path to JSON/newline CIK issuer list'
+        required: true
+        default: 'data/sec-submissions-issuers.json'
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Collect SEC submissions
+        env:
+          SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+          SEC_USER_AGENT_VAR: ${{ vars.SEC_USER_AGENT }}
+        run: python scripts/collect_sec_submissions.py --issuers "${{ inputs.issuers_file }}"
+      - name: Upload single artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sec-submissions
+          path: sec-submissions-artifact/
+          if-no-files-found: error
