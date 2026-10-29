@@ -1,0 +1,191 @@
+name: Build OOS universe (sealed prices)
+
+on:
+  workflow_dispatch:
+    inputs:
+      month:
+        description: "Target month YYYY-MM. Run 2026-01 Gate B successfully before any OOS month."
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  PYTHONUNBUFFERED: "1"
+  JAN_GATE_START: "2026-01-05"
+  JAN_GATE_END: "2026-01-30"
+  JAN_PUBLIC_PROJECTION_SHA256: "bed3fe6c3d101d30869499454372980a0c532771a37d1dcfd5fe11ab5cbaccec"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate month and January prerequisite
+        id: guard
+        shell: bash
+        run: |
+          set -euo pipefail
+          MONTH='${{ inputs.month }}'
+          if [[ ! "$MONTH" =~ ^2026-(0[1-9]|1[0-2])$ ]]; then
+            echo "ERROR_CODE=INVALID_MONTH" >&2
+            exit 1
+          fi
+          if [[ "$MONTH" != "2026-01" ]]; then
+            # Gate B is represented by a committed marker created by the user only after a successful Jan run.
+            if [[ ! -f timemachine/data/oos-gates/JAN_GATE_B_PASS.json ]]; then
+              echo "ERROR_CODE=JAN_GATE_B_NOT_RECORDED" >&2
+              exit 1
+            fi
+            python - <<'PY'
+          import json, sys
+          p='timemachine/data/oos-gates/JAN_GATE_B_PASS.json'
+          try:
+              d=json.load(open(p))
+          except Exception:
+              print('ERROR_CODE=JAN_GATE_B_MARKER_INVALID', file=sys.stderr); raise SystemExit(1)
+          if d.get('projection_sha256') != 'bed3fe6c3d101d30869499454372980a0c532771a37d1dcfd5fe11ab5cbaccec' or d.get('status') != 'PASS':
+              print('ERROR_CODE=JAN_GATE_B_MARKER_INVALID', file=sys.stderr); raise SystemExit(1)
+          PY
+          fi
+
+      - name: Collect STEP7H-compatible SEALED source
+        env:
+          MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _sealed _public _work
+          mkdir -p _sealed _public _work
+          python -m timemachine.src.step7h_month_build '${{ inputs.month }}' _sealed/source
+
+      - name: Run independent universe A and B
+        id: ab
+        shell: bash
+        run: |
+          set -euo pipefail
+          A_STDOUT="$(python timemachine/src/build_v2_universe_month.py _sealed/source '${{ inputs.month }}' _work/universe_a.json)"
+          B_STDOUT="$(python timemachine/src/universe_b.py _sealed/source '${{ inputs.month }}' _work/universe_b.json)"
+          printf '%s\n' "$A_STDOUT"
+          printf '%s\n' "$B_STDOUT"
+          export A_STDOUT B_STDOUT
+          python - <<'PY'
+          import hashlib,json,os,re,sys
+          from pathlib import Path
+          month='${{ inputs.month }}'
+          def parse_stdout(name,s):
+              pat=rf'^UNIVERSE_{name}_SHA256=([0-9a-f]{{64}})$'
+              m=re.fullmatch(pat,s.strip())
+              if not m:
+                  print(f'ERROR_CODE=UNIVERSE_{name}_STDOUT_INVALID',file=sys.stderr); raise SystemExit(1)
+              return m.group(1)
+          def load_canonical(path):
+              raw=Path(path).read_bytes()
+              try: data=json.loads(raw)
+              except Exception:
+                  print('ERROR_CODE=UNIVERSE_JSON_INVALID',file=sys.stderr); raise SystemExit(1)
+              if not isinstance(data,list):
+                  print('ERROR_CODE=UNIVERSE_SCHEMA_INVALID',file=sys.stderr); raise SystemExit(1)
+              keys={'ticker','trading_date','cik','prediction_cutoff'}
+              if any(set(r)!=keys for r in data):
+                  print('ERROR_CODE=PUBLIC_SCHEMA_INVALID',file=sys.stderr); raise SystemExit(1)
+              if data != sorted(data,key=lambda r:(r['trading_date'],r['ticker'])):
+                  print('ERROR_CODE=PUBLIC_ORDER_INVALID',file=sys.stderr); raise SystemExit(1)
+              can=json.dumps(data,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()
+              if raw != can:
+                  print('ERROR_CODE=UNIVERSE_NOT_CANONICAL',file=sys.stderr); raise SystemExit(1)
+              return data,hashlib.sha256(raw).hexdigest()
+          a_claim=parse_stdout('A',os.environ['A_STDOUT']); b_claim=parse_stdout('B',os.environ['B_STDOUT'])
+          a,a_sha=load_canonical('_work/universe_a.json'); b,b_sha=load_canonical('_work/universe_b.json')
+          if a_claim!=a_sha or b_claim!=b_sha:
+              print('ERROR_CODE=UNIVERSE_SELF_SHA_MISMATCH',file=sys.stderr); raise SystemExit(1)
+          print('UNIVERSE_A_SHA256='+a_sha)
+          print('UNIVERSE_B_SHA256='+b_sha)
+          if a_sha!=b_sha or a!=b:
+              print('UNIVERSE_MATCH=FALSE')
+              raise SystemExit(1)
+          print('UNIVERSE_MATCH=TRUE')
+          # January Gate B is deliberately projected to 2026-01-05..2026-01-30.
+          if month=='2026-01':
+              lo,hi=os.environ['JAN_GATE_START'],os.environ['JAN_GATE_END']
+              pa=[r for r in a if lo<=r['trading_date']<=hi]
+              pb=[r for r in b if lo<=r['trading_date']<=hi]
+              ra=json.dumps(pa,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()
+              rb=json.dumps(pb,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()
+              sa=hashlib.sha256(ra).hexdigest(); sb=hashlib.sha256(rb).hexdigest()
+              exp=os.environ['JAN_PUBLIC_PROJECTION_SHA256']
+              print('JAN_GATE_A_PROJECTION_SHA256='+sa)
+              print('JAN_GATE_B_PROJECTION_SHA256='+sb)
+              if sa!=exp or sb!=exp or pa!=pb:
+                  # January is development data: identity-only diff is allowed. Never print prices/returns.
+                  ka={(r['trading_date'],r['ticker'],str(r.get('cik')),r['prediction_cutoff']) for r in pa}
+                  kb={(r['trading_date'],r['ticker'],str(r.get('cik')),r['prediction_cutoff']) for r in pb}
+                  print('JAN_GATE_B_STATUS=FAIL')
+                  print('JAN_ONLY_A='+json.dumps(sorted(ka-kb),separators=(',',':')))
+                  print('JAN_ONLY_B='+json.dumps(sorted(kb-ka),separators=(',',':')))
+                  raise SystemExit(1)
+              print('JAN_GATE_B_STATUS=PASS')
+          Path('_public/universe.json').write_bytes(Path('_work/universe_a.json').read_bytes())
+          Path('_public/universe-sha256.json').write_text(json.dumps({
+              'target_month':month,'universe_a_sha256':a_sha,'universe_b_sha256':b_sha,'universe_match':True
+          },sort_keys=True,separators=(',',':')))
+          PY
+
+      - name: Build SEALED file manifest and public metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,os
+          from datetime import datetime,timedelta,timezone
+          from pathlib import Path
+          root=Path('_sealed')
+          files=[]
+          for p in sorted(x for x in root.rglob('*') if x.is_file()):
+              raw=p.read_bytes()
+              files.append({'filename':p.relative_to(root).as_posix(),'sha256':hashlib.sha256(raw).hexdigest(),'size_bytes':len(raw)})
+          created=datetime.now(timezone.utc)
+          meta={
+              'target_month':'${{ inputs.month }}',
+              'created_at':created.isoformat(),
+              'retention_days':90,
+              'expires_at':(created+timedelta(days=90)).isoformat(),
+              'workflow':os.getenv('GITHUB_WORKFLOW'),
+              'run_id':os.getenv('GITHUB_RUN_ID'),
+              'run_attempt':os.getenv('GITHUB_RUN_ATTEMPT'),
+              'sealed_files':files,
+          }
+          Path('_public/sealed-sha256-manifest.json').write_text(json.dumps(meta,sort_keys=True,separators=(',',':')))
+          PY
+
+      - name: Final public schema assertion
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,sys
+          d=json.load(open('_public/universe.json'))
+          keys={'ticker','trading_date','cik','prediction_cutoff'}
+          if not isinstance(d,list) or any(set(r)!=keys for r in d):
+              print('ERROR_CODE=PUBLIC_SCHEMA_ASSERTION_FAILED',file=sys.stderr); raise SystemExit(1)
+          PY
+
+      - name: Upload SEALED source
+        uses: actions/upload-artifact@v4
+        with:
+          name: oos-${{ inputs.month }}-SEALED
+          path: _sealed/
+          retention-days: 90
+          if-no-files-found: error
+
+      - name: Upload PUBLIC universe and manifests
+        uses: actions/upload-artifact@v4
+        with:
+          name: oos-${{ inputs.month }}-PUBLIC
+          path: _public/
+          retention-days: 90
+          if-no-files-found: error
