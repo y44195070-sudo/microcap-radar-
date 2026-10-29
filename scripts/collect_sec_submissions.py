@@ -10,6 +10,7 @@ PAGES = 0
 
 
 def now(): return datetime.now(timezone.utc).isoformat()
+def error_type(e): return type(e).__name__
 def req_json(url, ua, retries=3):
     global REQUESTS, PAGES
     last = None
@@ -25,7 +26,7 @@ def req_json(url, ua, retries=3):
             if e.code not in (429,500,502,503,504): break
         except Exception as e: last = e
         time.sleep(1.0 * (i + 1))
-    raise RuntimeError(str(last))
+    raise RuntimeError(error_type(last) if last is not None else "UnknownError")
 
 def sha256(p):
     h=hashlib.sha256()
@@ -36,8 +37,8 @@ def sha256(p):
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument("--issuers", required=True, help="JSON array/object with CIKs, or newline CIK list")
     a=ap.parse_args(); started=now()
-    ua=os.getenv("SEC_USER_AGENT") or os.getenv("SEC_USER_AGENT_VAR")
-    if not ua: raise SystemExit("SEC_USER_AGENT secret/variable is required")
+    ua=(os.getenv("SEC_USER_AGENT") or os.getenv("SEC_USER_AGENT_VAR") or "").strip()
+    if not ua: raise SystemExit("SEC_USER_AGENT secret/variable is required and must not be blank")
     src=pathlib.Path(a.issuers); txt=src.read_text()
     try:
         obj=json.loads(txt)
@@ -60,11 +61,11 @@ def main():
                 name=ent.get("name")
                 if not name: continue
                 try: bundle["history"].append({"name":name,"data":req_json(f"{BASE}/{name}",ua)})
-                except Exception as e: bundle["history"].append({"name":name,"error":str(e)}); ok=False
+                except Exception as e: bundle["history"].append({"name":name,"error":error_type(e)}); ok=False
                 time.sleep(0.11)
             p=OUT/"raw"/f"CIK{cik}.json"; p.write_text(json.dumps(bundle,ensure_ascii=False,separators=(",",":")))
             (complete if ok else incomplete).append(cik)
-        except Exception as e: failed.append({"cik":cik,"error":str(e)})
+        except Exception as e: failed.append({"cik":cik,"error":error_type(e)})
         time.sleep(0.11)
     summary={"issuers_requested":len(issuers),"issuers_complete_history":len(complete),"issuers_incomplete_history":len(incomplete),"issuers_failed":len(failed),"requests_total":REQUESTS,"pages_total":PAGES,"http_status_counts":STATUS,"started_at":started,"finished_at":now()}
     (OUT/"summary.json").write_text(json.dumps(summary,indent=2))
@@ -75,4 +76,6 @@ def main():
         manifest.append({"path":str(p.relative_to(OUT)),"sha256":sha256(p),"bytes":p.stat().st_size})
     (OUT/"sha256-manifest.json").write_text(json.dumps(manifest,indent=2))
     print(json.dumps(summary))
+    if summary["issuers_failed"] == summary["issuers_requested"] or summary["pages_total"] == 0:
+        raise SystemExit(1)
 if __name__=="__main__": main()
