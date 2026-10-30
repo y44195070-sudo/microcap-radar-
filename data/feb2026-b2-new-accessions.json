@@ -1,0 +1,850 @@
+[
+ {
+  "cik": "3197",
+  "accession": "0001193125-26-036815",
+  "primaryDocument": "ceco-20260130.htm",
+  "form": "8-K",
+  "known_at": "2026-02-04T14:04:26.000Z",
+  "items": "1.01,2.03,9.01"
+ },
+ {
+  "cik": "3197",
+  "accession": "0001104659-26-018825",
+  "primaryDocument": "tm267105d1_8k.htm",
+  "form": "8-K",
+  "known_at": "2026-02-24T12:33:41.000Z",
+  "items": "1.01,7.01,9.01"
+ },
+ {
+  "cik": "55135",
+  "accession": "0001193125-26-009849",
+  "primaryDocument": "d60090d8k.htm",
+  "form": "8-K",
+  "known_at": "2026-01-12T13:21:38.000Z",
+  "items": "1.01,3.03,7.01,9.01"
+ },
+ {
+  "cik": "55135",
+  "accession": "0001193125-26-031768",
+  "primaryDocument": "d48966d8k.htm",
+  "form": "8-K",
+  "known_at": "2026-01-30T21:05:39.000Z",
+  "items": "1.01,2.03,3.03,5.01,5.02,7.01,9.01"
+ },
+ {
+  "cik": "97134",
+  "accession": "0001104659-26-015182",
+  "primaryDocument": "tm266208d1_8k.htm",
+  "form": "8-K",
+  "known_at": "2026-02-13T21:06:06.000Z",
+  "items": "1.01,5.02,7.01,9.01"
+ },
+ {
+  "cik": "708821",
+  "accession": "0000708821-26-000004",
+  "primaryDocument": "par-20260114.htm",
+  "form": "8-K",
+  "known_at": "2026-01-15T02:46:35.000Z",
+  "items": "1.01,3.02,9.01"
+ },
+ {
+  "cik": "708821",
+  "accession": "0000708821-26-000007",
+  "primaryDocument": "par-20260123.htm",
+  "form": "8-K",
+  "known_at": "2026-01-26T13:00:47.000Z",
+  "items": "3.02,7.01,9.01"
+ },
+ {
+  "cik": "723612",
+  "accession": "0000950142-26-000034",
+  "primaryDocument": "eh260721539_8k.htm",
+  "form": "8-K",
+  "known_at": "2026-01-05T21:26:30.000Z",
+  "items": "1.01,2.03"
+ },
+ {
+  "cik": "787253",
+  "accession": "0001437749-25-038181",
+  "primaryDocument": "naii20251217_8k.htm",
+  "form": "8-K",
+  "known_at": "2025-12-17T22:13:44.000Z",
+  "items": "1.01,9.01"
+ },
+ {
+  "cik": "832489",
+  "accession": "0001437749-25-038547",
+  "primaryDocument": "govx20251221_8k.htm",
+  "form": "8-K",
+  "known_at": "2025-12-22T21:35:28.000Z",
+  "items": "1.01,7.01,9.01"
+ },
+ {
+  "cik": "933974",
+  "accession": "0001437749-25-038787",
+  "primaryDocument": "azta20251226_8k.htm",
+  "form": "8-K",
+  "known_at": "2025-12-29T14:25:46.000Z",
+  "items": "1.01,7.01,9.01"
+ },
+ {
+  "cik": "1074871",
+  "accession": "0001213900-25-120759",
+  "primaryDocument": "ea0269264-8k_modular.htm",
+  "form": "8-K",
+  "known_at": "2025-12-11T22:00:24.000Z",
+  "items": "1.01,8.01,9.01"
+ },
+ {
+  "cik": "1074871",
+  "accession": "0001213900-26-019603",
+  "primaryDocument": "ea0278049-8k_modular.htm",
+  "form": "8-K",
+  "known_at": "2026-02-24T13:31:07.000Z",
+  "items": "1.01,2.03,9.01"
+ },
+ {
+  "cik": "1120370",
+  "accession": "0001437749-26-003088",
+  "primaryDocument": "bwen20260204_8k.htm",
+  "form": "8-K",
+  "known_at": "2026-02-05T12:07:27.000Z",
+  "items": "1.01,2.02,2.03,9.01"
+ },
+ {
+  "cik": "1141284",
+  "accession": "0001213900-25-123590",
+  "primaryDocument": "ea0270294-8k_actelis.htm",
+  "form": "8-K",
+  "known_at": "2025-12-19T15:47:23.000Z",
+  "items": "1.01,9.01"
+ },
+ {
+  "cik": "1141284",
+  "accession": "0001213900-25-124150",
+  "primaryDocument": "ea0270510-8ka1_actelis.htm",
+  "form": "8-K/A",
+  "known_at": "2025-12-22T12:20:38.000Z",
+  "items": "1.01"
+ },
+ {
+  "cik": "1145986",
+  "accession": "0001171843-25-007988",
+  "primaryDocument": "f8k_121725.htm",
+  "form": "8-K",
+  "known_at": "2025-12-17T23:35:26.000Z",
+  "items": "1.01,7.01,9.01"
+ },
+ {
+  "cik": "1156041",
+  "accession": "0001493152-25-027992",
+  "primaryDocument": "form8-k.htm",
+  "form": "8-K",
+  "known_at": "2025-12-16T22:02:47.000Z",
+  "items": "1.01,8.01,9.01"
+ },
+ {
+  "cik": "1179929",
+  "accession": "0001437749-25-035866",
+  "primaryDocument": "moh20251120_8k.htm",
+  "form": "8-K",
+  "known_at": "2025-11-20T21:27:59.000Z",
+  "items": "1.01,2.03,8.01,9.01"
+ },
+ {
+  "cik": "1314196",
+  "accession": "0001213900-26-007800",
+  "primaryDocument": "ea0274141-8k_olbgroup.htm",
+  "form": "8-K",
+  "known_at": "2026-01-26T22:30:40.000Z",
+  "items": "1.01,3.02,7.01,9.01"
+ },
+ {
+  "cik": "1333493",
+  "accession": "0001333493-26-000003",
+  "primaryDocument": "ehth-20251231.htm",
+  "form": "8-K",
+  "known_at": "2026-01-06T13:43:18.000Z",
+  "items": "1.01,1.02,2.03,3.03,5.03,7.01,9.01"
+ },
+ {
+  "cik": "1350102",
+  "accession": "0001079973-26-000107",
+  "primaryDocument": "asti_8k.htm",
+  "form": "8-K",
+  "known_at": "2026-01-26T13:05:24.000Z",
+  "items": "1.01,3.02,8.01,9.01"
+ },
+ {
+  "cik": "1359931",
+  "accession": "0001213900-25-119242",
+  "primaryDocument": "ea0268756-8k_protara.htm",
+  "form": "8-K",
+  "known_at": "2025-12-08T21:15:25.000Z",
+  "items": "1.01,9.01"
+ },
+ {
+  "cik": "1469367",
+  "accession": "0001193125-26-003449",
+  "primaryDocument": "d43653d8k.htm",
+  "form": "8-K",
+  "known_at": "2026-01-06T12:00:28.000Z",
+  "items": "1.01,2.03,9.01"
+ },
+ {
+  "cik": "1506492",
+  "accession": "0001140361-26-002906",
+  "primaryDocument": "ny20058654x4_8k.htm",
+  "form": "8-K",
+  "known_at": "2026-01-30T14:08:30.000Z",
+  "items": "1.01,3.02,3.03,5.02,7.01,9.01"
+ },
+ {
+  "cik": "1513525",
+  "accession": "0001213900-25-116666",
+  "primaryDocument": "ea0267799-8k_adial.htm",
+  "form": "8-K",
+  "known_at": "2025-12-01T21:05:52.000Z",
+  "items": "1.01,3.02,8.01,9.01"
+ },
+ {
+  "cik": "1519061",
+  "accession": "0001104659-26-015648",
+  "primaryDocument": "tse-20260216x8k.htm",
+  "form": "8-K",
+  "known_at": "2026-02-17T11:40:44.000Z",
+  "items": "1.01,7.01,9.01"
+ },
+ {
+  "cik": "1527541",
+  "accession": "0001527541-25-000293",
+  "primaryDocument": "whlr-20251201.htm",
+  "form": "8-K",
+  "known_at": "2025-12-04T13:08:52.000Z",
+  "items": "3.02"
+ },
+ {
+  "cik": "1527541",
+  "accession": "0001527541-25-000300",
+  "primaryDocument": "whlr-20251205.htm",
+  "form": "8-K",
+  "known_at": "2025-12-08T21:17:23.000Z",
+  "items": "3.02,8.01"
+ },
+ {
+  "cik": "1527541",
+  "accession": "0001527541-25-000307",
+  "primaryDocument": "whlr-20251212.htm",
+  "form": "8-K",
+  "known_at": "2025-12-17T21:01:09.000Z",
+  "items": "3.02"
+ },
+ {
+  "cik": "1527541",
+  "accession": "0001527541-26-000011",
+  "primaryDocument": "whlr-20260108.htm",
+  "form": "8-K",
+  "known_at": "2026-01-14T21:01:24.000Z",
+  "items": "3.02,3.03,5.03,9.01"
+ },
+ {
+  "cik": "1546296",
+  "accession": "0001437749-25-038280",
+  "primaryDocument": "ipdn20251218_8k.htm",
+  "form": "8-K",
+  "known_at": "2025-12-18T21:27:12.000Z",
+  "items": "1.01,3.02,9.01"
+ },
+ {
+  "cik": "1630212",
+  "accession": "0001213900-26-018003",
+  "primaryDocument": "ea0277134-8k_avalon.htm",
+  "form": "8-K",
+  "known_at": "2026-02-18T22:00:27.000Z",
+  "items": "1.01,2.03,3.02,9.01"
+ },
+ {
+  "cik": "1648087",
+  "accession": "0001493152-25-027404",
+  "primaryDocument": "form8-k.htm",
+  "form": "8-K",
+  "known_at": "2025-12-12T16:55:20.000Z",
+  "items": "1.01,9.01"
+ },
+ {
+  "cik": "1648087",
+  "accession": "0001493152-25-028948",
+  "primaryDocument": "form8-k.htm",
+  "form": "8-K",
+  "known_at": "2025-12-23T18:25:29.000Z",
+  "items": "1.01,2.03,3.02,9.01"
+ },
+ {
+  "cik": "1648087",
+  "accession": "0001493152-26-000461",
+  "primaryDocument": "form8-k.htm",
+  "form": "8-K",
+  "known_at": "2026-01-05T23:53:33.000Z",
+  "items": "1.01,2.03,3.02,9.01"
+ },
+ {
+  "cik": "1648087",
+  "accession": "0001493152-26-001991",
+  "primaryDocument": "form8-k.htm",
+  "form": "8-K",
+  "known_at": "2026-01-13T19:10:40.000Z",
+  "items": "1.01,2.03,3.02,5.02,7.01,9.01"
+ },
+ {
+  "cik": "1648087",
+  "accession": "0001493152-26-003143",
+  "primaryDocument": "form8-k.htm",
+  "form": "8-K",
+  "known_at": "2026-01-21T22:31:29.000Z",
+  "items": "1.01,2.03,3.02,3.03,5.03,7.01,9.01"
+ },
+ {
+  "cik": "1648087",
+  "accession": "0001493152-26-004105",
+  "primaryDocument": "form8-k.htm",
+  "form": "8-K",
+  "known_at": "2026-01-29T00:47:25.000Z",
+  "items": "1.01,2.03,3.02,3.03,5.03,7.01,9.01"
+ },
+ {
+  "cik": "1648087",
+  "accession": "0001493152-26-005401",
+  "primaryDocument": "form8-k.htm",
+  "form": "8-K",
+  "known_at": "2026-02-05T22:30:22.000Z",
+  "items": "1.01,3.02,7.01,9.01"
+ },
+ {
+  "cik": "1648087",
+  "accession": "0001493152-26-005972",
+  "primaryDocument": "form8-k.htm",
+  "form": "8-K",
+  "known_at": "2026-02-10T21:30:28.000Z",
+  "items": "3.01,3.02,9.01"
+ },
+ {
+  "cik": "1648087",
+  "accession": "0001493152-26-006251",
+  "primaryDocument": "form8-k.htm",
+  "form": "8-K",
+  "known_at": "2026-02-11T22:29:54.000Z",
+  "items": "3.01,3.02,7.01,9.01"
+ },
+ {
+  "cik": "1659617",
+  "accession": "0001437749-25-037414",
+  "primaryDocument": "mbrx20251210_8k.htm",
+  "form": "8-K",
+  "known_at": "2025-12-10T21:45:07.000Z",
+  "items": "1.01,3.02,9.01"
+ },
+ {
+  "cik": "1659617",
+  "accession": "0001437749-25-038478",
+  "primaryDocument": "mbrx20251221_8k.htm",
+  "form": "8-K",
+  "known_at": "2025-12-22T13:55:52.000Z",
+  "items": "1.01,8.01,9.01"
+ },
+ {
+  "cik": "1668010",
+  "accession": "0001493152-26-007183",
+  "primaryDocument": "form8-k.htm",
+  "form": "8-K",
+  "known_at": "2026-02-17T22:05:58.000Z",
+  "items": "1.01,3.02,5.03,7.01,9.01"
+ },
+ {
+  "cik": "1674930",
+  "accession": "0001193125-25-328747",
+  "primaryDocument": "flgt-20251220.htm",
+  "form": "8-K",
+  "known_at": "2025-12-22T21:11:26.000Z",
+  "items": "1.01,8.01,9.01"
+ },
+ {
+  "cik": "1680581",
+  "accession": "0001193125-25-314728",
+  "primaryDocument": "fulc-20251210.htm",
+  "form": "8-K",
+  "known_at": "2025-12-11T02:36:53.000Z",
+  "items": "1.01,8.01,9.01"
+ },
+ {
+  "cik": "1716621",
+  "accession": "0001437749-26-000839",
+  "primaryDocument": "vtak20260107_8k.htm",
+  "form": "8-K",
+  "known_at": "2026-01-07T23:39:50.000Z",
+  "items": "1.01,2.03,9.01"
+ },
+ {
+  "cik": "1716621",
+  "accession": "0001437749-26-003387",
+  "primaryDocument": "vtak20260206_8k.htm",
+  "form": "8-K",
+  "known_at": "2026-02-06T22:25:30.000Z",
+  "items": "1.01,3.02,3.03,5.03,9.01"
+ },
+ {
+  "cik": "1716947",
+  "accession": "0001493152-25-023933",
+  "primaryDocument": "form8-k.htm",
+  "form": "8-K",
+  "known_at": "2025-11-17T22:29:37.000Z",
+  "items": "1.01,3.02,5.03,8.01,9.01"
+ },
+ {
+  "cik": "1756064",
+  "accession": "0001493152-26-004797",
+  "primaryDocument": "form8-k.htm",
+  "form": "8-K",
+  "known_at": "2026-02-02T23:03:28.000Z",
+  "items": "1.01,3.02,9.01"
+ },
+ {
+  "cik": "1782107",
+  "accession": "0001213900-25-119898",
+  "primaryDocument": "ea0269052-8k_onconetix.htm",
+  "form": "8-K",
+  "known_at": "2025-12-10T14:28:02.000Z",
+  "items": "1.01,9.01"
+ },
+ {
+  "cik": "1782107",
+  "accession": "0001213900-26-015212",
+  "primaryDocument": "ea0276704-8k425_onconet.htm",
+  "form": "8-K",
+  "known_at": "2026-02-12T13:12:49.000Z",
+  "items": "1.01,8.01,9.01"
+ },
+ {
+  "cik": "1785056",
+  "accession": "0001193125-25-294680",
+  "primaryDocument": "trnr-20251124.htm",
+  "form": "8-K",
+  "known_at": "2025-11-25T14:00:29.000Z",
+  "items": "1.01,9.01"
+ },
+ {
+  "cik": "1785056",
+  "accession": "0001193125-25-309804",
+  "primaryDocument": "trnr-20251204.htm",
+  "form": "8-K",
+  "known_at": "2025-12-05T21:46:52.000Z",
+  "items": "1.01,2.03,3.02"
+ },
+ {
+  "cik": "1785056",
+  "accession": "0001193125-25-317646",
+  "primaryDocument": "trnr-20251208.htm",
+  "form": "8-K",
+  "known_at": "2025-12-12T21:30:57.000Z",
+  "items": "1.01,2.03,2.04,3.02,9.01"
+ },
+ {
+  "cik": "1785056",
+  "accession": "0001193125-25-323793",
+  "primaryDocument": "trnr-20251217.htm",
+  "form": "8-K",
+  "known_at": "2025-12-18T13:30:47.000Z",
+  "items": "1.01,2.03,3.02,8.01"
+ },
+ {
+  "cik": "1785056",
+  "accession": "0001193125-26-002608",
+  "primaryDocument": "trnr-20251229.htm",
+  "form": "8-K",
+  "known_at": "2026-01-05T21:46:57.000Z",
+  "items": "1.01,2.03,3.02,9.01"
+ },
+ {
+  "cik": "1785056",
+  "accession": "0001193125-26-006397",
+  "primaryDocument": "trnr-20251231.htm",
+  "form": "8-K",
+  "known_at": "2026-01-07T21:33:06.000Z",
+  "items": "1.01,2.03,3.02,3.03,5.02,9.01"
+ },
+ {
+  "cik": "1785056",
+  "accession": "0001193125-26-021272",
+  "primaryDocument": "trnr-20260116.htm",
+  "form": "8-K",
+  "known_at": "2026-01-23T22:15:35.000Z",
+  "items": "3.02"
+ },
+ {
+  "cik": "1785056",
+  "accession": "0001193125-26-046591",
+  "primaryDocument": "trnr-20260205.htm",
+  "form": "8-K",
+  "known_at": "2026-02-11T21:15:37.000Z",
+  "items": "1.01,2.03,3.02"
+ },
+ {
+  "cik": "1794783",
+  "accession": "0001794783-26-000004",
+  "primaryDocument": "slqt-20260108.htm",
+  "form": "8-K",
+  "known_at": "2026-01-12T13:04:47.000Z",
+  "items": "1.01,1.02,2.03,7.01,9.01"
+ },
+ {
+  "cik": "1802156",
+  "accession": "0001193125-25-311452",
+  "primaryDocument": "d32941d8k.htm",
+  "form": "8-K",
+  "known_at": "2025-12-08T22:27:16.000Z",
+  "items": "1.01,1.02,2.03,7.01,8.01,9.01"
+ },
+ {
+  "cik": "1804745",
+  "accession": "0001193125-25-304428",
+  "primaryDocument": "d926887d8k.htm",
+  "form": "8-K",
+  "known_at": "2025-12-02T11:01:48.000Z",
+  "items": "1.01,7.01,9.01"
+ },
+ {
+  "cik": "1805077",
+  "accession": "0001628280-26-008648",
+  "primaryDocument": "eose-20260213.htm",
+  "form": "8-K",
+  "known_at": "2026-02-17T21:49:27.000Z",
+  "items": "1.01,9.01"
+ },
+ {
+  "cik": "1817511",
+  "accession": "0001493152-26-003083",
+  "primaryDocument": "form8-k.htm",
+  "form": "8-K",
+  "known_at": "2026-01-21T21:05:58.000Z",
+  "items": "1.01,9.01"
+ },
+ {
+  "cik": "1820721",
+  "accession": "0001193125-26-057110",
+  "primaryDocument": "d752776d8k.htm",
+  "form": "8-K",
+  "known_at": "2026-02-18T21:21:04.000Z",
+  "items": "1.01,2.03,7.01,9.01"
+ },
+ {
+  "cik": "1826892",
+  "accession": "0001193125-26-010458",
+  "primaryDocument": "bcab-20260109.htm",
+  "form": "8-K",
+  "known_at": "2026-01-12T21:30:04.000Z",
+  "items": "3.02,5.03,5.07,8.01,9.01"
+ },
+ {
+  "cik": "1830072",
+  "accession": "0001683168-25-008743",
+  "primaryDocument": "ipower_8k.htm",
+  "form": "8-K",
+  "known_at": "2025-12-01T14:20:25.000Z",
+  "items": "1.01,9.01"
+ },
+ {
+  "cik": "1830072",
+  "accession": "0001683168-25-009319",
+  "primaryDocument": "ipower_8k.htm",
+  "form": "8-K",
+  "known_at": "2025-12-23T14:02:00.000Z",
+  "items": "1.01,2.03,3.02,5.07,7.01,9.01"
+ },
+ {
+  "cik": "1830072",
+  "accession": "0001683168-25-009331",
+  "primaryDocument": "ipower_8ka.htm",
+  "form": "8-K/A",
+  "known_at": "2025-12-23T19:19:12.000Z",
+  "items": "1.01,2.03,3.02,5.07,7.01,9.01"
+ },
+ {
+  "cik": "1830072",
+  "accession": "0001683168-26-000654",
+  "primaryDocument": "ipower_8k.htm",
+  "form": "8-K",
+  "known_at": "2026-02-02T14:10:25.000Z",
+  "items": "1.01,8.01,9.01"
+ },
+ {
+  "cik": "1830072",
+  "accession": "0001683168-26-000884",
+  "primaryDocument": "ipower_8k.htm",
+  "form": "8-K",
+  "known_at": "2026-02-10T14:15:26.000Z",
+  "items": "1.01,8.01,9.01"
+ },
+ {
+  "cik": "1830188",
+  "accession": "0001104659-26-018344",
+  "primaryDocument": "tm266691d1_8k.htm",
+  "form": "8-K",
+  "known_at": "2026-02-23T12:35:52.000Z",
+  "items": "1.01,5.02,7.01,9.01"
+ },
+ {
+  "cik": "1830214",
+  "accession": "0001628280-26-012552",
+  "primaryDocument": "dna-20260226.htm",
+  "form": "8-K",
+  "known_at": "2026-02-27T02:56:36.000Z",
+  "items": "1.01,9.01"
+ },
+ {
+  "cik": "1839285",
+  "accession": "0001213900-25-112546",
+  "primaryDocument": "ea0265944-8k_healthcare.htm",
+  "form": "8-K",
+  "known_at": "2025-11-19T19:27:25.000Z",
+  "items": "1.01,9.01"
+ },
+ {
+  "cik": "1839285",
+  "accession": "0001213900-25-113672",
+  "primaryDocument": "ea0266767-8k_healthcare.htm",
+  "form": "8-K",
+  "known_at": "2025-11-21T21:57:06.000Z",
+  "items": "1.01,2.03,3.02,9.01"
+ },
+ {
+  "cik": "1839285",
+  "accession": "0001213900-25-119878",
+  "primaryDocument": "ea0269106-8k_healthcare.htm",
+  "form": "8-K",
+  "known_at": "2025-12-10T14:00:44.000Z",
+  "items": "1.01,7.01,9.01"
+ },
+ {
+  "cik": "1839285",
+  "accession": "0001213900-26-008594",
+  "primaryDocument": "ea0274373-8k_healthcare.htm",
+  "form": "8-K",
+  "known_at": "2026-01-28T15:03:56.000Z",
+  "items": "1.01,2.01,3.02,7.01,9.01"
+ },
+ {
+  "cik": "1840563",
+  "accession": "0001213900-26-005641",
+  "primaryDocument": "ea0273331-8k_pmgc.htm",
+  "form": "8-K",
+  "known_at": "2026-01-20T21:01:27.000Z",
+  "items": "1.01,9.01"
+ },
+ {
+  "cik": "1843724",
+  "accession": "0001628280-25-058573",
+  "primaryDocument": "amci-20251216.htm",
+  "form": "8-K",
+  "known_at": "2025-12-22T22:05:28.000Z",
+  "items": "1.01,9.01"
+ },
+ {
+  "cik": "1843724",
+  "accession": "0001628280-26-003163",
+  "primaryDocument": "amci-20260121.htm",
+  "form": "8-K",
+  "known_at": "2026-01-23T02:12:19.000Z",
+  "items": "1.01,3.02,5.03,9.01"
+ },
+ {
+  "cik": "1843724",
+  "accession": "0001628280-26-009171",
+  "primaryDocument": "amci-20260211.htm",
+  "form": "8-K",
+  "known_at": "2026-02-18T21:51:07.000Z",
+  "items": "1.01"
+ },
+ {
+  "cik": "1853044",
+  "accession": "0001829126-26-000086",
+  "primaryDocument": "aeriestech_8k.htm",
+  "form": "8-K",
+  "known_at": "2026-01-07T21:15:27.000Z",
+  "items": "1.01,9.01"
+ },
+ {
+  "cik": "1853044",
+  "accession": "0001829126-26-000686",
+  "primaryDocument": "aeriestech_8k.htm",
+  "form": "8-K",
+  "known_at": "2026-01-28T21:15:46.000Z",
+  "items": "1.01,9.01"
+ },
+ {
+  "cik": "1853070",
+  "accession": "0001493152-25-026684",
+  "primaryDocument": "form8-k.htm",
+  "form": "8-K",
+  "known_at": "2025-12-08T22:15:53.000Z",
+  "items": "1.01,9.01"
+ },
+ {
+  "cik": "1853070",
+  "accession": "0001628280-26-002544",
+  "primaryDocument": "soar-20260119.htm",
+  "form": "8-K",
+  "known_at": "2026-01-20T17:12:15.000Z",
+  "items": "1.01,9.01"
+ },
+ {
+  "cik": "1853816",
+  "accession": "0001493152-25-029364",
+  "primaryDocument": "form8-k.htm",
+  "form": "8-K",
+  "known_at": "2025-12-29T21:05:50.000Z",
+  "items": "1.01,3.02,8.01,9.01"
+ },
+ {
+  "cik": "1859807",
+  "accession": "0001213900-25-124826",
+  "primaryDocument": "ea0270772-8k_profusa.htm",
+  "form": "8-K",
+  "known_at": "2025-12-23T11:05:51.000Z",
+  "items": "1.01,9.01"
+ },
+ {
+  "cik": "1859807",
+  "accession": "0001213900-25-126316",
+  "primaryDocument": "ea0271254-8k_profusa.htm",
+  "form": "8-K",
+  "known_at": "2025-12-30T12:31:03.000Z",
+  "items": "1.01,9.01"
+ },
+ {
+  "cik": "1893219",
+  "accession": "0001213900-26-007215",
+  "primaryDocument": "ea0273734-8k_abpro.htm",
+  "form": "8-K",
+  "known_at": "2026-01-23T21:16:11.000Z",
+  "items": "1.01,2.03,5.02,9.01"
+ },
+ {
+  "cik": "1897245",
+  "accession": "0001493152-26-005418",
+  "primaryDocument": "form8-k.htm",
+  "form": "8-K",
+  "known_at": "2026-02-06T01:45:59.000Z",
+  "items": "1.01,2.03,3.02,9.01"
+ },
+ {
+  "cik": "1898766",
+  "accession": "0001493152-25-029158",
+  "primaryDocument": "form8-k.htm",
+  "form": "8-K",
+  "known_at": "2025-12-29T11:08:43.000Z",
+  "items": "1.01,3.02,9.01"
+ },
+ {
+  "cik": "1898766",
+  "accession": "0001493152-26-000386",
+  "primaryDocument": "form8-k.htm",
+  "form": "8-K",
+  "known_at": "2026-01-05T21:15:41.000Z",
+  "items": "1.01,2.01,3.02,7.01,9.01"
+ },
+ {
+  "cik": "1898766",
+  "accession": "0001493152-26-001116",
+  "primaryDocument": "form8-k.htm",
+  "form": "8-K",
+  "known_at": "2026-01-09T21:35:31.000Z",
+  "items": "1.01,9.01"
+ },
+ {
+  "cik": "1959023",
+  "accession": "0001213900-26-001868",
+  "primaryDocument": "ea0272018-8k_renx.htm",
+  "form": "8-K",
+  "known_at": "2026-01-06T22:28:31.000Z",
+  "items": "1.01,2.03,9.01"
+ },
+ {
+  "cik": "1959023",
+  "accession": "0001213900-26-003507",
+  "primaryDocument": "ea0272589-8k_renx.htm",
+  "form": "8-K",
+  "known_at": "2026-01-12T22:06:49.000Z",
+  "items": "1.01,2.03,9.01"
+ },
+ {
+  "cik": "1971387",
+  "accession": "0001104659-26-012016",
+  "primaryDocument": "tm265593d1_8k.htm",
+  "form": "8-K",
+  "known_at": "2026-02-09T20:01:42.000Z",
+  "items": "1.01,3.02,9.01"
+ },
+ {
+  "cik": "1972234",
+  "accession": "0001213900-26-015576",
+  "primaryDocument": "ea0276752-8k_venhub.htm",
+  "form": "8-K",
+  "known_at": "2026-02-12T21:16:04.000Z",
+  "items": "1.01,3.02,8.01,9.01"
+ },
+ {
+  "cik": "1994624",
+  "accession": "0001104659-25-117322",
+  "primaryDocument": "tm2532338d1_8k.htm",
+  "form": "8-K",
+  "known_at": "2025-12-01T21:15:46.000Z",
+  "items": "1.01,1.02,3.02,9.01"
+ },
+ {
+  "cik": "1994624",
+  "accession": "0001104659-25-124882",
+  "primaryDocument": "tm2534430d1_8k.htm",
+  "form": "8-K",
+  "known_at": "2025-12-29T21:27:11.000Z",
+  "items": "1.01,2.03,3.02,9.01"
+ },
+ {
+  "cik": "1994624",
+  "accession": "0001104659-26-011527",
+  "primaryDocument": "tm265409d1_8k.htm",
+  "form": "8-K",
+  "known_at": "2026-02-06T21:15:55.000Z",
+  "items": "1.01,3.02,9.01"
+ },
+ {
+  "cik": "2018145",
+  "accession": "0001213900-25-123302",
+  "primaryDocument": "ea0269782-8k_risingdragon.htm",
+  "form": "8-K",
+  "known_at": "2025-12-18T21:30:25.000Z",
+  "items": "1.01,5.07,8.01,9.01"
+ },
+ {
+  "cik": "2018145",
+  "accession": "0001213900-26-005140",
+  "primaryDocument": "ea0273188-8k_risingdragon.htm",
+  "form": "8-K",
+  "known_at": "2026-01-16T21:05:36.000Z",
+  "items": "1.01,2.03,9.01"
+ },
+ {
+  "cik": "2024306",
+  "accession": "0001493152-26-006957",
+  "primaryDocument": "form8-k.htm",
+  "form": "8-K",
+  "known_at": "2026-02-17T13:51:06.000Z",
+  "items": "1.01,3.02,8.01,9.01"
+ },
+ {
+  "cik": "2041385",
+  "accession": "0002041385-25-000077",
+  "primaryDocument": "ral-20251124.htm",
+  "form": "8-K",
+  "known_at": "2025-11-25T21:45:29.000Z",
+  "items": "1.01,2.03,9.01"
+ }
+]
