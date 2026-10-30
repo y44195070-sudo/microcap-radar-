@@ -1,0 +1,10 @@
+{
+ "status": "PASS",
+ "gate": "JANUARY_GATE_B",
+ "projection_sha256": "bed3fe6c3d101d30869499454372980a0c532771a37d1dcfd5fe11ab5cbaccec",
+ "projection_scope": "2026-01-05..2026-01-30",
+ "projection_count": 285,
+ "universe_a_sha256": "05e4493035c6a2828add7467912ab86bbc10201abb8affdd24af04b986da0c98",
+ "universe_b_sha256": "05e4493035c6a2828add7467912ab86bbc10201abb8affdd24af04b986da0c98",
+ "run_id": "40891914906"
+}
