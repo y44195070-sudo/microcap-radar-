@@ -1,0 +1,88 @@
+name: supply-shadow-daily
+# PRODUCT-1B-1I. Frozen implementation: supply_shadow/frozen/PRODUCT_1B_1_IMPLEMENTATION_FREEZE_MANIFEST.json
+#   sha256 ff06cfc8dff46d6ed34c34e315ccc89f910e9ba0146abf1d5c2d8edf7641d26f (verified by run_shadow.py before any network).
+# LIVE_SCHEDULE_ENABLE = NOT_YET_APPROVED -> no `schedule:` trigger in this version.
+#   Frozen cron for later enable (separate reviewed change): '47 22 * * 1-5'
+# LIVE_PUBLICATION = NOT_YET_APPROVED -> PUBLICATION_ENABLED is 'false': publish job only dry-runs (local commit, no push).
+on:
+  workflow_dispatch:
+    inputs:
+      target_date:
+        description: 'US trading date YYYY-MM-DD (manual run; cutoff = date T21:00:00Z)'
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: supply-shadow
+  cancel-in-progress: false
+env:
+  PUBLICATION_ENABLED: 'false'
+jobs:
+  compute:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    outputs:
+      staged: ${{ steps.run.outputs.staged }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Run frozen supply shadow pipeline
+        id: run
+        env:
+          SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+          TARGET_DATE: ${{ inputs.target_date }}
+        shell: bash
+        run: |
+          set +e
+          MODE=manual
+          if [ "${{ github.event_name }}" = "schedule" ]; then MODE=scheduled; fi
+          ARGS=(--mode "$MODE" --frozen-dir supply_shadow/frozen --repo-root "$GITHUB_WORKSPACE" --staging-dir "$RUNNER_TEMP/supply-shadow-stage")
+          if [ "$MODE" = "manual" ]; then ARGS+=(--target-date "$TARGET_DATE"); fi
+          python -I supply_shadow/run_shadow.py "${ARGS[@]}"
+          RC=$?
+          set -e
+          if [ "$RC" = "0" ]; then echo "staged=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          if [ "$RC" = "10" ]; then echo "staged=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          echo "staged=false" >> "$GITHUB_OUTPUT"; exit 1
+      - name: Upload staged manifest (no raw SEC source)
+        if: steps.run.outputs.staged == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: supply-shadow-stage
+          path: ${{ runner.temp }}/supply-shadow-stage/
+          retention-days: 1
+          if-no-files-found: error
+  publish:
+    needs: compute
+    if: needs.compute.outputs.staged == 'true' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/download-artifact@v4
+        with:
+          name: supply-shadow-stage
+          path: ${{ runner.temp }}/supply-shadow-stage
+      - name: Publish (path-scoped, no force push)
+        shell: bash
+        run: |
+          if [ "$PUBLICATION_ENABLED" = "true" ]; then
+            python -I supply_shadow/publish_shadow.py --repo-root "$GITHUB_WORKSPACE" --staging-dir "$RUNNER_TEMP/supply-shadow-stage" --branch main
+          else
+            python -I supply_shadow/publish_shadow.py --repo-root "$GITHUB_WORKSPACE" --staging-dir "$RUNNER_TEMP/supply-shadow-stage" --branch main --dry-run
+          fi
