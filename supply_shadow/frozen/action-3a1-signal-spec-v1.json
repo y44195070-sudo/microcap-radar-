@@ -1,0 +1,68 @@
+{
+  "spec_id": "SUPPLY_SIGNAL_V0_INDEX_ONLY_3A1",
+  "version": "1.0.0",
+  "status": "FROZEN_FOR_3A1_COMPUTATION",
+  "origin": "Consolidated from GPT 'ACTION 3A — SUPPLY SIGNAL V0 FINAL SPECIFICATION' (approved by user 2026-10-29) + user decisions (SHELF 1095d YES, S-1/F-1/424B3 UNRESOLVED_PRIMARY_VS_RESALE YES).",
+  "development_cohort": "JANUARY_2026_PREDICTIONS_ONLY",
+  "universe_file": "v2-universe-occurrences-jan2026.json (285 occurrences, 205 issuers)",
+  "data_source": {
+    "artifact_id": 12879440282,
+    "run_id": 40831968426,
+    "content": "SEC submissions JSON per CIK: filings.recent + all filings.files pages"
+  },
+  "point_in_time_rule": {
+    "known_at": "acceptanceDateTime (UTC, as given by SEC with Z suffix)",
+    "eligible_if": "known_at <= prediction_cutoff",
+    "window_if": "known_at > prediction_cutoff - lookback_calendar_days",
+    "missing_known_at": "EXCLUDE_AND_COUNT (FILINGS_EXCLUDED_MISSING_KNOWN_AT)",
+    "filingDate_substitution": "PROHIBITED",
+    "future_access_violation": "any filing with known_at > prediction_cutoff that contributes to any signal value; must be 0"
+  },
+  "form_matching": "exact string match on 'form' field after trimming whitespace",
+  "signals": {
+    "SHELF_REGISTRATION_ON_FILE":        {"forms": ["S-3", "S-3/A", "F-3", "F-3/A"], "lookback_calendar_days": 1095, "class": "PARTIAL_SUPPLY_INDEX_SIGNAL"},
+    "RECENT_SHELF_REGISTRATION_180D":    {"forms": ["S-3", "S-3/A", "F-3", "F-3/A"], "lookback_calendar_days": 180, "class": "PARTIAL_SUPPLY_INDEX_SIGNAL"},
+    "RECENT_PROSPECTUS_TAKEDOWN_30D":    {"forms": ["424B5"], "lookback_calendar_days": 30, "class": "PARTIAL_SUPPLY_INDEX_SIGNAL"},
+    "RECENT_PROSPECTUS_TAKEDOWN_90D":    {"forms": ["424B5"], "lookback_calendar_days": 90, "class": "PARTIAL_SUPPLY_INDEX_SIGNAL"},
+    "RECENT_424B3_90D":                  {"forms": ["424B3"], "lookback_calendar_days": 90, "class": "PARTIAL_SUPPLY_INDEX_SIGNAL", "primary_vs_resale": "UNRESOLVED_PRIMARY_VS_RESALE"},
+    "RECENT_REGISTRATION_90D":           {"forms": ["S-1", "S-1/A", "F-1", "F-1/A"], "lookback_calendar_days": 90, "class": "PARTIAL_SUPPLY_INDEX_SIGNAL", "primary_vs_resale": "UNRESOLVED_PRIMARY_VS_RESALE"},
+    "RECENT_REGISTRATION_180D":          {"forms": ["S-1", "S-1/A", "F-1", "F-1/A"], "lookback_calendar_days": 180, "class": "PARTIAL_SUPPLY_INDEX_SIGNAL", "primary_vs_resale": "UNRESOLVED_PRIMARY_VS_RESALE"},
+    "RECENT_EFFECT_90D":                 {"forms": ["EFFECT"], "lookback_calendar_days": 90, "class": "PARTIAL_SUPPLY_INDEX_SIGNAL"},
+    "RECENT_POST_EFFECTIVE_AMENDMENT_180D": {"forms": ["POS AM"], "lookback_calendar_days": 180, "class": "PARTIAL_SUPPLY_INDEX_SIGNAL"},
+    "RECENT_IPO_REGISTRATION_180D":      {"forms": ["S-1", "S-1/A", "F-1", "F-1/A", "DRS", "DRS/A"], "lookback_calendar_days": 180, "class": "REGISTRATION_ACTIVITY_ONLY"},
+    "8K_ITEM_1_01_RECENT_30D":           {"forms": ["8-K", "8-K/A"], "item": "1.01", "lookback_calendar_days": 30, "class": "FINANCING_CANDIDATE_UNRESOLVED"},
+    "8K_ITEM_1_01_RECENT_90D":           {"forms": ["8-K", "8-K/A"], "item": "1.01", "lookback_calendar_days": 90, "class": "FINANCING_CANDIDATE_UNRESOLVED"},
+    "8K_ITEM_3_02_RECENT_90D":           {"forms": ["8-K", "8-K/A"], "item": "3.02", "lookback_calendar_days": 90, "class": "UNREGISTERED_SALE_CANDIDATE_UNRESOLVED"},
+    "8K_ITEM_3_01_RECENT_180D":          {"forms": ["8-K", "8-K/A"], "item": "3.01", "lookback_calendar_days": 180, "class": "LISTING_DEFICIENCY_CANDIDATE_UNRESOLVED"},
+    "8K_ITEM_5_03_RECENT_90D":           {"forms": ["8-K", "8-K/A"], "item": "5.03", "lookback_calendar_days": 90, "class": "CHARTER_AMENDMENT_CANDIDATE_UNRESOLVED"},
+    "FORM_D_RECENT_30D":                 {"forms": ["D", "D/A"], "lookback_calendar_days": 30, "class": "PRIVATE_OFFERING_CANDIDATE"},
+    "FORM_D_RECENT_90D":                 {"forms": ["D", "D/A"], "lookback_calendar_days": 90, "class": "PRIVATE_OFFERING_CANDIDATE"},
+    "FORM_D_RECENT_180D":                {"forms": ["D", "D/A"], "lookback_calendar_days": 180, "class": "PRIVATE_OFFERING_CANDIDATE"},
+    "PROXY_INFO_STATEMENT_RECENT_30D":   {"forms": ["DEF 14A", "PRE 14A", "PRE 14C", "DEF 14C"], "lookback_calendar_days": 30, "class": "CORPORATE_ACTION_AGENDA_CANDIDATE"},
+    "PROXY_INFO_STATEMENT_RECENT_90D":   {"forms": ["DEF 14A", "PRE 14A", "PRE 14C", "DEF 14C"], "lookback_calendar_days": 90, "class": "CORPORATE_ACTION_AGENDA_CANDIDATE"},
+    "PROXY_INFO_STATEMENT_RECENT_180D":  {"forms": ["DEF 14A", "PRE 14A", "PRE 14C", "DEF 14C"], "lookback_calendar_days": 180, "class": "CORPORATE_ACTION_AGENDA_CANDIDATE"}
+  },
+  "item_parsing": "split 'items' on comma, trim each; an 8-K matches an item signal if the exact item code is present. One accession may set several signals; count it once in UNIQUE_ACCESSIONS.",
+  "young_issuer_flag": "YOUNG_ISSUER if the issuer's earliest filing acceptanceDateTime > prediction_cutoff - 1095 days. Not a data gap; report count separately for SHELF_REGISTRATION_ON_FILE.",
+  "prohibited_inferences": [
+    "ATM/ELOC/PIPE confirmed from form type or 8-K item only",
+    "RESALE or PRIMARY from S-1/F-1/424B3 form type only",
+    "REVERSE_SPLIT from 8-K 5.03 or proxy form only",
+    "LISTING_DEFICIENCY type from 8-K 3.01 only"
+  ],
+  "required_output_per_signal": {
+    "TRIGGER_COUNT": "number of the 285 occurrences where the signal is TRUE",
+    "UNIQUE_ISSUERS": "distinct CIKs among triggered occurrences",
+    "UNIQUE_ACCESSIONS": "distinct accession numbers that caused any TRUE among the 285 occurrences",
+    "V2_OCCURRENCE_COVERAGE": "TRIGGER_COUNT / 285"
+  },
+  "required_global_output": [
+    "OCCURRENCES_WITH_ANY_SIGNAL (x / 285)",
+    "FILINGS_SCANNED",
+    "FILINGS_EXCLUDED_AFTER_CUTOFF",
+    "FILINGS_EXCLUDED_MISSING_KNOWN_AT",
+    "YOUNG_ISSUER_OCCURRENCES",
+    "FUTURE_ACCESS_VIOLATIONS (must be 0)"
+  ],
+  "boundary": "No outcome / price-after-cutoff data is used in 3A-1."
+}
