@@ -5,6 +5,8 @@ name: supply-shadow-daily
 #   Frozen cron for later enable (separate reviewed change): '47 22 * * 1-5'
 # LIVE_PUBLICATION = NOT_YET_APPROVED -> PUBLICATION_ENABLED is 'false': publish job only dry-runs (local commit, no push).
 on:
+  schedule:
+    - cron: '47 22 * * 1-5'
   workflow_dispatch:
     inputs:
       target_date:
@@ -17,7 +19,7 @@ concurrency:
   group: supply-shadow
   cancel-in-progress: false
 env:
-  PUBLICATION_ENABLED: 'false'
+  PUBLICATION_ENABLED: 'true'
 jobs:
   compute:
     if: github.ref == 'refs/heads/main'
