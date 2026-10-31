@@ -1,0 +1,36 @@
+name: product2-probe-2a0
+# PRODUCT-2 STAGE 2A STEP 0: read-only provider probe (manual only).
+# Earliest available grouped-daily date, daily-bar session composition vs D T21:00Z cutoff,
+# splits depth, reference snapshot depth. No commit, no publication. Summary-only artifact.
+# Protected ranges (never requested): 2026-03 QUARANTINE, 2026-04..09 FINAL OOS.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: product2-massive
+  cancel-in-progress: false
+jobs:
+  probe:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Run probe
+        env:
+          MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
+        run: python -I research/product2/probe/probe_2a0.py "$RUNNER_TEMP/probe_2a0_report.json"
+      - name: Upload summary report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product2-probe-2a0-report
+          path: ${{ runner.temp }}/probe_2a0_report.json
+          retention-days: 30
+          if-no-files-found: warn
