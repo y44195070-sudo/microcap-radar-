@@ -1,1 +1,831 @@
-{"runAt":"2026-11-04 04:40 KST","session":"2026-11-03 미국 정규장 15:40 ET 스냅샷","basis":"StockAnalysis 2026-11-03 정규장 15:40 ET 근접 하락 상위 15개; 확정 종가 아님. SEC 일부 검토, 전수검증 미완료.","note":"구조 점검이며 매수 추천 아님. 전 종목 flow=null, flowKnown=false. VWAP/종가 수급·공식 SI·CTB·대차 가능·현재 Float 미확인. 세부 점수 검증 불가로 점수·등급 미산출.","scoreGuide":["drop 15","volume 20","flow 20","dilution 20","short 10","float 10","risk 5","flow 미확인: 나머지 80점을 100점 환산","희석 공백 +3","과거 closeLog 시간외 반등 +3","저금통 +3"],"gradeGuide":["fire 85↑","ok 70~84","cond 55~69","pass 55 미만","flow 미확인 시 fire 금지·최대 ok","최근 5거래일 공모·RD는 최대 pass"],"candidates":[{"rank":1,"ticker":"CENN","exchange":"Nasdaq","dropPct":-86.44,"price":0.269,"volume":35630403,"score":null,"grade":"unverified","flow":null,"flowKnown":false,"parts":{"drop":null,"volume":null,"flow":null,"dilution":null,"short":null,"float":null,"risk":null},"bonuses":{"dilutionGap":0,"closeLog":0,"piggy":0},"supply":"대규모 authorized shares 확대 및 RS 승인","shortVerdict":"확인 불가","float":"확인 불가","why":"대규모 authorized shares 확대 및 RS 승인","risk":"대규모 authorized shares 확대 및 RS 승인","source":"StockAnalysis 2026-11-03; SEC 공시 일부 확인"},{"rank":2,"ticker":"ABTS","exchange":"Nasdaq","dropPct":-61.43,"price":0.405,"volume":981538,"score":null,"grade":"unverified","flow":null,"flowKnown":false,"parts":{"drop":null,"volume":null,"flow":null,"dilution":null,"short":null,"float":null,"risk":null},"bonuses":{"dilutionGap":0,"closeLog":0,"piggy":0},"supply":"$250M ELOC·변동가 CB, 10/30 F-1 EFFECT","shortVerdict":"확인 불가","float":"확인 불가","why":"$250M ELOC·변동가 CB, 10/30 F-1 EFFECT","risk":"$250M ELOC·변동가 CB, 10/30 F-1 EFFECT","source":"StockAnalysis 2026-11-03; SEC 공시 일부 확인"},{"rank":3,"ticker":"AIRE","exchange":"Nasdaq","dropPct":-40.85,"price":0.395,"volume":1264458,"score":null,"grade":"unverified","flow":null,"flowKnown":false,"parts":{"drop":null,"volume":null,"flow":null,"dilution":null,"short":null,"float":null,"risk":null},"bonuses":{"dilutionGap":0,"closeLog":0,"piggy":0},"supply":"10/22 S-1, 잔량 확인 불가","shortVerdict":"확인 불가","float":"확인 불가","why":"10/22 S-1, 잔량 확인 불가","risk":"10/22 S-1, 잔량 확인 불가","source":"StockAnalysis 2026-11-03; SEC 공시 일부 확인"},{"rank":4,"ticker":"XXII","exchange":"Nasdaq","dropPct":-39.41,"price":0.0449,"volume":24604099,"score":null,"grade":"unverified","flow":null,"flowKnown":false,"parts":{"drop":null,"volume":null,"flow":null,"dilution":null,"short":null,"float":null,"risk":null},"bonuses":{"dilutionGap":0,"closeLog":0,"piggy":0},"supply":"going concern·현금흐름 위험","shortVerdict":"확인 불가","float":"확인 불가","why":"going concern·현금흐름 위험","risk":"going concern·현금흐름 위험","source":"StockAnalysis 2026-11-03; SEC 공시 일부 확인"},{"rank":5,"ticker":"JAGX","exchange":"Nasdaq","dropPct":-38.23,"price":0.546,"volume":2928805,"score":null,"grade":"unverified","flow":null,"flowKnown":false,"parts":{"drop":null,"volume":null,"flow":null,"dilution":null,"short":null,"float":null,"risk":null},"bonuses":{"dilutionGap":0,"closeLog":0,"piggy":0},"supply":"$40M ELOC·10/22 S-3·424B5","shortVerdict":"확인 불가","float":"확인 불가","why":"$40M ELOC·10/22 S-3·424B5","risk":"$40M ELOC·10/22 S-3·424B5","source":"StockAnalysis 2026-11-03; SEC 공시 일부 확인"},{"rank":6,"ticker":"VCIG","exchange":"Nasdaq","dropPct":-36.4,"price":5.19,"volume":1294809,"score":null,"grade":"unverified","flow":null,"flowKnown":false,"parts":{"drop":null,"volume":null,"flow":null,"dilution":null,"short":null,"float":null,"risk":null},"bonuses":{"dilutionGap":0,"closeLog":0,"piggy":0},"supply":"공급 검증 불가","shortVerdict":"확인 불가","float":"확인 불가","why":"공급 검증 불가","risk":"공급 검증 불가","source":"StockAnalysis 2026-11-03; SEC 공시 일부 확인"},{"rank":7,"ticker":"VIVO","exchange":"Nasdaq","dropPct":-34.24,"price":1.45,"volume":1780793,"score":null,"grade":"unverified","flow":null,"flowKnown":false,"parts":{"drop":null,"volume":null,"flow":null,"dilution":null,"short":null,"float":null,"risk":null},"bonuses":{"dilutionGap":0,"closeLog":0,"piggy":0},"supply":"PIPE 전환우선주·워런트","shortVerdict":"확인 불가","float":"확인 불가","why":"PIPE 전환우선주·워런트","risk":"PIPE 전환우선주·워런트","source":"StockAnalysis 2026-11-03; SEC 공시 일부 확인"},{"rank":8,"ticker":"GTN.A","exchange":"NYSE","dropPct":-33.93,"price":6.6,"volume":188456,"score":null,"grade":"unverified","flow":null,"flowKnown":false,"parts":{"drop":null,"volume":null,"flow":null,"dilution":null,"short":null,"float":null,"risk":null},"bonuses":{"dilutionGap":0,"closeLog":0,"piggy":0},"supply":"NYSE Class A, 공급 검증 불가","shortVerdict":"확인 불가","float":"확인 불가","why":"NYSE Class A, 공급 검증 불가","risk":"NYSE Class A, 공급 검증 불가","source":"StockAnalysis 2026-11-03; SEC 공시 일부 확인"},{"rank":9,"ticker":"PLCE","exchange":"Nasdaq","dropPct":-32.94,"price":0.285,"volume":2816216,"score":null,"grade":"unverified","flow":null,"flowKnown":false,"parts":{"drop":null,"volume":null,"flow":null,"dilution":null,"short":null,"float":null,"risk":null},"bonuses":{"dilutionGap":0,"closeLog":0,"piggy":0},"supply":"실적·현금흐름 위험","shortVerdict":"확인 불가","float":"확인 불가","why":"실적·현금흐름 위험","risk":"실적·현금흐름 위험","source":"StockAnalysis 2026-11-03; SEC 공시 일부 확인"},{"rank":10,"ticker":"EZGO","exchange":"Nasdaq","dropPct":-32.31,"price":0.538,"volume":514929,"score":null,"grade":"unverified","flow":null,"flowKnown":false,"parts":{"drop":null,"volume":null,"flow":null,"dilution":null,"short":null,"float":null,"risk":null},"bonuses":{"dilutionGap":0,"closeLog":0,"piggy":0},"supply":"$200M F-3 EFFECT","shortVerdict":"확인 불가","float":"확인 불가","why":"$200M F-3 EFFECT","risk":"$200M F-3 EFFECT","source":"StockAnalysis 2026-11-03; SEC 공시 일부 확인"},{"rank":11,"ticker":"RZAI","exchange":"Nasdaq","dropPct":-32.29,"price":3.9,"volume":433678,"score":null,"grade":"unverified","flow":null,"flowKnown":false,"parts":{"drop":null,"volume":null,"flow":null,"dilution":null,"short":null,"float":null,"risk":null},"bonuses":{"dilutionGap":0,"closeLog":0,"piggy":0},"supply":"19.814M resale·변동가 전환우선주","shortVerdict":"확인 불가","float":"확인 불가","why":"19.814M resale·변동가 전환우선주","risk":"19.814M resale·변동가 전환우선주","source":"StockAnalysis 2026-11-03; SEC 공시 일부 확인"},{"rank":12,"ticker":"GMEX","exchange":"Nasdaq","dropPct":-31.34,"price":0.602,"volume":467970,"score":null,"grade":"unverified","flow":null,"flowKnown":false,"parts":{"drop":null,"volume":null,"flow":null,"dilution":null,"short":null,"float":null,"risk":null},"bonuses":{"dilutionGap":0,"closeLog":0,"piggy":0},"supply":"Class C 전환우선주 24개월 락업·F-3","shortVerdict":"확인 불가","float":"확인 불가","why":"Class C 전환우선주 24개월 락업·F-3","risk":"Class C 전환우선주 24개월 락업·F-3","source":"StockAnalysis 2026-11-03; SEC 공시 일부 확인"},{"rank":13,"ticker":"JDZG","exchange":"Nasdaq","dropPct":-29.75,"price":0.37,"volume":1952030,"score":null,"grade":"unverified","flow":null,"flowKnown":false,"parts":{"drop":null,"volume":null,"flow":null,"dilution":null,"short":null,"float":null,"risk":null},"bonuses":{"dilutionGap":0,"closeLog":0,"piggy":0},"supply":"공급 검증 불가","shortVerdict":"확인 불가","float":"확인 불가","why":"공급 검증 불가","risk":"공급 검증 불가","source":"StockAnalysis 2026-11-03; SEC 공시 일부 확인"},{"rank":14,"ticker":"HXHX","exchange":"Nasdaq","dropPct":-27.97,"price":0.17,"volume":3119503,"score":null,"grade":"unverified","flow":null,"flowKnown":false,"parts":{"drop":null,"volume":null,"flow":null,"dilution":null,"short":null,"float":null,"risk":null},"bonuses":{"dilutionGap":0,"closeLog":0,"piggy":0},"supply":"공급 검증 불가","shortVerdict":"확인 불가","float":"확인 불가","why":"공급 검증 불가","risk":"공급 검증 불가","source":"StockAnalysis 2026-11-03; SEC 공시 일부 확인"},{"rank":15,"ticker":"BDMD","exchange":"Nasdaq","dropPct":-26.67,"price":0.101,"volume":20779494,"score":null,"grade":"unverified","flow":null,"flowKnown":false,"parts":{"drop":null,"volume":null,"flow":null,"dilution":null,"short":null,"float":null,"risk":null},"bonuses":{"dilutionGap":0,"closeLog":0,"piggy":0},"supply":"34.415M resale·11.5M warrants","shortVerdict":"확인 불가","float":"확인 불가","why":"34.415M resale·11.5M warrants","risk":"34.415M resale·11.5M warrants","source":"StockAnalysis 2026-11-03; SEC 공시 일부 확인"}],"history":[{"runAt":"2026-11-04 04:40 KST","session":"2026-11-03","top":[{"ticker":"CENN","score":null,"grade":"unverified"},{"ticker":"ABTS","score":null,"grade":"unverified"},{"ticker":"AIRE","score":null,"grade":"unverified"},{"ticker":"XXII","score":null,"grade":"unverified"},{"ticker":"JAGX","score":null,"grade":"unverified"}],"note":"15종목 스냅샷. 점수·등급은 전수 SEC/수급 검증 미완료로 미산출."},{"runAt":"2026-11-03 04:36 KST","session":"2026-11-02","top":[{"ticker":"OFRM","score":58,"grade":"cond"},{"ticker":"NRSN","score":56,"grade":"cond"},{"ticker":"DRUG","score":54,"grade":"pass"},{"ticker":"AIOK","score":51,"grade":"pass"},{"ticker":"SVRN","score":48,"grade":"pass"}],"note":"flow 전 후보 확인 불가로 fire 없음. ok 이상 0개. OFRM은 리콜 실질악재, NRSN은 초저유통이나 ATM/상장유지 위험. DRUG는 FDA partial clinical hold, SVRN은 Nasdaq delisting determination/회계 이슈로 pass."},{"runAt":"2026-10-31 04:42 KST","session":"2026-10-30","top":[{"ticker":"PTHS","score":68,"grade":"cond"},{"ticker":"CLRO","score":64,"grade":"cond"},{"ticker":"CETX","score":61,"grade":"cond"},{"ticker":"HMR","score":58,"grade":"cond"},{"ticker":"PMN","score":56,"grade":"cond"}],"note":"flow 전 후보 확인 불가로 fire 없음. ok 이상 0개. PTHS/CLRO는 초저유통 장점이 있으나 각각 합병 주식대가와 pending unit financing/현금부족이 핵심 감점. ABOS는 Phase 2 실패로 pass, VIVK/SMTK는 변동가 CB·ELOC/대규모 equity line 때문에 pass."},{"runAt":"2026-10-30 04:42 KST","session":"2026-10-29","top":[{"ticker":"XRX","score":64,"grade":"cond"},{"ticker":"IOVA","score":61,"grade":"cond"},{"ticker":"LVWR","score":58,"grade":"cond"},{"ticker":"NOW","score":57,"grade":"cond"},{"ticker":"TWI","score":55,"grade":"cond"}],"note":"flow 전 후보 확인 불가로 fire 없음. ok 이상 0개."},{"runAt":"2026-10-29 04:42 KST","session":"2026-10-28","top":[{"ticker":"SLS","score":68,"grade":"cond"},{"ticker":"DBD","score":63,"grade":"cond"},{"ticker":"LSTR","score":61,"grade":"cond"},{"ticker":"ENPH","score":60,"grade":"cond"},{"ticker":"FFIV","score":57,"grade":"cond"}],"note":"flow 전 후보 확인 불가로 fire 없음. ok 이상 0개."},{"runAt":"2026-10-28 04:37 KST","session":"2026-10-27","top":[{"ticker":"SXTP","score":68,"grade":"cond"},{"ticker":"WFF","score":58,"grade":"cond"},{"ticker":"IMNN","score":53,"grade":"pass"},{"ticker":"AZTR","score":52,"grade":"pass"},{"ticker":"MKDW","score":50,"grade":"pass"}],"note":"flow 전 후보 확인 불가로 fire 없음."},{"runAt":"2026-10-27 04:40 KST","session":"2026-10-26","top":[{"ticker":"YHC","score":66,"grade":"cond"},{"ticker":"ORIC","score":64,"grade":"cond"},{"ticker":"CATX","score":61,"grade":"cond"},{"ticker":"NAUT","score":59,"grade":"cond"},{"ticker":"AVBP","score":57,"grade":"cond"}],"note":"flow 전 후보 확인 불가로 fire 없음."},{"runAt":"2026-10-24 04:35 KST","session":"2026-10-23","top":[{"ticker":"FGL","score":79,"grade":"ok"},{"ticker":"TANH","score":76,"grade":"ok"},{"ticker":"MGNX","score":72,"grade":"ok"},{"ticker":"SHPH","score":67,"grade":"cond"},{"ticker":"CATX","score":61,"grade":"cond"}],"note":"flow 전 후보 확인 불가로 fire 없음."},{"runAt":"2026-10-23 04:44 KST","session":"2026-10-22","top":[{"ticker":"FPS","score":84,"grade":"ok"},{"ticker":"TTMI","score":75,"grade":"ok"},{"ticker":"MRNA","score":69,"grade":"cond"},{"ticker":"VICR","score":69,"grade":"cond"},{"ticker":"COHU","score":65,"grade":"cond"}],"note":"flow 전 후보 확인 불가로 fire 없음."},{"runAt":"2026-10-22 04:40 KST","session":"2026-10-21","top":[{"ticker":"PRSO","score":78,"grade":"ok"},{"ticker":"FMFC","score":72,"grade":"ok"},{"ticker":"WORX","score":67,"grade":"cond"},{"ticker":"CMCT","score":61,"grade":"cond"},{"ticker":"MKDW","score":58,"grade":"cond"}],"note":"flow 전 후보 확인 불가로 fire 없음."}]}
+{
+  "runAt": "2026-11-05 04:41 KST",
+  "session": "2026-11-04 미국 정규장 종가 기준 공개 하락률 스냅샷",
+  "basis": "StockAnalysis Losers Nov 4 2026 공개 순위에서 미국 상장 보통주 중심 15개 선별; 일부 거래소/증권종류·SEC 전수 확인 미완료.",
+  "note": "구조 점검용, 매수 추천 아님. flow=null/flowKnown=false 전 종목. SEC 전수·5거래일 공모/RD·Float·SI·CTB·VWAP·종가 수급 미검증으로 점수/등급 unverified; fire/ok 확정 불가. 일부 공시 위험만 확인. 종가 자료는 지연/사후 갱신될 수 있음.",
+  "scoreGuide": [
+    "drop 15",
+    "volume 20",
+    "flow 20",
+    "dilution 20",
+    "short 10",
+    "float 10",
+    "risk 5",
+    "flow 미확인: 나머지 80점을 100점 환산",
+    "희석 공백 +3",
+    "과거 closeLog 시간외 반등 +3",
+    "저금통 +3"
+  ],
+  "gradeGuide": [
+    "fire 85↑",
+    "ok 70~84",
+    "cond 55~69",
+    "pass 55 미만",
+    "flow 미확인 시 fire 금지·최대 ok",
+    "최근 5거래일 공모·RD는 최대 pass"
+  ],
+  "candidates": [
+    {
+      "rank": 1,
+      "ticker": "PARA",
+      "exchange": "Nasdaq",
+      "dropPct": -88.55,
+      "price": 0.312,
+      "volume": 42724317,
+      "score": null,
+      "grade": "unverified",
+      "flow": null,
+      "flowKnown": false,
+      "parts": {
+        "drop": null,
+        "volume": null,
+        "flow": null,
+        "dilution": null,
+        "short": null,
+        "float": null,
+        "risk": null
+      },
+      "bonuses": {
+        "dilutionGap": 0,
+        "closeLog": 0,
+        "piggy": 0
+      },
+      "supply": "Nasdaq Staff Delisting Determination 2026-10-27; 항소 및 거래정지 유예 여부 미확인",
+      "shortVerdict": "확인 불가",
+      "float": "확인 불가",
+      "why": "Nasdaq Staff Delisting Determination 2026-10-27; 항소 및 거래정지 유예 여부 미확인",
+      "risk": "상장폐지·계속기업 리스크",
+      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+    },
+    {
+      "rank": 2,
+      "ticker": "CENN",
+      "exchange": "Nasdaq",
+      "dropPct": -45.95,
+      "price": 0.161,
+      "volume": 34083481,
+      "score": null,
+      "grade": "unverified",
+      "flow": null,
+      "flowKnown": false,
+      "parts": {
+        "drop": null,
+        "volume": null,
+        "flow": null,
+        "dilution": null,
+        "short": null,
+        "float": null,
+        "risk": null
+      },
+      "bonuses": {
+        "dilutionGap": 0,
+        "closeLog": 0,
+        "piggy": 0
+      },
+      "supply": "역분할·발행가능주식 확대 관련 공급 위험; 최신 발행량 미확인",
+      "shortVerdict": "확인 불가",
+      "float": "확인 불가",
+      "why": "역분할·발행가능주식 확대 관련 공급 위험; 최신 발행량 미확인",
+      "risk": "공급/상장유지 위험",
+      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+    },
+    {
+      "rank": 3,
+      "ticker": "RZAI",
+      "exchange": "Nasdaq",
+      "dropPct": -38.24,
+      "price": 2.39,
+      "volume": 603842,
+      "score": null,
+      "grade": "unverified",
+      "flow": null,
+      "flowKnown": false,
+      "parts": {
+        "drop": null,
+        "volume": null,
+        "flow": null,
+        "dilution": null,
+        "short": null,
+        "float": null,
+        "risk": null
+      },
+      "bonuses": {
+        "dilutionGap": 0,
+        "closeLog": 0,
+        "piggy": 0
+      },
+      "supply": "기존 전환우선주·재판매 등록 물량 존재; 잔여량 미확인",
+      "shortVerdict": "확인 불가",
+      "float": "확인 불가",
+      "why": "기존 전환우선주·재판매 등록 물량 존재; 잔여량 미확인",
+      "risk": "변동 전환·등록매도 위험",
+      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+    },
+    {
+      "rank": 4,
+      "ticker": "NRIX",
+      "exchange": "Nasdaq",
+      "dropPct": -36.83,
+      "price": 16.31,
+      "volume": 14309785,
+      "score": null,
+      "grade": "unverified",
+      "flow": null,
+      "flowKnown": false,
+      "parts": {
+        "drop": null,
+        "volume": null,
+        "flow": null,
+        "dilution": null,
+        "short": null,
+        "float": null,
+        "risk": null
+      },
+      "bonuses": {
+        "dilutionGap": 0,
+        "closeLog": 0,
+        "piggy": 0
+      },
+      "supply": "Sanofi가 SAR448272/NX-3911 개발 중단 발표",
+      "shortVerdict": "확인 불가",
+      "float": "확인 불가",
+      "why": "Sanofi가 SAR448272/NX-3911 개발 중단 발표",
+      "risk": "파트너 개발중단",
+      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+    },
+    {
+      "rank": 5,
+      "ticker": "CNSY",
+      "exchange": "Nasdaq",
+      "dropPct": -30.31,
+      "price": 0.906,
+      "volume": 2225801,
+      "score": null,
+      "grade": "unverified",
+      "flow": null,
+      "flowKnown": false,
+      "parts": {
+        "drop": null,
+        "volume": null,
+        "flow": null,
+        "dilution": null,
+        "short": null,
+        "float": null,
+        "risk": null
+      },
+      "bonuses": {
+        "dilutionGap": 0,
+        "closeLog": 0,
+        "piggy": 0
+      },
+      "supply": "2026-09-10 8-K: 최대 $21.28M 선순위 담보 전환노트, $0.50 floor 및 default시 할인 전환 조항",
+      "shortVerdict": "확인 불가",
+      "float": "확인 불가",
+      "why": "2026-09-10 8-K: 최대 $21.28M 선순위 담보 전환노트, $0.50 floor 및 default시 할인 전환 조항",
+      "risk": "전환사채·재판매 등록 의무",
+      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+    },
+    {
+      "rank": 6,
+      "ticker": "SNDX",
+      "exchange": "Nasdaq",
+      "dropPct": -28.48,
+      "price": 10.22,
+      "volume": 11221256,
+      "score": null,
+      "grade": "unverified",
+      "flow": null,
+      "flowKnown": false,
+      "parts": {
+        "drop": null,
+        "volume": null,
+        "flow": null,
+        "dilution": null,
+        "short": null,
+        "float": null,
+        "risk": null
+      },
+      "bonuses": {
+        "dilutionGap": 0,
+        "closeLog": 0,
+        "piggy": 0
+      },
+      "supply": "확인 불가",
+      "shortVerdict": "확인 불가",
+      "float": "확인 불가",
+      "why": "SEC 공급구조 및 종가 수급 검증 미완료",
+      "risk": "확인 불가",
+      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+    },
+    {
+      "rank": 7,
+      "ticker": "ECG",
+      "exchange": "NYSE",
+      "dropPct": -27.83,
+      "price": 81.36,
+      "volume": 2236798,
+      "score": null,
+      "grade": "unverified",
+      "flow": null,
+      "flowKnown": false,
+      "parts": {
+        "drop": null,
+        "volume": null,
+        "flow": null,
+        "dilution": null,
+        "short": null,
+        "float": null,
+        "risk": null
+      },
+      "bonuses": {
+        "dilutionGap": 0,
+        "closeLog": 0,
+        "piggy": 0
+      },
+      "supply": "확인 불가",
+      "shortVerdict": "확인 불가",
+      "float": "확인 불가",
+      "why": "SEC 공급구조 및 종가 수급 검증 미완료",
+      "risk": "확인 불가",
+      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+    },
+    {
+      "rank": 8,
+      "ticker": "CDT",
+      "exchange": "Nasdaq",
+      "dropPct": -27.16,
+      "price": 0.0488,
+      "volume": 5170104,
+      "score": null,
+      "grade": "unverified",
+      "flow": null,
+      "flowKnown": false,
+      "parts": {
+        "drop": null,
+        "volume": null,
+        "flow": null,
+        "dilution": null,
+        "short": null,
+        "float": null,
+        "risk": null
+      },
+      "bonuses": {
+        "dilutionGap": 0,
+        "closeLog": 0,
+        "piggy": 0
+      },
+      "supply": "확인 불가",
+      "shortVerdict": "확인 불가",
+      "float": "확인 불가",
+      "why": "SEC 공급구조 및 종가 수급 검증 미완료",
+      "risk": "확인 불가",
+      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+    },
+    {
+      "rank": 9,
+      "ticker": "POLA",
+      "exchange": "Nasdaq",
+      "dropPct": -26.94,
+      "price": 0.38,
+      "volume": 1380700,
+      "score": null,
+      "grade": "unverified",
+      "flow": null,
+      "flowKnown": false,
+      "parts": {
+        "drop": null,
+        "volume": null,
+        "flow": null,
+        "dilution": null,
+        "short": null,
+        "float": null,
+        "risk": null
+      },
+      "bonuses": {
+        "dilutionGap": 0,
+        "closeLog": 0,
+        "piggy": 0
+      },
+      "supply": "2026-10-28 424B7 등록 확인; 세부 잔여매도량 미확인",
+      "shortVerdict": "확인 불가",
+      "float": "확인 불가",
+      "why": "2026-10-28 424B7 등록 확인; 세부 잔여매도량 미확인",
+      "risk": "등록매도 공급 위험",
+      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+    },
+    {
+      "rank": 10,
+      "ticker": "TSQ",
+      "exchange": "NYSE",
+      "dropPct": -26.58,
+      "price": 2.21,
+      "volume": 799155,
+      "score": null,
+      "grade": "unverified",
+      "flow": null,
+      "flowKnown": false,
+      "parts": {
+        "drop": null,
+        "volume": null,
+        "flow": null,
+        "dilution": null,
+        "short": null,
+        "float": null,
+        "risk": null
+      },
+      "bonuses": {
+        "dilutionGap": 0,
+        "closeLog": 0,
+        "piggy": 0
+      },
+      "supply": "확인 불가",
+      "shortVerdict": "확인 불가",
+      "float": "확인 불가",
+      "why": "SEC 공급구조 및 종가 수급 검증 미완료",
+      "risk": "확인 불가",
+      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+    },
+    {
+      "rank": 11,
+      "ticker": "MOD",
+      "exchange": "NYSE",
+      "dropPct": -26.19,
+      "price": 92.59,
+      "volume": 6753126,
+      "score": null,
+      "grade": "unverified",
+      "flow": null,
+      "flowKnown": false,
+      "parts": {
+        "drop": null,
+        "volume": null,
+        "flow": null,
+        "dilution": null,
+        "short": null,
+        "float": null,
+        "risk": null
+      },
+      "bonuses": {
+        "dilutionGap": 0,
+        "closeLog": 0,
+        "piggy": 0
+      },
+      "supply": "확인 불가",
+      "shortVerdict": "확인 불가",
+      "float": "확인 불가",
+      "why": "SEC 공급구조 및 종가 수급 검증 미완료",
+      "risk": "확인 불가",
+      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+    },
+    {
+      "rank": 12,
+      "ticker": "LIME",
+      "exchange": "NYSE",
+      "dropPct": -25.24,
+      "price": 19.05,
+      "volume": 1630562,
+      "score": null,
+      "grade": "unverified",
+      "flow": null,
+      "flowKnown": false,
+      "parts": {
+        "drop": null,
+        "volume": null,
+        "flow": null,
+        "dilution": null,
+        "short": null,
+        "float": null,
+        "risk": null
+      },
+      "bonuses": {
+        "dilutionGap": 0,
+        "closeLog": 0,
+        "piggy": 0
+      },
+      "supply": "확인 불가",
+      "shortVerdict": "확인 불가",
+      "float": "확인 불가",
+      "why": "SEC 공급구조 및 종가 수급 검증 미완료",
+      "risk": "확인 불가",
+      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+    },
+    {
+      "rank": 13,
+      "ticker": "FIS",
+      "exchange": "NYSE",
+      "dropPct": -24.88,
+      "price": 29.29,
+      "volume": 24515158,
+      "score": null,
+      "grade": "unverified",
+      "flow": null,
+      "flowKnown": false,
+      "parts": {
+        "drop": null,
+        "volume": null,
+        "flow": null,
+        "dilution": null,
+        "short": null,
+        "float": null,
+        "risk": null
+      },
+      "bonuses": {
+        "dilutionGap": 0,
+        "closeLog": 0,
+        "piggy": 0
+      },
+      "supply": "확인 불가",
+      "shortVerdict": "확인 불가",
+      "float": "확인 불가",
+      "why": "SEC 공급구조 및 종가 수급 검증 미완료",
+      "risk": "확인 불가",
+      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+    },
+    {
+      "rank": 14,
+      "ticker": "ACCV",
+      "exchange": "NYSE",
+      "dropPct": -24.45,
+      "price": 10.66,
+      "volume": 2503851,
+      "score": null,
+      "grade": "unverified",
+      "flow": null,
+      "flowKnown": false,
+      "parts": {
+        "drop": null,
+        "volume": null,
+        "flow": null,
+        "dilution": null,
+        "short": null,
+        "float": null,
+        "risk": null
+      },
+      "bonuses": {
+        "dilutionGap": 0,
+        "closeLog": 0,
+        "piggy": 0
+      },
+      "supply": "확인 불가",
+      "shortVerdict": "확인 불가",
+      "float": "확인 불가",
+      "why": "SEC 공급구조 및 종가 수급 검증 미완료",
+      "risk": "확인 불가",
+      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+    },
+    {
+      "rank": 15,
+      "ticker": "BIVI",
+      "exchange": "Nasdaq",
+      "dropPct": -24.28,
+      "price": 1.31,
+      "volume": 1001932,
+      "score": null,
+      "grade": "unverified",
+      "flow": null,
+      "flowKnown": false,
+      "parts": {
+        "drop": null,
+        "volume": null,
+        "flow": null,
+        "dilution": null,
+        "short": null,
+        "float": null,
+        "risk": null
+      },
+      "bonuses": {
+        "dilutionGap": 0,
+        "closeLog": 0,
+        "piggy": 0
+      },
+      "supply": "확인 불가",
+      "shortVerdict": "확인 불가",
+      "float": "확인 불가",
+      "why": "SEC 공급구조 및 종가 수급 검증 미완료",
+      "risk": "확인 불가",
+      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+    }
+  ],
+  "history": [
+    {
+      "runAt": "2026-11-05 04:41 KST",
+      "session": "2026-11-04",
+      "top": [
+        {
+          "ticker": "PARA",
+          "score": null,
+          "grade": "unverified"
+        },
+        {
+          "ticker": "CENN",
+          "score": null,
+          "grade": "unverified"
+        },
+        {
+          "ticker": "RZAI",
+          "score": null,
+          "grade": "unverified"
+        },
+        {
+          "ticker": "NRIX",
+          "score": null,
+          "grade": "unverified"
+        },
+        {
+          "ticker": "CNSY",
+          "score": null,
+          "grade": "unverified"
+        }
+      ],
+      "note": "15개 공개 하락률 스냅샷. 일부 공급 위험 확인, 전수 검증 미완료로 점수·등급 보류."
+    },
+    {
+      "runAt": "2026-11-04 04:40 KST",
+      "session": "2026-11-03",
+      "top": [
+        {
+          "ticker": "CENN",
+          "score": null,
+          "grade": "unverified"
+        },
+        {
+          "ticker": "ABTS",
+          "score": null,
+          "grade": "unverified"
+        },
+        {
+          "ticker": "AIRE",
+          "score": null,
+          "grade": "unverified"
+        },
+        {
+          "ticker": "XXII",
+          "score": null,
+          "grade": "unverified"
+        },
+        {
+          "ticker": "JAGX",
+          "score": null,
+          "grade": "unverified"
+        }
+      ],
+      "note": "15종목 스냅샷. 점수·등급은 전수 SEC/수급 검증 미완료로 미산출."
+    },
+    {
+      "runAt": "2026-11-03 04:36 KST",
+      "session": "2026-11-02",
+      "top": [
+        {
+          "ticker": "OFRM",
+          "score": 58,
+          "grade": "cond"
+        },
+        {
+          "ticker": "NRSN",
+          "score": 56,
+          "grade": "cond"
+        },
+        {
+          "ticker": "DRUG",
+          "score": 54,
+          "grade": "pass"
+        },
+        {
+          "ticker": "AIOK",
+          "score": 51,
+          "grade": "pass"
+        },
+        {
+          "ticker": "SVRN",
+          "score": 48,
+          "grade": "pass"
+        }
+      ],
+      "note": "flow 전 후보 확인 불가로 fire 없음. ok 이상 0개. OFRM은 리콜 실질악재, NRSN은 초저유통이나 ATM/상장유지 위험. DRUG는 FDA partial clinical hold, SVRN은 Nasdaq delisting determination/회계 이슈로 pass."
+    },
+    {
+      "runAt": "2026-10-31 04:42 KST",
+      "session": "2026-10-30",
+      "top": [
+        {
+          "ticker": "PTHS",
+          "score": 68,
+          "grade": "cond"
+        },
+        {
+          "ticker": "CLRO",
+          "score": 64,
+          "grade": "cond"
+        },
+        {
+          "ticker": "CETX",
+          "score": 61,
+          "grade": "cond"
+        },
+        {
+          "ticker": "HMR",
+          "score": 58,
+          "grade": "cond"
+        },
+        {
+          "ticker": "PMN",
+          "score": 56,
+          "grade": "cond"
+        }
+      ],
+      "note": "flow 전 후보 확인 불가로 fire 없음. ok 이상 0개. PTHS/CLRO는 초저유통 장점이 있으나 각각 합병 주식대가와 pending unit financing/현금부족이 핵심 감점. ABOS는 Phase 2 실패로 pass, VIVK/SMTK는 변동가 CB·ELOC/대규모 equity line 때문에 pass."
+    },
+    {
+      "runAt": "2026-10-30 04:42 KST",
+      "session": "2026-10-29",
+      "top": [
+        {
+          "ticker": "XRX",
+          "score": 64,
+          "grade": "cond"
+        },
+        {
+          "ticker": "IOVA",
+          "score": 61,
+          "grade": "cond"
+        },
+        {
+          "ticker": "LVWR",
+          "score": 58,
+          "grade": "cond"
+        },
+        {
+          "ticker": "NOW",
+          "score": 57,
+          "grade": "cond"
+        },
+        {
+          "ticker": "TWI",
+          "score": 55,
+          "grade": "cond"
+        }
+      ],
+      "note": "flow 전 후보 확인 불가로 fire 없음. ok 이상 0개."
+    },
+    {
+      "runAt": "2026-10-29 04:42 KST",
+      "session": "2026-10-28",
+      "top": [
+        {
+          "ticker": "SLS",
+          "score": 68,
+          "grade": "cond"
+        },
+        {
+          "ticker": "DBD",
+          "score": 63,
+          "grade": "cond"
+        },
+        {
+          "ticker": "LSTR",
+          "score": 61,
+          "grade": "cond"
+        },
+        {
+          "ticker": "ENPH",
+          "score": 60,
+          "grade": "cond"
+        },
+        {
+          "ticker": "FFIV",
+          "score": 57,
+          "grade": "cond"
+        }
+      ],
+      "note": "flow 전 후보 확인 불가로 fire 없음. ok 이상 0개."
+    },
+    {
+      "runAt": "2026-10-28 04:37 KST",
+      "session": "2026-10-27",
+      "top": [
+        {
+          "ticker": "SXTP",
+          "score": 68,
+          "grade": "cond"
+        },
+        {
+          "ticker": "WFF",
+          "score": 58,
+          "grade": "cond"
+        },
+        {
+          "ticker": "IMNN",
+          "score": 53,
+          "grade": "pass"
+        },
+        {
+          "ticker": "AZTR",
+          "score": 52,
+          "grade": "pass"
+        },
+        {
+          "ticker": "MKDW",
+          "score": 50,
+          "grade": "pass"
+        }
+      ],
+      "note": "flow 전 후보 확인 불가로 fire 없음."
+    },
+    {
+      "runAt": "2026-10-27 04:40 KST",
+      "session": "2026-10-26",
+      "top": [
+        {
+          "ticker": "YHC",
+          "score": 66,
+          "grade": "cond"
+        },
+        {
+          "ticker": "ORIC",
+          "score": 64,
+          "grade": "cond"
+        },
+        {
+          "ticker": "CATX",
+          "score": 61,
+          "grade": "cond"
+        },
+        {
+          "ticker": "NAUT",
+          "score": 59,
+          "grade": "cond"
+        },
+        {
+          "ticker": "AVBP",
+          "score": 57,
+          "grade": "cond"
+        }
+      ],
+      "note": "flow 전 후보 확인 불가로 fire 없음."
+    },
+    {
+      "runAt": "2026-10-24 04:35 KST",
+      "session": "2026-10-23",
+      "top": [
+        {
+          "ticker": "FGL",
+          "score": 79,
+          "grade": "ok"
+        },
+        {
+          "ticker": "TANH",
+          "score": 76,
+          "grade": "ok"
+        },
+        {
+          "ticker": "MGNX",
+          "score": 72,
+          "grade": "ok"
+        },
+        {
+          "ticker": "SHPH",
+          "score": 67,
+          "grade": "cond"
+        },
+        {
+          "ticker": "CATX",
+          "score": 61,
+          "grade": "cond"
+        }
+      ],
+      "note": "flow 전 후보 확인 불가로 fire 없음."
+    },
+    {
+      "runAt": "2026-10-23 04:44 KST",
+      "session": "2026-10-22",
+      "top": [
+        {
+          "ticker": "FPS",
+          "score": 84,
+          "grade": "ok"
+        },
+        {
+          "ticker": "TTMI",
+          "score": 75,
+          "grade": "ok"
+        },
+        {
+          "ticker": "MRNA",
+          "score": 69,
+          "grade": "cond"
+        },
+        {
+          "ticker": "VICR",
+          "score": 69,
+          "grade": "cond"
+        },
+        {
+          "ticker": "COHU",
+          "score": 65,
+          "grade": "cond"
+        }
+      ],
+      "note": "flow 전 후보 확인 불가로 fire 없음."
+    }
+  ]
+}
