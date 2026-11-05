@@ -1,8 +1,8 @@
 {
-  "runAt": "2026-11-05 04:41 KST",
-  "session": "2026-11-04 미국 정규장 종가 기준 공개 하락률 스냅샷",
-  "basis": "StockAnalysis Losers Nov 4 2026 공개 순위에서 미국 상장 보통주 중심 15개 선별; 일부 거래소/증권종류·SEC 전수 확인 미완료.",
-  "note": "구조 점검용, 매수 추천 아님. flow=null/flowKnown=false 전 종목. SEC 전수·5거래일 공모/RD·Float·SI·CTB·VWAP·종가 수급 미검증으로 점수/등급 unverified; fire/ok 확정 불가. 일부 공시 위험만 확인. 종가 자료는 지연/사후 갱신될 수 있음.",
+  "runAt": "2026-11-06 04:41 KST",
+  "session": "2026-11-05 미국 정규장 15:41 EST 공개 하락률 스냅샷",
+  "basis": "StockAnalysis Losers 2026-11-05 공개 상위권; CDLR은 외국 예탁증권/증권종류 검증 미완료로 제외, 보통주/ordinary share 중심 15종목. 거래소·증권종류 일부 미확정, 사후 가격 갱신 가능.",
+  "note": "구조 점검용이며 매수 추천 아님. SEC 공급구조/최근 5거래일 공모·RD 전수검증 미완료, flow=null/flowKnown=false, VWAP·종가 수급·CTB·Borrow Available·SI·실제 Float 확인 불가. 점수와 등급은 unverified로 보존; fire/ok 미확정. 과거 closeLog/저금통 보너스 미적용.",
   "scoreGuide": [
     "drop 15",
     "volume 20",
@@ -27,11 +27,11 @@
   "candidates": [
     {
       "rank": 1,
-      "ticker": "PARA",
+      "ticker": "SNWV",
       "exchange": "Nasdaq",
-      "dropPct": -88.55,
-      "price": 0.312,
-      "volume": 42724317,
+      "dropPct": -62.65,
+      "price": 2.14,
+      "volume": 842952,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -50,20 +50,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "Nasdaq Staff Delisting Determination 2026-10-27; 항소 및 거래정지 유예 여부 미확인",
+      "supply": "SEC 등록/매도가능 물량 전수 확인 불가",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "Nasdaq Staff Delisting Determination 2026-10-27; 항소 및 거래정지 유예 여부 미확인",
-      "risk": "상장폐지·계속기업 리스크",
-      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+      "why": "하락률 스냅샷만 확인; 공급·수급 추가 검증 필요",
+      "risk": "미확인 공급 및 종가 수급 위험",
+      "source": "StockAnalysis 2026-11-05; 일부 공시/회사 발표 교차검증"
     },
     {
       "rank": 2,
-      "ticker": "CENN",
+      "ticker": "VCYT",
       "exchange": "Nasdaq",
-      "dropPct": -45.95,
-      "price": 0.161,
-      "volume": 34083481,
+      "dropPct": -57.44,
+      "price": 22.35,
+      "volume": 10975701,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -82,20 +82,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "역분할·발행가능주식 확대 관련 공급 위험; 최신 발행량 미확인",
+      "supply": "2026-11-05 Q3 실적 발표 후 Decipher 검사 성장 전망 하향; 매출 가이던스 조정. SEC 공급 전수 미확인.",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "역분할·발행가능주식 확대 관련 공급 위험; 최신 발행량 미확인",
-      "risk": "공급/상장유지 위험",
-      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+      "why": "2026-11-05 Q3 실적 발표 후 Decipher 검사 성장 전망 하향; 매출 가이던스 조정. SEC 공급 전수 미확인.",
+      "risk": "2026-11-05 Q3 실적 발표 후 Decipher 검사 성장 전망 하향; 매출 가이던스 조정. SEC 공급 전수 미확인.",
+      "source": "StockAnalysis 2026-11-05; 일부 공시/회사 발표 교차검증"
     },
     {
       "rank": 3,
-      "ticker": "RZAI",
-      "exchange": "Nasdaq",
-      "dropPct": -38.24,
-      "price": 2.39,
-      "volume": 603842,
+      "ticker": "MNTN",
+      "exchange": "NYSE",
+      "dropPct": -54.19,
+      "price": 4.75,
+      "volume": 7765909,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -114,20 +114,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "기존 전환우선주·재판매 등록 물량 존재; 잔여량 미확인",
+      "supply": "2026-11-04 Q3 실적 발표, Q4/연간 매출 전망 하향 및 CEO 교체. SEC 공급 전수 미확인.",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "기존 전환우선주·재판매 등록 물량 존재; 잔여량 미확인",
-      "risk": "변동 전환·등록매도 위험",
-      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+      "why": "2026-11-04 Q3 실적 발표, Q4/연간 매출 전망 하향 및 CEO 교체. SEC 공급 전수 미확인.",
+      "risk": "2026-11-04 Q3 실적 발표, Q4/연간 매출 전망 하향 및 CEO 교체. SEC 공급 전수 미확인.",
+      "source": "StockAnalysis 2026-11-05; 일부 공시/회사 발표 교차검증"
     },
     {
       "rank": 4,
-      "ticker": "NRIX",
+      "ticker": "ELPW",
       "exchange": "Nasdaq",
-      "dropPct": -36.83,
-      "price": 16.31,
-      "volume": 14309785,
+      "dropPct": -48.21,
+      "price": 1.3,
+      "volume": 61464284,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -146,20 +146,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "Sanofi가 SAR448272/NX-3911 개발 중단 발표",
+      "supply": "2026-02 F-1 EFFECT 공모 및 행사가 조정/무현금 행사 가능 워런트 이력 확인. 현재 잔여 공급 미확인.",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "Sanofi가 SAR448272/NX-3911 개발 중단 발표",
-      "risk": "파트너 개발중단",
-      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+      "why": "2026-02 F-1 EFFECT 공모 및 행사가 조정/무현금 행사 가능 워런트 이력 확인. 현재 잔여 공급 미확인.",
+      "risk": "2026-02 F-1 EFFECT 공모 및 행사가 조정/무현금 행사 가능 워런트 이력 확인. 현재 잔여 공급 미확인.",
+      "source": "StockAnalysis 2026-11-05; 일부 공시/회사 발표 교차검증"
     },
     {
       "rank": 5,
-      "ticker": "CNSY",
-      "exchange": "Nasdaq",
-      "dropPct": -30.31,
-      "price": 0.906,
-      "volume": 2225801,
+      "ticker": "ANVS",
+      "exchange": "NYSE",
+      "dropPct": -47.17,
+      "price": 0.639,
+      "volume": 25678228,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -178,20 +178,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "2026-09-10 8-K: 최대 $21.28M 선순위 담보 전환노트, $0.50 floor 및 default시 할인 전환 조항",
+      "supply": "SEC 등록/매도가능 물량 전수 확인 불가",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "2026-09-10 8-K: 최대 $21.28M 선순위 담보 전환노트, $0.50 floor 및 default시 할인 전환 조항",
-      "risk": "전환사채·재판매 등록 의무",
-      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+      "why": "하락률 스냅샷만 확인; 공급·수급 추가 검증 필요",
+      "risk": "미확인 공급 및 종가 수급 위험",
+      "source": "StockAnalysis 2026-11-05; 일부 공시/회사 발표 교차검증"
     },
     {
       "rank": 6,
-      "ticker": "SNDX",
+      "ticker": "PARA",
       "exchange": "Nasdaq",
-      "dropPct": -28.48,
-      "price": 10.22,
-      "volume": 11221256,
+      "dropPct": -45.11,
+      "price": 0.175,
+      "volume": 18103683,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -210,20 +210,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "확인 불가",
+      "supply": "2026-10-27 Nasdaq Staff Delisting Determination, 10/30 authorized shares 850M 확대. 항소 결과 미확인.",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "SEC 공급구조 및 종가 수급 검증 미완료",
-      "risk": "확인 불가",
-      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+      "why": "2026-10-27 Nasdaq Staff Delisting Determination, 10/30 authorized shares 850M 확대. 항소 결과 미확인.",
+      "risk": "2026-10-27 Nasdaq Staff Delisting Determination, 10/30 authorized shares 850M 확대. 항소 결과 미확인.",
+      "source": "StockAnalysis 2026-11-05; 일부 공시/회사 발표 교차검증"
     },
     {
       "rank": 7,
-      "ticker": "ECG",
-      "exchange": "NYSE",
-      "dropPct": -27.83,
-      "price": 81.36,
-      "volume": 2236798,
+      "ticker": "TEAD",
+      "exchange": "Nasdaq",
+      "dropPct": -41.16,
+      "price": 0.162,
+      "volume": 836617,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -242,20 +242,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "확인 불가",
+      "supply": "SEC 등록/매도가능 물량 전수 확인 불가",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "SEC 공급구조 및 종가 수급 검증 미완료",
-      "risk": "확인 불가",
-      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+      "why": "하락률 스냅샷만 확인; 공급·수급 추가 검증 필요",
+      "risk": "미확인 공급 및 종가 수급 위험",
+      "source": "StockAnalysis 2026-11-05; 일부 공시/회사 발표 교차검증"
     },
     {
       "rank": 8,
-      "ticker": "CDT",
+      "ticker": "PASW",
       "exchange": "Nasdaq",
-      "dropPct": -27.16,
-      "price": 0.0488,
-      "volume": 5170104,
+      "dropPct": -38.23,
+      "price": 1.81,
+      "volume": 186385,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -274,20 +274,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "확인 불가",
+      "supply": "SEC 등록/매도가능 물량 전수 확인 불가",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "SEC 공급구조 및 종가 수급 검증 미완료",
-      "risk": "확인 불가",
-      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+      "why": "하락률 스냅샷만 확인; 공급·수급 추가 검증 필요",
+      "risk": "미확인 공급 및 종가 수급 위험",
+      "source": "StockAnalysis 2026-11-05; 일부 공시/회사 발표 교차검증"
     },
     {
       "rank": 9,
-      "ticker": "POLA",
+      "ticker": "YOUL",
       "exchange": "Nasdaq",
-      "dropPct": -26.94,
-      "price": 0.38,
-      "volume": 1380700,
+      "dropPct": -36.2,
+      "price": 0.12,
+      "volume": 632871,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -306,20 +306,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "2026-10-28 424B7 등록 확인; 세부 잔여매도량 미확인",
+      "supply": "SEC 등록/매도가능 물량 전수 확인 불가",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "2026-10-28 424B7 등록 확인; 세부 잔여매도량 미확인",
-      "risk": "등록매도 공급 위험",
-      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+      "why": "하락률 스냅샷만 확인; 공급·수급 추가 검증 필요",
+      "risk": "미확인 공급 및 종가 수급 위험",
+      "source": "StockAnalysis 2026-11-05; 일부 공시/회사 발표 교차검증"
     },
     {
       "rank": 10,
-      "ticker": "TSQ",
-      "exchange": "NYSE",
-      "dropPct": -26.58,
-      "price": 2.21,
-      "volume": 799155,
+      "ticker": "TDUP",
+      "exchange": "Nasdaq",
+      "dropPct": -35.84,
+      "price": 1.405,
+      "volume": 4678315,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -338,20 +338,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "확인 불가",
+      "supply": "SEC 등록/매도가능 물량 전수 확인 불가",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "SEC 공급구조 및 종가 수급 검증 미완료",
-      "risk": "확인 불가",
-      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+      "why": "하락률 스냅샷만 확인; 공급·수급 추가 검증 필요",
+      "risk": "미확인 공급 및 종가 수급 위험",
+      "source": "StockAnalysis 2026-11-05; 일부 공시/회사 발표 교차검증"
     },
     {
       "rank": 11,
-      "ticker": "MOD",
+      "ticker": "DDD",
       "exchange": "NYSE",
-      "dropPct": -26.19,
-      "price": 92.59,
-      "volume": 6753126,
+      "dropPct": -35.42,
+      "price": 1.705,
+      "volume": 8007977,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -370,20 +370,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "확인 불가",
+      "supply": "SEC 등록/매도가능 물량 전수 확인 불가",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "SEC 공급구조 및 종가 수급 검증 미완료",
-      "risk": "확인 불가",
-      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+      "why": "하락률 스냅샷만 확인; 공급·수급 추가 검증 필요",
+      "risk": "미확인 공급 및 종가 수급 위험",
+      "source": "StockAnalysis 2026-11-05; 일부 공시/회사 발표 교차검증"
     },
     {
       "rank": 12,
-      "ticker": "LIME",
-      "exchange": "NYSE",
-      "dropPct": -25.24,
-      "price": 19.05,
-      "volume": 1630562,
+      "ticker": "AKBA",
+      "exchange": "Nasdaq",
+      "dropPct": -35.11,
+      "price": 0.451,
+      "volume": 11489753,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -402,20 +402,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "확인 불가",
+      "supply": "2026-11-05 Q3 실적 및 VOCAL topline 발표. 당일 급락과의 인과관계 미확정.",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "SEC 공급구조 및 종가 수급 검증 미완료",
-      "risk": "확인 불가",
-      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+      "why": "2026-11-05 Q3 실적 및 VOCAL topline 발표. 당일 급락과의 인과관계 미확정.",
+      "risk": "2026-11-05 Q3 실적 및 VOCAL topline 발표. 당일 급락과의 인과관계 미확정.",
+      "source": "StockAnalysis 2026-11-05; 일부 공시/회사 발표 교차검증"
     },
     {
       "rank": 13,
-      "ticker": "FIS",
-      "exchange": "NYSE",
-      "dropPct": -24.88,
-      "price": 29.29,
-      "volume": 24515158,
+      "ticker": "FISN",
+      "exchange": "NYSE American",
+      "dropPct": -33.48,
+      "price": 1.47,
+      "volume": 1445114,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -434,20 +434,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "확인 불가",
+      "supply": "SEC 등록/매도가능 물량 전수 확인 불가",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "SEC 공급구조 및 종가 수급 검증 미완료",
-      "risk": "확인 불가",
-      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+      "why": "하락률 스냅샷만 확인; 공급·수급 추가 검증 필요",
+      "risk": "미확인 공급 및 종가 수급 위험",
+      "source": "StockAnalysis 2026-11-05; 일부 공시/회사 발표 교차검증"
     },
     {
       "rank": 14,
-      "ticker": "ACCV",
-      "exchange": "NYSE",
-      "dropPct": -24.45,
-      "price": 10.66,
-      "volume": 2503851,
+      "ticker": "BZFD",
+      "exchange": "Nasdaq",
+      "dropPct": -33.45,
+      "price": 0.613,
+      "volume": 1818049,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -466,20 +466,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "확인 불가",
+      "supply": "SEC 등록/매도가능 물량 전수 확인 불가",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "SEC 공급구조 및 종가 수급 검증 미완료",
-      "risk": "확인 불가",
-      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+      "why": "하락률 스냅샷만 확인; 공급·수급 추가 검증 필요",
+      "risk": "미확인 공급 및 종가 수급 위험",
+      "source": "StockAnalysis 2026-11-05; 일부 공시/회사 발표 교차검증"
     },
     {
       "rank": 15,
-      "ticker": "BIVI",
+      "ticker": "PCT",
       "exchange": "Nasdaq",
-      "dropPct": -24.28,
-      "price": 1.31,
-      "volume": 1001932,
+      "dropPct": -33.33,
+      "price": 1.86,
+      "volume": 24470017,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -498,15 +498,47 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "확인 불가",
+      "supply": "SEC 등록/매도가능 물량 전수 확인 불가",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "SEC 공급구조 및 종가 수급 검증 미완료",
-      "risk": "확인 불가",
-      "source": "StockAnalysis 2026-11-04; 공시 확인 범위 제한"
+      "why": "하락률 스냅샷만 확인; 공급·수급 추가 검증 필요",
+      "risk": "미확인 공급 및 종가 수급 위험",
+      "source": "StockAnalysis 2026-11-05; 일부 공시/회사 발표 교차검증"
     }
   ],
   "history": [
+    {
+      "runAt": "2026-11-06 04:41 KST",
+      "session": "2026-11-05",
+      "top": [
+        {
+          "ticker": "SNWV",
+          "score": null,
+          "grade": "unverified"
+        },
+        {
+          "ticker": "VCYT",
+          "score": null,
+          "grade": "unverified"
+        },
+        {
+          "ticker": "MNTN",
+          "score": null,
+          "grade": "unverified"
+        },
+        {
+          "ticker": "ELPW",
+          "score": null,
+          "grade": "unverified"
+        },
+        {
+          "ticker": "ANVS",
+          "score": null,
+          "grade": "unverified"
+        }
+      ],
+      "note": "15개 공개 하락률 스냅샷; SEC/수급 전수검증 미완료로 점수 및 등급 보류."
+    },
     {
       "runAt": "2026-11-05 04:41 KST",
       "session": "2026-11-04",
@@ -790,38 +822,6 @@
         {
           "ticker": "CATX",
           "score": 61,
-          "grade": "cond"
-        }
-      ],
-      "note": "flow 전 후보 확인 불가로 fire 없음."
-    },
-    {
-      "runAt": "2026-10-23 04:44 KST",
-      "session": "2026-10-22",
-      "top": [
-        {
-          "ticker": "FPS",
-          "score": 84,
-          "grade": "ok"
-        },
-        {
-          "ticker": "TTMI",
-          "score": 75,
-          "grade": "ok"
-        },
-        {
-          "ticker": "MRNA",
-          "score": 69,
-          "grade": "cond"
-        },
-        {
-          "ticker": "VICR",
-          "score": 69,
-          "grade": "cond"
-        },
-        {
-          "ticker": "COHU",
-          "score": 65,
           "grade": "cond"
         }
       ],
