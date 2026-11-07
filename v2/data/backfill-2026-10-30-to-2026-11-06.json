@@ -1,0 +1,58 @@
+{
+  "schema": "microcap-radar-backfill-v1",
+  "window": {
+    "from": "2026-10-30",
+    "to": "2026-11-06",
+    "market": "US",
+    "completedSessions": [
+      "2026-10-30",
+      "2026-11-02",
+      "2026-11-03",
+      "2026-11-04",
+      "2026-11-05",
+      "2026-11-06"
+    ]
+  },
+  "status": "PARTIAL_SOURCE_COLLECTION_NOT_VALIDATED",
+  "publicationPolicy": "RESEARCH_STAGING_ONLY_DO_NOT_MERGE_INTO_VERIFIED_CASES_OR_RANKINGS",
+  "sourceChecks": [
+    {
+      "date": "2026-11-06",
+      "provider": "StockSetups",
+      "url": "https://stocksetups.com/movers/today",
+      "kind": "regular_session_movers",
+      "observations": [
+        {
+          "ticker": "STAK",
+          "close": 3.25,
+          "changePct": 81.56,
+          "volume": 19140000
+        },
+        {
+          "ticker": "VSA",
+          "close": 2.33,
+          "changePct": 51.3,
+          "volume": 9390000
+        },
+        {
+          "ticker": "CIIT",
+          "close": 2.36,
+          "changePct": 51.94,
+          "volume": 24450000
+        },
+        {
+          "ticker": "BDSX",
+          "changePct": -56.96
+        }
+      ]
+    }
+  ],
+  "pendingValidation": [
+    "2026-10-30 through 2026-11-05 daily mover screening",
+    "2026-11-06 issuer SEC filings and corporate actions",
+    "2026-11-06 price-source cross-check",
+    "issuer O/S, float, dilution, short/borrow, Reg SHO and eligibility",
+    "reconcile home, rankings, discovery, piggy, review, stocks and deployed UI"
+  ],
+  "notes": "Source-reported candidates only. No claim of comprehensive daily coverage or SEC-validated structure. Do not advance any verified asOf date."
+}
