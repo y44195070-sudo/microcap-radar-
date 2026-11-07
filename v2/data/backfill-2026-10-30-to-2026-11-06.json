@@ -45,6 +45,65 @@
           "changePct": -56.96
         }
       ]
+    },
+    {
+      "date": "2026-11-06",
+      "provider": "Tradestie",
+      "url": "https://tradestie.com/apps/stockmarket/movers/",
+      "kind": "regular_session_movers_independent_crosscheck",
+      "observations": [
+        {
+          "ticker": "STAK",
+          "close": 3.26,
+          "changePct": 82.12
+        },
+        {
+          "ticker": "CIIT",
+          "close": 2.4,
+          "changePct": 54.84
+        },
+        {
+          "ticker": "VSA",
+          "close": 2.35,
+          "changePct": 52.6
+        },
+        {
+          "ticker": "BDSX",
+          "close": 8.53,
+          "changePct": -57.01
+        },
+        {
+          "ticker": "AEHL",
+          "close": 12.5,
+          "changePct": -28.33
+        }
+      ],
+      "note": "Independent vendor differs from StockSetups; no canonical closing price selected pending exchange/corporate-action checks."
+    },
+    {
+      "date": "2026-11-06",
+      "provider": "FennEdge",
+      "url": "https://fennedge.ai/daily-recap/2026-11-06",
+      "kind": "SEC_filing_presence_secondary_index",
+      "observations": [
+        {
+          "ticker": "CIIT",
+          "filingType": "8-K",
+          "reportedFiled": "2026-11-05 17:10 ET",
+          "filingTopic": "earnings"
+        },
+        {
+          "ticker": "VSA",
+          "filingType": "6-K",
+          "reportedFiled": "2026-11-06 06:10 ET"
+        },
+        {
+          "ticker": "STAK",
+          "filingType": "6-K",
+          "reportedTopic": "initial progress in gas-powered generator business"
+        }
+      ],
+      "note": "Secondary filing index only, original EDGAR filings and dilution not yet verified."
     }
   ],
   "pendingValidation": [
@@ -52,7 +111,53 @@
     "2026-11-06 issuer SEC filings and corporate actions",
     "2026-11-06 price-source cross-check",
     "issuer O/S, float, dilution, short/borrow, Reg SHO and eligibility",
-    "reconcile home, rankings, discovery, piggy, review, stocks and deployed UI"
+    "reconcile home, rankings, discovery, piggy, review, stocks and deployed UI",
+    "Resolve discrepancies between StockSetups and Tradestie Nov 6 close/percent change",
+    "Check 11/6 STAK 6-K, CIIT 8-K and VSA 6-K against original SEC EDGAR filings"
   ],
-  "notes": "Source-reported candidates only. No claim of comprehensive daily coverage or SEC-validated structure. Do not advance any verified asOf date."
+  "notes": "Source-reported candidates only. No claim of comprehensive daily coverage or SEC-validated structure. Do not advance any verified asOf date.",
+  "perSessionStatus": {
+    "2026-10-30": {
+      "moverScreen": "PENDING",
+      "sec": "PENDING",
+      "dilution": "PENDING",
+      "shortBorrow": "PENDING",
+      "uiMerged": false
+    },
+    "2026-11-02": {
+      "moverScreen": "PENDING",
+      "sec": "PENDING",
+      "dilution": "PENDING",
+      "shortBorrow": "PENDING",
+      "uiMerged": false
+    },
+    "2026-11-03": {
+      "moverScreen": "PENDING",
+      "sec": "PENDING",
+      "dilution": "PENDING",
+      "shortBorrow": "PENDING",
+      "uiMerged": false
+    },
+    "2026-11-04": {
+      "moverScreen": "PENDING",
+      "sec": "PENDING",
+      "dilution": "PENDING",
+      "shortBorrow": "PENDING",
+      "uiMerged": false
+    },
+    "2026-11-05": {
+      "moverScreen": "PENDING",
+      "sec": "PENDING",
+      "dilution": "PENDING",
+      "shortBorrow": "PENDING",
+      "uiMerged": false
+    },
+    "2026-11-06": {
+      "moverScreen": "PARTIAL_TWO_VENDOR_CROSSCHECK",
+      "sec": "PENDING",
+      "dilution": "PENDING",
+      "shortBorrow": "PENDING",
+      "uiMerged": false
+    }
+  }
 }
