@@ -113,7 +113,7 @@
     "issuer O/S, float, dilution, short/borrow, Reg SHO and eligibility",
     "reconcile home, rankings, discovery, piggy, review, stocks and deployed UI",
     "Resolve discrepancies between StockSetups and Tradestie Nov 6 close/percent change",
-    "Check 11/6 STAK 6-K, CIIT 8-K and VSA 6-K against original SEC EDGAR filings"
+    "Read SEC primary exhibits and verify economic significance before case promotion"
   ],
   "notes": "Source-reported candidates only. No claim of comprehensive daily coverage or SEC-validated structure. Do not advance any verified asOf date.",
   "perSessionStatus": {
@@ -147,17 +147,48 @@
     },
     "2026-11-05": {
       "moverScreen": "PENDING",
-      "sec": "PENDING",
+      "sec": "PARTIAL_TWO_ISSUER_PRIMARY_FILINGS",
       "dilution": "PENDING",
       "shortBorrow": "PENDING",
       "uiMerged": false
     },
     "2026-11-06": {
       "moverScreen": "PARTIAL_TWO_VENDOR_CROSSCHECK",
-      "sec": "PENDING",
+      "sec": "PARTIAL_PREVIOUS_DAY_FILINGS",
       "dilution": "PENDING",
       "shortBorrow": "PENDING",
       "uiMerged": false
     }
-  }
+  },
+  "secVerifiedEvents": [
+    {
+      "ticker": "CIIT",
+      "date": "2026-11-05",
+      "form": "8-K",
+      "accession": "0001683168-26-008358",
+      "secUrl": "https://www.sec.gov/Archives/edgar/data/1557798/000168316826008358/tianci_8k.htm",
+      "event": "FY2026 results announced; Item 2.02, 9.01, Exhibit 99.1",
+      "verifiedScope": "SEC primary filing existence, filing date and subject",
+      "notVerified": [
+        "earnings figures",
+        "offering/dilution impact",
+        "price and float"
+      ]
+    },
+    {
+      "ticker": "STAK",
+      "date": "2026-11-05",
+      "form": "6-K",
+      "secUrl": "https://www.sec.gov/Archives/edgar/data/2002453/000149315226050238/form6-k.htm",
+      "event": "Initial progress in gas-powered generator business, Exhibit 99.1",
+      "verifiedScope": "SEC primary filing existence and exhibit title",
+      "notVerified": [
+        "commercial contract value",
+        "revenue impact",
+        "dilution",
+        "float",
+        "borrow"
+      ]
+    }
+  ]
 }
