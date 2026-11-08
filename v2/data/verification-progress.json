@@ -1,0 +1,401 @@
+{
+  "schema": "microcap-radar-v2-verification-state-v1",
+  "stateRecordedAt": "2026-11-08T09:01:36+09:00",
+  "latestCompletedUsRegularSession": "2026-11-06",
+  "policy": "Research progress ledger only; never use this file as a verified market-data source or UI asOf.",
+  "universe": {
+    "manifestPath": "v2/data/manifest.json",
+    "count": 37,
+    "tickers": [
+      "AMSS",
+      "BDAI",
+      "BRNX",
+      "BTTC",
+      "CCTG",
+      "CDT",
+      "CLIK",
+      "CYAB",
+      "DKI",
+      "DRMA",
+      "GCDT",
+      "GIPR",
+      "GLE",
+      "GPUS",
+      "HCAI",
+      "HUBC",
+      "ISPC",
+      "JEM",
+      "JZ",
+      "MGN",
+      "MI",
+      "NIVF",
+      "NXAT",
+      "NXL",
+      "ONEN",
+      "QTI",
+      "SAIQ",
+      "SBFM",
+      "STEX",
+      "TDIC",
+      "TRUG",
+      "VCIG",
+      "VEEA",
+      "VSA",
+      "WSHP",
+      "YMAT",
+      "ZBAO"
+    ],
+    "perTicker": {
+      "AMSS": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "BDAI": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "BRNX": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "BTTC": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "CCTG": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "CDT": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "CLIK": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "CYAB": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "DKI": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "DRMA": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "GCDT": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "GIPR": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "GLE": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "GPUS": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "HCAI": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "HUBC": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "ISPC": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "JEM": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "JZ": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "MGN": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "MI": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "NIVF": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "NXAT": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "NXL": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "ONEN": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "QTI": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "SAIQ": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "SBFM": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "STEX": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "TDIC": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "TRUG": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "VCIG": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "VEEA": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "VSA": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "WSHP": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "YMAT": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      },
+      "ZBAO": {
+        "currentOfficialFilingReview": "PENDING",
+        "marketDataReview": "PENDING",
+        "dilutionReview": "PENDING",
+        "shortBorrowReview": "PENDING",
+        "lastVerifiedMarketSession": null
+      }
+    }
+  },
+  "tabs": {
+    "home": {
+      "source": "v2/data/home.json",
+      "sourceAsOf": "2026-10-30",
+      "fullOfficialRevalidation": "PENDING",
+      "uiBrowserTest": "PENDING"
+    },
+    "rankings": {
+      "source": "v2/data/rankings.json",
+      "sourceAsOf": "2026-10-30",
+      "fullOfficialRevalidation": "PENDING",
+      "uiBrowserTest": "PENDING"
+    },
+    "discovery": {
+      "source": "v2/data/discovery.json",
+      "sourceAsOf": "2026-10-30",
+      "fullOfficialRevalidation": "PENDING",
+      "uiBrowserTest": "PENDING"
+    },
+    "review": {
+      "source": "v2/data/review.json",
+      "sourceAsOf": "2026-10-18",
+      "fullOfficialRevalidation": "PENDING",
+      "uiBrowserTest": "PENDING"
+    },
+    "shortWatch": {
+      "source": "v2/data/short-latest.json",
+      "sourceAsOf": "2026-10-22",
+      "fullOfficialRevalidation": "PENDING",
+      "uiBrowserTest": "PENDING"
+    },
+    "closing": {
+      "source": "v2/data/closing.json",
+      "sourceAsOf": null,
+      "fullOfficialRevalidation": "PENDING",
+      "uiBrowserTest": "PENDING"
+    },
+    "piggy": {
+      "source": "v2/data/piggy.json",
+      "sourceAsOf": null,
+      "fullOfficialRevalidation": "PENDING",
+      "uiBrowserTest": "PENDING"
+    }
+  },
+  "additionalTabs": {
+    "coreTracking": {
+      "status": "PENDING_MAPPING"
+    },
+    "watch": {
+      "status": "PENDING_MAPPING"
+    },
+    "discoveryV3": {
+      "status": "PENDING_MAPPING"
+    },
+    "patternAtlas": {
+      "status": "PENDING_MAPPING"
+    },
+    "stockSearchDetail": {
+      "status": "PENDING_MAPPING"
+    },
+    "dilutionAndPriceLadder": {
+      "status": "PENDING_MAPPING"
+    }
+  },
+  "review": {
+    "verifiedSource": "v2/data/review.json",
+    "verifiedAsOf": "2026-10-18",
+    "verifiedCaseCount": 42,
+    "masterPatternCount": 8,
+    "stagingSources": [
+      "v2/data/review-latest.json",
+      "v2/data/review-daily-2026-10-22.json",
+      "v2/data/review-daily-2026-10-23.json",
+      "v2/data/backfill-2026-10-30-to-2026-11-06.json"
+    ],
+    "missingSessionRange": "2026-10-19..2026-11-06",
+    "completeSessionValidationCountThisRun": 0,
+    "casePromotionsThisRun": 0,
+    "patternMergesThisRun": 0,
+    "newPatternsThisRun": 0,
+    "reason": "No day-by-day complete verified candidate universe or synchronized dilution/short/float validation. Existing staging must be deduplicated first."
+  },
+  "run": {
+    "newOfficialIssuerVerifications": 0,
+    "newCompletedSessionVerifications": 0,
+    "filesChanged": [
+      "v2/data/verification-progress.json"
+    ],
+    "notes": "Created durable inventory and work queue after reading live main manifest and primary V2 data; not a claim that all issuers or tabs were validated.",
+    "next": "Map remaining tab source/renderers; reconcile existing review staging and verify earliest missing session; validate official issuer sources per ticker before changing rankings."
+  }
+}
