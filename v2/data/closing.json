@@ -1,8 +1,8 @@
 {
-  "runAt": "2026-11-07 04:40 KST",
-  "session": "2026-11-06 미국 정규장 14:40 EST 전후 공개 하락률 스냅샷",
-  "basis": "StockAnalysis Losers 2026-11-06 공개 상위 15종목; 보통주/ordinary shares 중심. 개별 거래소·증권종류 전수 교차검증 미완료, 마감 전 스냅샷이며 가격 변동 가능.",
-  "note": "구조 점검용이며 매수 추천 아님. SEC 전 종목 공모·RD 및 ATM/ELOC/Shelf/전환증권/등록매도 잔량 전수검증 미완료. flow=null/flowKnown=false, VWAP·종가 수급·CTB·대차가능주식·최신 SI·실제 Float 확인 불가. 점수 및 등급 unverified; fire/ok 판정 금지. 보너스 미적용.",
+  "runAt": "2026-11-10 04:40 KST",
+  "session": "2026-11-09 미국 정규장 마감 직전(15:40 EST 전후) 공개 하락률 스냅샷",
+  "basis": "StockAnalysis Losers 2026-11-09 상위 15종목 공개 스냅샷; 최종 종가 아님. Nasdaq/NYSE/NYSE American 보통주/ordinary share 여부 전수 교차검증 미완료.",
+  "note": "2026-11-09 미국 정규장 마감 전 공개 시세 스냅샷. 15종목 수집, 거래소/증권종류 전수 교차검증 및 SEC 공급 전수조사 미완료. ZURA 임상 2상 1차 평가변수 미충족, SOC 계속기업 불확실성, PLCE Chapter 11 확인. flow=null/flowKnown=false, VWAP/CTB/대차/최신 SI/실제 float 확인 불가. 점수/등급 unverified, 보너스 0(미검증), fire 금지. 구조 점검용이며 매수 추천 아님.",
   "scoreGuide": [
     "drop 15",
     "volume 20",
@@ -27,11 +27,11 @@
   "candidates": [
     {
       "rank": 1,
-      "ticker": "AIRS",
+      "ticker": "ZURA",
       "exchange": "확인 불가",
-      "dropPct": -59.61,
-      "price": 0.582,
-      "volume": 7908836,
+      "dropPct": -71.52,
+      "price": 1.165,
+      "volume": 54730983,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -50,20 +50,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "2026-11-06 8-K: Q3 ATM 발행 $7.2M, 연간 가이던스 하향, 현금 $15.2M/총부채 $37.2M",
+      "supply": "Phase 2 TibuSHIELD primary endpoint failure; 2026-11-03 EFFECT; resale scope unverified",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "ATM 실제 발행과 실적 악화",
-      "risk": "미확인 공급 및 종가 수급 위험",
-      "source": "StockAnalysis 2026-11-06; 일부 SEC 8-K/10-Q 및 회사 발표 교차검증"
+      "why": "Phase 2 TibuSHIELD primary endpoint failure; 2026-11-03 EFFECT; resale scope unverified",
+      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
     },
     {
       "rank": 2,
-      "ticker": "JDZG",
+      "ticker": "SOC",
       "exchange": "확인 불가",
-      "dropPct": -54.38,
-      "price": 0.18,
-      "volume": 4182357,
+      "dropPct": -58.01,
+      "price": 0.81,
+      "volume": 218236612,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -82,20 +82,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "최신 SEC 등록/매도가능 물량 전수 확인 불가",
+      "supply": "Going concern warning; liquidity stress; Q3 ATM issuance reported; supply outstanding unverified",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "낙폭 스냅샷 확보, 공급·수급 추가 검증 필요",
-      "risk": "미확인 공급 및 종가 수급 위험",
-      "source": "StockAnalysis 2026-11-06; 일부 SEC 8-K/10-Q 및 회사 발표 교차검증"
+      "why": "Going concern warning; liquidity stress; Q3 ATM issuance reported; supply outstanding unverified",
+      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
     },
     {
       "rank": 3,
-      "ticker": "BDSX",
+      "ticker": "ONCO",
       "exchange": "확인 불가",
-      "dropPct": -51.76,
-      "price": 9.57,
-      "volume": 1264180,
+      "dropPct": -47.88,
+      "price": 3.622,
+      "volume": 672209,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -114,20 +114,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "최신 SEC 등록/매도가능 물량 전수 확인 불가",
+      "supply": "SEC financing and float not fully verified",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "낙폭 스냅샷 확보, 공급·수급 추가 검증 필요",
-      "risk": "미확인 공급 및 종가 수급 위험",
-      "source": "StockAnalysis 2026-11-06; 일부 SEC 8-K/10-Q 및 회사 발표 교차검증"
+      "why": "SEC financing and float not fully verified",
+      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
     },
     {
       "rank": 4,
-      "ticker": "BDMD",
+      "ticker": "PLCE",
       "exchange": "확인 불가",
-      "dropPct": -44.76,
-      "price": 0.087,
-      "volume": 27256398,
+      "dropPct": -42.83,
+      "price": 0.184,
+      "volume": 9221166,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -146,20 +146,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "과거 대규모 resale registration 및 warrant shares; 최신 잔여량 확인 불가",
+      "supply": "2026-11-08 Chapter 11 bankruptcy; company/SEC announcement",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "등록매도 공급 부담",
-      "risk": "미확인 공급 및 종가 수급 위험",
-      "source": "StockAnalysis 2026-11-06; 일부 SEC 8-K/10-Q 및 회사 발표 교차검증"
+      "why": "2026-11-08 Chapter 11 bankruptcy; company/SEC announcement",
+      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
     },
     {
       "rank": 5,
-      "ticker": "STLN",
+      "ticker": "FTH",
       "exchange": "확인 불가",
-      "dropPct": -43.66,
-      "price": 3.775,
-      "volume": 12959593,
+      "dropPct": -42.36,
+      "price": 12.71,
+      "volume": 2541914,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -178,20 +178,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "2026-11-05 Q3 실적 및 2026-11-06 10-Q 발표; 약 102M O/S(제3자)",
+      "supply": "PIK-201 clinical data repricing; no definitive clinical failure established",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "초저유통 아님, 실적 재평가",
-      "risk": "미확인 공급 및 종가 수급 위험",
-      "source": "StockAnalysis 2026-11-06; 일부 SEC 8-K/10-Q 및 회사 발표 교차검증"
+      "why": "PIK-201 clinical data repricing; no definitive clinical failure established",
+      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
     },
     {
       "rank": 6,
-      "ticker": "CVRX",
+      "ticker": "AUUD",
       "exchange": "확인 불가",
-      "dropPct": -41.95,
-      "price": 0.853,
-      "volume": 4600469,
+      "dropPct": -41.56,
+      "price": 0.281,
+      "volume": 1041475,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -210,20 +210,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "2026 Q3 매출 $13.8M, 연간 매출 전망 $56–57M 하향",
+      "supply": "SEC financing and float not fully verified",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "보험 승인율 저하 및 매출 전망 하향",
-      "risk": "미확인 공급 및 종가 수급 위험",
-      "source": "StockAnalysis 2026-11-06; 일부 SEC 8-K/10-Q 및 회사 발표 교차검증"
+      "why": "SEC financing and float not fully verified",
+      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
     },
     {
       "rank": 7,
-      "ticker": "OMH",
+      "ticker": "ABEO",
       "exchange": "확인 불가",
-      "dropPct": -41.27,
-      "price": 7.84,
-      "volume": 4255287,
+      "dropPct": -37.17,
+      "price": 2.62,
+      "volume": 9503594,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -242,20 +242,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "최신 SEC 등록/매도가능 물량 전수 확인 불가",
+      "supply": "Catalyst and financing not fully verified",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "낙폭 스냅샷 확보, 공급·수급 추가 검증 필요",
-      "risk": "미확인 공급 및 종가 수급 위험",
-      "source": "StockAnalysis 2026-11-06; 일부 SEC 8-K/10-Q 및 회사 발표 교차검증"
+      "why": "Catalyst and financing not fully verified",
+      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
     },
     {
       "rank": 8,
-      "ticker": "AEHL",
+      "ticker": "KPTI",
       "exchange": "확인 불가",
-      "dropPct": -38.25,
-      "price": 10.77,
-      "volume": 2446793,
+      "dropPct": -33.33,
+      "price": 0.0366,
+      "volume": 13520329,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -274,20 +274,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "최신 SEC 등록/매도가능 물량 전수 확인 불가",
+      "supply": "2026-11-02 Chapter 11 filing reported previously; current status requires recheck",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "낙폭 스냅샷 확보, 공급·수급 추가 검증 필요",
-      "risk": "미확인 공급 및 종가 수급 위험",
-      "source": "StockAnalysis 2026-11-06; 일부 SEC 8-K/10-Q 및 회사 발표 교차검증"
+      "why": "2026-11-02 Chapter 11 filing reported previously; current status requires recheck",
+      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
     },
     {
       "rank": 9,
-      "ticker": "LABT",
+      "ticker": "DBGI",
       "exchange": "확인 불가",
-      "dropPct": -38.11,
-      "price": 0.335,
-      "volume": 28454937,
+      "dropPct": -32.54,
+      "price": 0.191,
+      "volume": 24868561,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -306,20 +306,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "최신 SEC 등록/매도가능 물량 전수 확인 불가",
+      "supply": "SEC financing and float not fully verified",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "낙폭 스냅샷 확보, 공급·수급 추가 검증 필요",
-      "risk": "미확인 공급 및 종가 수급 위험",
-      "source": "StockAnalysis 2026-11-06; 일부 SEC 8-K/10-Q 및 회사 발표 교차검증"
+      "why": "SEC financing and float not fully verified",
+      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
     },
     {
       "rank": 10,
-      "ticker": "DBGI",
+      "ticker": "CDT",
       "exchange": "확인 불가",
-      "dropPct": -36.36,
-      "price": 0.299,
-      "volume": 88100753,
+      "dropPct": -32.06,
+      "price": 0.89,
+      "volume": 3025592,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -338,20 +338,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "최신 SEC 등록/매도가능 물량 전수 확인 불가",
+      "supply": "SEC financing and float not fully verified",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "낙폭 스냅샷 확보, 공급·수급 추가 검증 필요",
-      "risk": "미확인 공급 및 종가 수급 위험",
-      "source": "StockAnalysis 2026-11-06; 일부 SEC 8-K/10-Q 및 회사 발표 교차검증"
+      "why": "SEC financing and float not fully verified",
+      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
     },
     {
       "rank": 11,
-      "ticker": "SXTP",
+      "ticker": "LICN",
       "exchange": "확인 불가",
-      "dropPct": -34.61,
-      "price": 0.599,
-      "volume": 253572,
+      "dropPct": -29.47,
+      "price": 0.36,
+      "volume": 650181,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -370,20 +370,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "최신 SEC 등록/매도가능 물량 전수 확인 불가",
+      "supply": "Ordinary share; exchange/security details require recheck",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "낙폭 스냅샷 확보, 공급·수급 추가 검증 필요",
-      "risk": "미확인 공급 및 종가 수급 위험",
-      "source": "StockAnalysis 2026-11-06; 일부 SEC 8-K/10-Q 및 회사 발표 교차검증"
+      "why": "Ordinary share; exchange/security details require recheck",
+      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
     },
     {
       "rank": 12,
-      "ticker": "VRAX",
+      "ticker": "YFOR",
       "exchange": "확인 불가",
-      "dropPct": -33.12,
-      "price": 0.789,
-      "volume": 930619,
+      "dropPct": -28.35,
+      "price": 0.0844,
+      "volume": 6635602,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -402,20 +402,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "최신 SEC 등록/매도가능 물량 전수 확인 불가",
+      "supply": "SEC financing and float not fully verified",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "낙폭 스냅샷 확보, 공급·수급 추가 검증 필요",
-      "risk": "미확인 공급 및 종가 수급 위험",
-      "source": "StockAnalysis 2026-11-06; 일부 SEC 8-K/10-Q 및 회사 발표 교차검증"
+      "why": "SEC financing and float not fully verified",
+      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
     },
     {
       "rank": 13,
-      "ticker": "PRAA",
+      "ticker": "RAYA",
       "exchange": "확인 불가",
-      "dropPct": -32.81,
-      "price": 13.72,
-      "volume": 912150,
+      "dropPct": -28.31,
+      "price": 0.605,
+      "volume": 909102,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -434,20 +434,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "최신 SEC 등록/매도가능 물량 전수 확인 불가",
+      "supply": "Ordinary share; exchange/security details require recheck",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "낙폭 스냅샷 확보, 공급·수급 추가 검증 필요",
-      "risk": "미확인 공급 및 종가 수급 위험",
-      "source": "StockAnalysis 2026-11-06; 일부 SEC 8-K/10-Q 및 회사 발표 교차검증"
+      "why": "Ordinary share; exchange/security details require recheck",
+      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
     },
     {
       "rank": 14,
-      "ticker": "KRT",
+      "ticker": "PARA",
       "exchange": "확인 불가",
-      "dropPct": -32.3,
-      "price": 34.83,
-      "volume": 410273,
+      "dropPct": -27.77,
+      "price": 0.0827,
+      "volume": 51758054,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -466,20 +466,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "최신 SEC 등록/매도가능 물량 전수 확인 불가",
+      "supply": "Nasdaq delisting determination previously reported; current appeal status unverified",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "낙폭 스냅샷 확보, 공급·수급 추가 검증 필요",
-      "risk": "미확인 공급 및 종가 수급 위험",
-      "source": "StockAnalysis 2026-11-06; 일부 SEC 8-K/10-Q 및 회사 발표 교차검증"
+      "why": "Nasdaq delisting determination previously reported; current appeal status unverified",
+      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
     },
     {
       "rank": 15,
-      "ticker": "NCT",
+      "ticker": "MPAA",
       "exchange": "확인 불가",
-      "dropPct": -31.03,
-      "price": 1,
-      "volume": 529708,
+      "dropPct": -24.71,
+      "price": 7.92,
+      "volume": 402450,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -498,15 +498,47 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "최신 SEC 등록/매도가능 물량 전수 확인 불가",
+      "supply": "SEC financing and float not fully verified",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "낙폭 스냅샷 확보, 공급·수급 추가 검증 필요",
-      "risk": "미확인 공급 및 종가 수급 위험",
-      "source": "StockAnalysis 2026-11-06; 일부 SEC 8-K/10-Q 및 회사 발표 교차검증"
+      "why": "SEC financing and float not fully verified",
+      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
     }
   ],
   "history": [
+    {
+      "runAt": "2026-11-10 04:40 KST",
+      "session": "2026-11-09",
+      "top": [
+        {
+          "ticker": "ZURA",
+          "score": null,
+          "grade": "unverified"
+        },
+        {
+          "ticker": "SOC",
+          "score": null,
+          "grade": "unverified"
+        },
+        {
+          "ticker": "ONCO",
+          "score": null,
+          "grade": "unverified"
+        },
+        {
+          "ticker": "PLCE",
+          "score": null,
+          "grade": "unverified"
+        },
+        {
+          "ticker": "FTH",
+          "score": null,
+          "grade": "unverified"
+        }
+      ],
+      "note": "2026-11-09 미국 정규장 마감 전 공개 시세 스냅샷. 15종목 수집, 거래소/증권종류 전수 교차검증 및 SEC 공급 전수조사 미완료. ZURA 임상 2상 1차 평가변수 미충족, SOC 계속기업 불확실성, PLCE Chapter 11 확인. flow=null/flowKnown=false, VWAP/CTB/대차/최신 SI/실제 float 확인 불가. 점수/등급 unverified, 보너스 0(미검증), fire 금지. 구조 점검용이며 매수 추천 아님."
+    },
     {
       "runAt": "2026-11-07 04:40 KST",
       "session": "2026-11-06",
@@ -791,38 +823,6 @@
           "ticker": "MKDW",
           "score": 50,
           "grade": "pass"
-        }
-      ],
-      "note": "flow 전 후보 확인 불가로 fire 없음."
-    },
-    {
-      "runAt": "2026-10-27 04:40 KST",
-      "session": "2026-10-26",
-      "top": [
-        {
-          "ticker": "YHC",
-          "score": 66,
-          "grade": "cond"
-        },
-        {
-          "ticker": "ORIC",
-          "score": 64,
-          "grade": "cond"
-        },
-        {
-          "ticker": "CATX",
-          "score": 61,
-          "grade": "cond"
-        },
-        {
-          "ticker": "NAUT",
-          "score": 59,
-          "grade": "cond"
-        },
-        {
-          "ticker": "AVBP",
-          "score": 57,
-          "grade": "cond"
         }
       ],
       "note": "flow 전 후보 확인 불가로 fire 없음."
