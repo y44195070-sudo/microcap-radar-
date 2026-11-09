@@ -1,6 +1,6 @@
 {
   "schema": "microcap-radar-v2-verification-state-v1",
-  "stateRecordedAt": "2026-11-08T09:01:36+09:00",
+  "stateRecordedAt": "2026-11-09T09:01:06+09:00",
   "latestCompletedUsRegularSession": "2026-11-06",
   "policy": "Research progress ledger only; never use this file as a verified market-data source or UI asOf.",
   "universe": {
@@ -299,11 +299,31 @@
         "lastVerifiedMarketSession": null
       },
       "ZBAO": {
-        "currentOfficialFilingReview": "PENDING",
+        "currentOfficialFilingReview": "PARTIAL_VERIFIED_2026-10-08_6K_RS_TERMS_ONLY",
         "marketDataReview": "PENDING",
         "dilutionReview": "PENDING",
         "shortBorrowReview": "PENDING",
-        "lastVerifiedMarketSession": null
+        "lastVerifiedMarketSession": null,
+        "officialEvidence": [
+          {
+            "filed": "2026-10-08",
+            "form": "6-K",
+            "url": "https://www.sec.gov/Archives/edgar/data/1966750/000121390026107822/ea0308064-6k_zhibao.htm",
+            "verifiedFacts": [
+              "1-for-50 reverse split effective 2026-10-09, adjusted trading 2026-10-12",
+              "Convertible notes and warrants subject to split adjustments; market-based conversion prices not assumed fixed"
+            ],
+            "verificationScope": "Historical corporate-action terms only. NOT a complete filing sweep through 2026-11-09."
+          }
+        ],
+        "lastOfficialEvidenceDate": "2026-10-08",
+        "unresolved": [
+          "2026-11-03 event market price/reset calculation",
+          "post-reset conversion price and outstanding note principal",
+          "post-split O/S and actual float",
+          "current CTB, borrow, SI and Reg SHO",
+          "latest subsequent filings not exhaustively checked"
+        ]
       }
     }
   },
@@ -340,15 +360,17 @@
     },
     "closing": {
       "source": "v2/data/closing.json",
-      "sourceAsOf": null,
+      "sourceAsOf": "2026-11-06",
       "fullOfficialRevalidation": "PENDING",
-      "uiBrowserTest": "PENDING"
+      "uiBrowserTest": "PENDING",
+      "sourceSessionType": "INTRADAY_SNAPSHOT_NOT_FINAL_CLOSE"
     },
     "piggy": {
       "source": "v2/data/piggy.json",
-      "sourceAsOf": null,
+      "sourceAsOf": "2026-10-18",
       "fullOfficialRevalidation": "PENDING",
-      "uiBrowserTest": "PENDING"
+      "uiBrowserTest": "PENDING",
+      "sourceSessionType": "HISTORICAL_USER_SUPPLIED_NOT_REVALIDATED"
     }
   },
   "additionalTabs": {
@@ -391,11 +413,12 @@
   },
   "run": {
     "newOfficialIssuerVerifications": 0,
+    "newPartialOfficialIssuerEvidenceChecks": 1,
     "newCompletedSessionVerifications": 0,
     "filesChanged": [
       "v2/data/verification-progress.json"
     ],
-    "notes": "Created durable inventory and work queue after reading live main manifest and primary V2 data; not a claim that all issuers or tabs were validated.",
-    "next": "Map remaining tab source/renderers; reconcile existing review staging and verify earliest missing session; validate official issuer sources per ticker before changing rankings."
+    "notes": "Checked ZBAO official 2026-10-08 SEC 6-K against stock detail. Verified historical RS mechanics only; no claim of latest filing sweep, reset result or market data. Confirmed closing.json 2026-11-06 intraday snapshot and piggy.json 2026-10-18 historical basis. No rankings or review promotion.",
+    "next": "Reconcile earliest staged review session and complete issuer filing sweeps; do not infer 11/03 reset or sellable shares."
   }
 }
