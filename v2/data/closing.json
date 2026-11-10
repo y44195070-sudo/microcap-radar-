@@ -1,8 +1,8 @@
 {
-  "runAt": "2026-11-10 04:40 KST",
-  "session": "2026-11-09 미국 정규장 마감 직전(15:40 EST 전후) 공개 하락률 스냅샷",
-  "basis": "StockAnalysis Losers 2026-11-09 상위 15종목 공개 스냅샷; 최종 종가 아님. Nasdaq/NYSE/NYSE American 보통주/ordinary share 여부 전수 교차검증 미완료.",
-  "note": "2026-11-09 미국 정규장 마감 전 공개 시세 스냅샷. 15종목 수집, 거래소/증권종류 전수 교차검증 및 SEC 공급 전수조사 미완료. ZURA 임상 2상 1차 평가변수 미충족, SOC 계속기업 불확실성, PLCE Chapter 11 확인. flow=null/flowKnown=false, VWAP/CTB/대차/최신 SI/실제 float 확인 불가. 점수/등급 unverified, 보너스 0(미검증), fire 금지. 구조 점검용이며 매수 추천 아님.",
+  "runAt": "2026-11-11 04:41 KST",
+  "session": "2026-11-10 미국 정규장 마감 직전(15:41 EST 전후) 공개 하락률 스냅샷",
+  "basis": "StockAnalysis Losers 2026-11-10 상위 15종목 공개 스냅샷, 확정 종가 아님; Nasdaq/NYSE/NYSE American 보통주 여부 전수 교차검증 미완료.",
+  "note": "15종목 시세 수집. LICN 1:100 역분할 승인, BMGL 600만주 RD+600만주 워런트, IHRT 실적/가이던스 악화, KPTI Chapter 11 확인. SEC 전수 검증·종가 수급·상장증권 종류 미완료. flow=null/flowKnown=false; 점수·등급 unverified, 보너스 미적용, fire 금지. 구조 점검이며 매수 추천 아님.",
   "scoreGuide": [
     "drop 15",
     "volume 20",
@@ -27,11 +27,11 @@
   "candidates": [
     {
       "rank": 1,
-      "ticker": "ZURA",
+      "ticker": "NXXT",
       "exchange": "확인 불가",
-      "dropPct": -71.52,
-      "price": 1.165,
-      "volume": 54730983,
+      "dropPct": -89.78,
+      "price": 0.267,
+      "volume": 6208595,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -50,20 +50,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "Phase 2 TibuSHIELD primary endpoint failure; 2026-11-03 EFFECT; resale scope unverified",
+      "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "Phase 2 TibuSHIELD primary endpoint failure; 2026-11-03 EFFECT; resale scope unverified",
-      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
-      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+      "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+      "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
     },
     {
       "rank": 2,
-      "ticker": "SOC",
+      "ticker": "LICN",
       "exchange": "확인 불가",
-      "dropPct": -58.01,
-      "price": 0.81,
-      "volume": 218236612,
+      "dropPct": -85.93,
+      "price": 0.0429,
+      "volume": 36062022,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -82,20 +82,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "Going concern warning; liquidity stress; Q3 ATM issuance reported; supply outstanding unverified",
+      "supply": "2026-11-10 6-K: 1:100 역분할 승인, 11/19 발효 예정; 상장유지 위험. 최신 등록매도 잔량 미검증",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "Going concern warning; liquidity stress; Q3 ATM issuance reported; supply outstanding unverified",
-      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
-      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+      "why": "2026-11-10 6-K: 1:100 역분할 승인, 11/19 발효 예정; 상장유지 위험. 최신 등록매도 잔량 미검증",
+      "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
     },
     {
       "rank": 3,
-      "ticker": "ONCO",
+      "ticker": "BMGL",
       "exchange": "확인 불가",
-      "dropPct": -47.88,
-      "price": 3.622,
-      "volume": 672209,
+      "dropPct": -69.81,
+      "price": 1.63,
+      "volume": 12103642,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -114,20 +114,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "SEC financing and float not fully verified",
+      "supply": "2026-10-09 RD 600만주 및 즉시 행사 가능한 무현금 워런트 600만주; 신규 자금조달 180일 제한은 동의 예외 존재",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "SEC financing and float not fully verified",
-      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
-      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+      "why": "2026-10-09 RD 600만주 및 즉시 행사 가능한 무현금 워런트 600만주; 신규 자금조달 180일 제한은 동의 예외 존재",
+      "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
     },
     {
       "rank": 4,
-      "ticker": "PLCE",
+      "ticker": "IHRT",
       "exchange": "확인 불가",
-      "dropPct": -42.83,
-      "price": 0.184,
-      "volume": 9221166,
+      "dropPct": -66.15,
+      "price": 0.599,
+      "volume": 32494087,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -146,20 +146,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "2026-11-08 Chapter 11 bankruptcy; company/SEC announcement",
+      "supply": "2026-11-09 Q3 실적 부진 및 연간 EBITDA 전망 하향; 대규모 발행주식/부채·유통량 검증 필요",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "2026-11-08 Chapter 11 bankruptcy; company/SEC announcement",
-      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
-      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+      "why": "2026-11-09 Q3 실적 부진 및 연간 EBITDA 전망 하향; 대규모 발행주식/부채·유통량 검증 필요",
+      "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
     },
     {
       "rank": 5,
-      "ticker": "FTH",
+      "ticker": "MVST",
       "exchange": "확인 불가",
-      "dropPct": -42.36,
-      "price": 12.71,
-      "volume": 2541914,
+      "dropPct": -64.28,
+      "price": 0.221,
+      "volume": 31413813,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -178,20 +178,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "PIK-201 clinical data repricing; no definitive clinical failure established",
+      "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "PIK-201 clinical data repricing; no definitive clinical failure established",
-      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
-      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+      "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+      "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
     },
     {
       "rank": 6,
-      "ticker": "AUUD",
+      "ticker": "MNTK",
       "exchange": "확인 불가",
-      "dropPct": -41.56,
-      "price": 0.281,
-      "volume": 1041475,
+      "dropPct": -54.32,
+      "price": 1.27,
+      "volume": 1775685,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -210,20 +210,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "SEC financing and float not fully verified",
+      "supply": "2026-11-10 공개 자료 발행주식 약 143.24M; 초저유통 부적합",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "SEC financing and float not fully verified",
-      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
-      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+      "why": "2026-11-10 공개 자료 발행주식 약 143.24M; 초저유통 부적합",
+      "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
     },
     {
       "rank": 7,
-      "ticker": "ABEO",
+      "ticker": "KPTI",
       "exchange": "확인 불가",
-      "dropPct": -37.17,
-      "price": 2.62,
-      "volume": 9503594,
+      "dropPct": -51,
+      "price": 0.0196,
+      "volume": 15714869,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -242,20 +242,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "Catalyst and financing not fully verified",
+      "supply": "2026-11-02 Chapter 11 신청 보도; 파산 위험으로 종배 제외",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "Catalyst and financing not fully verified",
-      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
-      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+      "why": "2026-11-02 Chapter 11 신청 보도; 파산 위험으로 종배 제외",
+      "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
     },
     {
       "rank": 8,
-      "ticker": "KPTI",
+      "ticker": "NCT",
       "exchange": "확인 불가",
-      "dropPct": -33.33,
-      "price": 0.0366,
-      "volume": 13520329,
+      "dropPct": -49.36,
+      "price": 0.436,
+      "volume": 971205,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -274,20 +274,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "2026-11-02 Chapter 11 filing reported previously; current status requires recheck",
+      "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "2026-11-02 Chapter 11 filing reported previously; current status requires recheck",
-      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
-      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+      "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+      "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
     },
     {
       "rank": 9,
-      "ticker": "DBGI",
+      "ticker": "KNRX",
       "exchange": "확인 불가",
-      "dropPct": -32.54,
-      "price": 0.191,
-      "volume": 24868561,
+      "dropPct": -46.55,
+      "price": 0.0767,
+      "volume": 718559,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -306,20 +306,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "SEC financing and float not fully verified",
+      "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "SEC financing and float not fully verified",
-      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
-      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+      "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+      "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
     },
     {
       "rank": 10,
-      "ticker": "CDT",
+      "ticker": "ITP",
       "exchange": "확인 불가",
-      "dropPct": -32.06,
-      "price": 0.89,
-      "volume": 3025592,
+      "dropPct": -44.83,
+      "price": 0.0614,
+      "volume": 1752903,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -338,20 +338,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "SEC financing and float not fully verified",
+      "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "SEC financing and float not fully verified",
-      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
-      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+      "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+      "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
     },
     {
       "rank": 11,
-      "ticker": "LICN",
+      "ticker": "EMAT",
       "exchange": "확인 불가",
-      "dropPct": -29.47,
-      "price": 0.36,
-      "volume": 650181,
+      "dropPct": -43.81,
+      "price": 1.225,
+      "volume": 2756907,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -370,20 +370,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "Ordinary share; exchange/security details require recheck",
+      "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "Ordinary share; exchange/security details require recheck",
-      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
-      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+      "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+      "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
     },
     {
       "rank": 12,
       "ticker": "YFOR",
       "exchange": "확인 불가",
-      "dropPct": -28.35,
-      "price": 0.0844,
-      "volume": 6635602,
+      "dropPct": -42.17,
+      "price": 0.05505,
+      "volume": 15804171,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -402,20 +402,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "SEC financing and float not fully verified",
+      "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "SEC financing and float not fully verified",
-      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
-      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+      "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+      "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
     },
     {
       "rank": 13,
-      "ticker": "RAYA",
+      "ticker": "ARAI",
       "exchange": "확인 불가",
-      "dropPct": -28.31,
-      "price": 0.605,
-      "volume": 909102,
+      "dropPct": -41.47,
+      "price": 0.0556,
+      "volume": 5419780,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -434,20 +434,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "Ordinary share; exchange/security details require recheck",
+      "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "Ordinary share; exchange/security details require recheck",
-      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
-      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+      "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+      "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
     },
     {
       "rank": 14,
-      "ticker": "PARA",
+      "ticker": "FF",
       "exchange": "확인 불가",
-      "dropPct": -27.77,
-      "price": 0.0827,
-      "volume": 51758054,
+      "dropPct": -39.84,
+      "price": 3.05,
+      "volume": 5721931,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -466,20 +466,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "Nasdaq delisting determination previously reported; current appeal status unverified",
+      "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "Nasdaq delisting determination previously reported; current appeal status unverified",
-      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
-      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+      "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+      "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
     },
     {
       "rank": 15,
-      "ticker": "MPAA",
+      "ticker": "HLSQ",
       "exchange": "확인 불가",
-      "dropPct": -24.71,
-      "price": 7.92,
-      "volume": 402450,
+      "dropPct": -39.79,
+      "price": 0.069,
+      "volume": 1730772,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -498,15 +498,991 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "SEC financing and float not fully verified",
+      "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
       "shortVerdict": "확인 불가",
       "float": "확인 불가",
-      "why": "SEC financing and float not fully verified",
-      "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
-      "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+      "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+      "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
     }
   ],
   "history": [
+    {
+      "runAt": "2026-11-11 04:41 KST",
+      "session": "2026-11-10 미국 정규장 마감 직전(15:41 EST 전후) 공개 하락률 스냅샷",
+      "basis": "StockAnalysis Losers 2026-11-10 상위 15종목 공개 스냅샷, 확정 종가 아님; Nasdaq/NYSE/NYSE American 보통주 여부 전수 교차검증 미완료.",
+      "note": "15종목 시세 수집. LICN 1:100 역분할 승인, BMGL 600만주 RD+600만주 워런트, IHRT 실적/가이던스 악화, KPTI Chapter 11 확인. SEC 전수 검증·종가 수급·상장증권 종류 미완료. flow=null/flowKnown=false; 점수·등급 unverified, 보너스 미적용, fire 금지. 구조 점검이며 매수 추천 아님.",
+      "candidates": [
+        {
+          "rank": 1,
+          "ticker": "NXXT",
+          "exchange": "확인 불가",
+          "dropPct": -89.78,
+          "price": 0.267,
+          "volume": 6208595,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+        },
+        {
+          "rank": 2,
+          "ticker": "LICN",
+          "exchange": "확인 불가",
+          "dropPct": -85.93,
+          "price": 0.0429,
+          "volume": 36062022,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "2026-11-10 6-K: 1:100 역분할 승인, 11/19 발효 예정; 상장유지 위험. 최신 등록매도 잔량 미검증",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "2026-11-10 6-K: 1:100 역분할 승인, 11/19 발효 예정; 상장유지 위험. 최신 등록매도 잔량 미검증",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+        },
+        {
+          "rank": 3,
+          "ticker": "BMGL",
+          "exchange": "확인 불가",
+          "dropPct": -69.81,
+          "price": 1.63,
+          "volume": 12103642,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "2026-10-09 RD 600만주 및 즉시 행사 가능한 무현금 워런트 600만주; 신규 자금조달 180일 제한은 동의 예외 존재",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "2026-10-09 RD 600만주 및 즉시 행사 가능한 무현금 워런트 600만주; 신규 자금조달 180일 제한은 동의 예외 존재",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+        },
+        {
+          "rank": 4,
+          "ticker": "IHRT",
+          "exchange": "확인 불가",
+          "dropPct": -66.15,
+          "price": 0.599,
+          "volume": 32494087,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "2026-11-09 Q3 실적 부진 및 연간 EBITDA 전망 하향; 대규모 발행주식/부채·유통량 검증 필요",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "2026-11-09 Q3 실적 부진 및 연간 EBITDA 전망 하향; 대규모 발행주식/부채·유통량 검증 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+        },
+        {
+          "rank": 5,
+          "ticker": "MVST",
+          "exchange": "확인 불가",
+          "dropPct": -64.28,
+          "price": 0.221,
+          "volume": 31413813,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+        },
+        {
+          "rank": 6,
+          "ticker": "MNTK",
+          "exchange": "확인 불가",
+          "dropPct": -54.32,
+          "price": 1.27,
+          "volume": 1775685,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "2026-11-10 공개 자료 발행주식 약 143.24M; 초저유통 부적합",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "2026-11-10 공개 자료 발행주식 약 143.24M; 초저유통 부적합",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+        },
+        {
+          "rank": 7,
+          "ticker": "KPTI",
+          "exchange": "확인 불가",
+          "dropPct": -51,
+          "price": 0.0196,
+          "volume": 15714869,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "2026-11-02 Chapter 11 신청 보도; 파산 위험으로 종배 제외",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "2026-11-02 Chapter 11 신청 보도; 파산 위험으로 종배 제외",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+        },
+        {
+          "rank": 8,
+          "ticker": "NCT",
+          "exchange": "확인 불가",
+          "dropPct": -49.36,
+          "price": 0.436,
+          "volume": 971205,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+        },
+        {
+          "rank": 9,
+          "ticker": "KNRX",
+          "exchange": "확인 불가",
+          "dropPct": -46.55,
+          "price": 0.0767,
+          "volume": 718559,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+        },
+        {
+          "rank": 10,
+          "ticker": "ITP",
+          "exchange": "확인 불가",
+          "dropPct": -44.83,
+          "price": 0.0614,
+          "volume": 1752903,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+        },
+        {
+          "rank": 11,
+          "ticker": "EMAT",
+          "exchange": "확인 불가",
+          "dropPct": -43.81,
+          "price": 1.225,
+          "volume": 2756907,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+        },
+        {
+          "rank": 12,
+          "ticker": "YFOR",
+          "exchange": "확인 불가",
+          "dropPct": -42.17,
+          "price": 0.05505,
+          "volume": 15804171,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+        },
+        {
+          "rank": 13,
+          "ticker": "ARAI",
+          "exchange": "확인 불가",
+          "dropPct": -41.47,
+          "price": 0.0556,
+          "volume": 5419780,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+        },
+        {
+          "rank": 14,
+          "ticker": "FF",
+          "exchange": "확인 불가",
+          "dropPct": -39.84,
+          "price": 3.05,
+          "volume": 5721931,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+        },
+        {
+          "rank": 15,
+          "ticker": "HLSQ",
+          "exchange": "확인 불가",
+          "dropPct": -39.79,
+          "price": 0.069,
+          "volume": 1730772,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+        }
+      ]
+    },
+    {
+      "runAt": "2026-11-10 04:40 KST",
+      "session": "2026-11-09 미국 정규장 마감 직전(15:40 EST 전후) 공개 하락률 스냅샷",
+      "basis": "StockAnalysis Losers 2026-11-09 상위 15종목 공개 스냅샷; 최종 종가 아님. Nasdaq/NYSE/NYSE American 보통주/ordinary share 여부 전수 교차검증 미완료.",
+      "note": "2026-11-09 미국 정규장 마감 전 공개 시세 스냅샷. 15종목 수집, 거래소/증권종류 전수 교차검증 및 SEC 공급 전수조사 미완료. ZURA 임상 2상 1차 평가변수 미충족, SOC 계속기업 불확실성, PLCE Chapter 11 확인. flow=null/flowKnown=false, VWAP/CTB/대차/최신 SI/실제 float 확인 불가. 점수/등급 unverified, 보너스 0(미검증), fire 금지. 구조 점검용이며 매수 추천 아님.",
+      "candidates": [
+        {
+          "rank": 1,
+          "ticker": "ZURA",
+          "exchange": "확인 불가",
+          "dropPct": -71.52,
+          "price": 1.165,
+          "volume": 54730983,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "Phase 2 TibuSHIELD primary endpoint failure; 2026-11-03 EFFECT; resale scope unverified",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "Phase 2 TibuSHIELD primary endpoint failure; 2026-11-03 EFFECT; resale scope unverified",
+          "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+          "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+        },
+        {
+          "rank": 2,
+          "ticker": "SOC",
+          "exchange": "확인 불가",
+          "dropPct": -58.01,
+          "price": 0.81,
+          "volume": 218236612,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "Going concern warning; liquidity stress; Q3 ATM issuance reported; supply outstanding unverified",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "Going concern warning; liquidity stress; Q3 ATM issuance reported; supply outstanding unverified",
+          "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+          "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+        },
+        {
+          "rank": 3,
+          "ticker": "ONCO",
+          "exchange": "확인 불가",
+          "dropPct": -47.88,
+          "price": 3.622,
+          "volume": 672209,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC financing and float not fully verified",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "SEC financing and float not fully verified",
+          "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+          "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+        },
+        {
+          "rank": 4,
+          "ticker": "PLCE",
+          "exchange": "확인 불가",
+          "dropPct": -42.83,
+          "price": 0.184,
+          "volume": 9221166,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "2026-11-08 Chapter 11 bankruptcy; company/SEC announcement",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "2026-11-08 Chapter 11 bankruptcy; company/SEC announcement",
+          "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+          "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+        },
+        {
+          "rank": 5,
+          "ticker": "FTH",
+          "exchange": "확인 불가",
+          "dropPct": -42.36,
+          "price": 12.71,
+          "volume": 2541914,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "PIK-201 clinical data repricing; no definitive clinical failure established",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "PIK-201 clinical data repricing; no definitive clinical failure established",
+          "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+          "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+        },
+        {
+          "rank": 6,
+          "ticker": "AUUD",
+          "exchange": "확인 불가",
+          "dropPct": -41.56,
+          "price": 0.281,
+          "volume": 1041475,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC financing and float not fully verified",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "SEC financing and float not fully verified",
+          "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+          "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+        },
+        {
+          "rank": 7,
+          "ticker": "ABEO",
+          "exchange": "확인 불가",
+          "dropPct": -37.17,
+          "price": 2.62,
+          "volume": 9503594,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "Catalyst and financing not fully verified",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "Catalyst and financing not fully verified",
+          "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+          "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+        },
+        {
+          "rank": 8,
+          "ticker": "KPTI",
+          "exchange": "확인 불가",
+          "dropPct": -33.33,
+          "price": 0.0366,
+          "volume": 13520329,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "2026-11-02 Chapter 11 filing reported previously; current status requires recheck",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "2026-11-02 Chapter 11 filing reported previously; current status requires recheck",
+          "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+          "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+        },
+        {
+          "rank": 9,
+          "ticker": "DBGI",
+          "exchange": "확인 불가",
+          "dropPct": -32.54,
+          "price": 0.191,
+          "volume": 24868561,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC financing and float not fully verified",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "SEC financing and float not fully verified",
+          "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+          "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+        },
+        {
+          "rank": 10,
+          "ticker": "CDT",
+          "exchange": "확인 불가",
+          "dropPct": -32.06,
+          "price": 0.89,
+          "volume": 3025592,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC financing and float not fully verified",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "SEC financing and float not fully verified",
+          "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+          "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+        },
+        {
+          "rank": 11,
+          "ticker": "LICN",
+          "exchange": "확인 불가",
+          "dropPct": -29.47,
+          "price": 0.36,
+          "volume": 650181,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "Ordinary share; exchange/security details require recheck",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "Ordinary share; exchange/security details require recheck",
+          "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+          "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+        },
+        {
+          "rank": 12,
+          "ticker": "YFOR",
+          "exchange": "확인 불가",
+          "dropPct": -28.35,
+          "price": 0.0844,
+          "volume": 6635602,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC financing and float not fully verified",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "SEC financing and float not fully verified",
+          "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+          "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+        },
+        {
+          "rank": 13,
+          "ticker": "RAYA",
+          "exchange": "확인 불가",
+          "dropPct": -28.31,
+          "price": 0.605,
+          "volume": 909102,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "Ordinary share; exchange/security details require recheck",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "Ordinary share; exchange/security details require recheck",
+          "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+          "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+        },
+        {
+          "rank": 14,
+          "ticker": "PARA",
+          "exchange": "확인 불가",
+          "dropPct": -27.77,
+          "price": 0.0827,
+          "volume": 51758054,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "Nasdaq delisting determination previously reported; current appeal status unverified",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "Nasdaq delisting determination previously reported; current appeal status unverified",
+          "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+          "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+        },
+        {
+          "rank": 15,
+          "ticker": "MPAA",
+          "exchange": "확인 불가",
+          "dropPct": -24.71,
+          "price": 7.92,
+          "volume": 402450,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC financing and float not fully verified",
+          "shortVerdict": "확인 불가",
+          "float": "확인 불가",
+          "why": "SEC financing and float not fully verified",
+          "risk": "최신 등록매도 잔량·종가 수급 확인 불가",
+          "source": "StockAnalysis 2026-11-09 market losers; selected company/SEC and Reuters news"
+        }
+      ]
+    },
     {
       "runAt": "2026-11-10 04:40 KST",
       "session": "2026-11-09",
@@ -762,70 +1738,6 @@
         }
       ],
       "note": "flow 전 후보 확인 불가로 fire 없음. ok 이상 0개."
-    },
-    {
-      "runAt": "2026-10-29 04:42 KST",
-      "session": "2026-10-28",
-      "top": [
-        {
-          "ticker": "SLS",
-          "score": 68,
-          "grade": "cond"
-        },
-        {
-          "ticker": "DBD",
-          "score": 63,
-          "grade": "cond"
-        },
-        {
-          "ticker": "LSTR",
-          "score": 61,
-          "grade": "cond"
-        },
-        {
-          "ticker": "ENPH",
-          "score": 60,
-          "grade": "cond"
-        },
-        {
-          "ticker": "FFIV",
-          "score": 57,
-          "grade": "cond"
-        }
-      ],
-      "note": "flow 전 후보 확인 불가로 fire 없음. ok 이상 0개."
-    },
-    {
-      "runAt": "2026-10-28 04:37 KST",
-      "session": "2026-10-27",
-      "top": [
-        {
-          "ticker": "SXTP",
-          "score": 68,
-          "grade": "cond"
-        },
-        {
-          "ticker": "WFF",
-          "score": 58,
-          "grade": "cond"
-        },
-        {
-          "ticker": "IMNN",
-          "score": 53,
-          "grade": "pass"
-        },
-        {
-          "ticker": "AZTR",
-          "score": 52,
-          "grade": "pass"
-        },
-        {
-          "ticker": "MKDW",
-          "score": 50,
-          "grade": "pass"
-        }
-      ],
-      "note": "flow 전 후보 확인 불가로 fire 없음."
     }
   ]
 }
