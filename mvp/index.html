@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Microcap Radar 개발용 종목 검색 및 대시보드 MVP">
+<title>Microcap Radar · MVP</title>
+<style>
+:root{color-scheme:dark;--bg:#080d16;--panel:#111a29;--panel2:#172338;--line:#293952;--text:#f3f6fb;--muted:#9eabc0;--blue:#72b6ff;--red:#ff7184;--yellow:#ffd166;--green:#60d6ad;--purple:#c49aff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#13213a 0,#080d16 55%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{position:sticky;top:0;z-index:5;background:#080d16ed;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
+.top{max-width:1060px;margin:auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-weight:900;letter-spacing:.12em}.tag{display:inline-block;border:1px solid #6b4e11;background:#34280f;color:#ffdb83;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:850;letter-spacing:.04em;margin-left:8px}
+.wrap{max-width:1060px;margin:auto;padding:22px 18px 60px}.notice{border:1px solid #755a1d;background:#211b10;color:#ffe5a3;padding:13px 15px;border-radius:14px;line-height:1.55;font-size:13px}
+h1{font-size:clamp(26px,5vw,38px);line-height:1.12;margin:22px 0 8px}.intro{color:var(--muted);line-height:1.6;margin:0 0 20px}
+.searchbar{display:flex;gap:8px}.searchbar input{min-width:0;flex:1;background:#101a2a;border:1px solid #344963;border-radius:13px;padding:14px;color:var(--text);font-size:16px;outline:none}.searchbar input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #72b6ff20}
+button{font:inherit;cursor:pointer}.searchbar button,.secondary{border:0;border-radius:12px;padding:0 18px;background:var(--blue);color:#06111f;font-weight:900}.statusline{display:flex;flex-wrap:wrap;gap:9px 14px;align-items:center;color:var(--muted);font-size:12px;padding:12px 2px}
+.panel{border:1px solid var(--line);background:linear-gradient(145deg,#121d2e,#0e1725);border-radius:17px;padding:17px;margin:13px 0;box-shadow:0 12px 30px #0002}
+.panel h2{font-size:17px;margin:0 0 13px}.sub{color:var(--muted);font-size:12px;line-height:1.5}.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{background:#17243a;color:#d8e7fb;border:1px solid #2d4260;border-radius:999px;padding:8px 11px;font-weight:800}.chip:hover{border-color:var(--blue);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.metric{background:var(--panel2);border:1px solid var(--line);border-radius:13px;padding:12px}.metric small{display:block;color:var(--muted);font-size:11px;margin-bottom:6px}.metric b{font-size:14px;line-height:1.45;overflow-wrap:anywhere}
+.hero{border-left:4px solid var(--blue)}.hero.red{border-left-color:var(--red)}.hero.green{border-left-color:var(--green)}.heroTop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.ticker{font-size:31px;font-weight:950;letter-spacing:.02em}.company{color:var(--muted);margin-top:3px}.score{font-size:22px;font-weight:900;color:var(--yellow);white-space:nowrap}.pill{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:5px 9px;margin:8px 5px 0 0;color:#d9e6f7;font-size:11px;font-weight:750}.pill.warn{color:#ffe09a;border-color:#725b28;background:#2a2315}.pill.bad{color:#ffc1c9;border-color:#703440;background:#2b1720}.summary{line-height:1.65;margin:14px 0 2px}
+.rows{display:grid;gap:8px}.row{display:grid;grid-template-columns:minmax(110px,30%) 1fr;gap:12px;border-bottom:1px solid #243249;padding:9px 0;line-height:1.5}.row:last-child{border:0}.key{color:var(--muted);font-size:12px}.value{overflow-wrap:anywhere;font-size:13px}.unclear{color:#ffd98a}.empty{padding:40px 15px;text-align:center;color:var(--muted);border:1px dashed #374b67;border-radius:16px;margin-top:16px}
+.list{display:grid;gap:8px}.item{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:11px 12px;line-height:1.55;font-size:13px}.priceItem{display:grid;grid-template-columns:88px 1fr;gap:10px}.price{font-weight:900;color:var(--blue)}
+.footer{color:#8795aa;font-size:11px;line-height:1.6;text-align:center;margin:24px 0}.error{color:#ffc1c9}.loading{opacity:.8}
+.hidden{display:none!important}
+@media(max-width:640px){.wrap{padding:16px 13px 40px}.top{padding:12px 13px}.searchbar button{padding:0 14px}.grid{grid-template-columns:1fr 1fr}.row{grid-template-columns:1fr;gap:4px}.ticker{font-size:28px}.panel{padding:14px}}
+</style>
+</head>
+<body>
+<header><div class="top"><div><span class="brand">MICROCAP RADAR</span><span class="tag">MVP · DEV</span></div><span id="loadClock" class="sub"></span></div></header>
+<main class="wrap">
+<div class="notice"><b>개발용 화면입니다.</b> 여기 표시되는 기존 분석 기록은 실시간 시세나 검증된 OOS(표본 외) 결과가 아닙니다. 기준일·출처가 비어 있거나 오래된 항목은 확인 필요로 표시합니다.</div>
+<h1>종목을 검색하고<br>핵심 구조를 확인하세요</h1>
+<p class="intro">티커를 입력하면 회사 개요, 공급·희석 위험, 이벤트와 확인할 항목을 한 화면에서 볼 수 있어요.</p>
+<form id="searchForm" class="searchbar"><input id="query" autocomplete="off" spellcheck="false" placeholder="티커 검색 (예: WSHP)" aria-label="티커 검색"><button type="submit">검색</button></form>
+<div class="statusline"><span id="count">종목 목록 불러오는 중…</span><span id="fetchStamp"></span><button id="refresh" class="chip" type="button">다시 불러오기</button></div>
+<div id="view"><div class="empty loading">개발용 종목 데이터를 불러오는 중…</div></div>
+<p class="footer">개발용 기록만 표시 · 현재가/실시간 수급 미제공 · OOS 성과를 의미하지 않음<br>원본 출처와 수집 시점이 기록되지 않은 값은 검증된 사실로 간주하지 않습니다.</p>
+</main>
+<script>
+(function(){
+"use strict";
+var manifest=[],activeTicker="";
+var $=function(s){return document.querySelector(s)};
+var esc=function(v){return String(v==null?"확인 필요":v).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})};
+var unclear=function(v){return v==null||/확인 필요|미확인|재확인 필요|unknown|not verified/i.test(String(v))};
+var stamp=function(){return new Date().toLocaleString("ko-KR",{dateStyle:"medium",timeStyle:"short"})};
+function mark(v){return unclear(v)?'<span class="unclear">'+esc(v==null?"확인 필요":v)+"</span>":esc(v)}
+function pairs(obj){if(!obj||typeof obj!=="object")return '<div class="sub">기록된 항목 없음 · 확인 필요</div>';return '<div class="rows">'+Object.entries(obj).map(function(e){return '<div class="row"><div class="key">'+esc(e[0])+'</div><div class="value'+(unclear(e[1])?' unclear':'')+'">'+mark(typeof e[1]==="object"?JSON.stringify(e[1]):e[1])+'</div></div>'}).join("")+'</div>'}
+function section(title,body){return '<section class="panel"><h2>'+title+'</h2>'+body+'</section>'}
+function list(items){if(!Array.isArray(items)||!items.length)return '<div class="sub">기록 없음 · 확인 필요</div>';return '<div class="list">'+items.map(function(x){return '<div class="item'+(unclear(x)?' unclear':'')+'">'+esc(x)+'</div>'}).join("")+'</div>'}
+function showHome(message){var t=(message||"")+"<section class=\"panel\"><h2>빠른 검색</h2><div class=\"chips\">"+manifest.slice(0,24).map(function(x){return '<button type="button" class="chip pick" data-t="'+esc(x)+'">'+esc(x)+'</button>'}).join("")+"</div><p class=\"sub\">목록은 현재 저장소의 개발용 티커 manifest를 사용합니다. 티커를 누르거나 직접 검색하세요.</p></section>";$("#view").innerHTML=t}
+async function boot(){ $("#loadClock").textContent="페이지 불러옴 "+stamp();try{var r=await fetch("../v2/data/manifest.json",{cache:"no-store"});if(!r.ok)throw Error("목록 파일 HTTP "+r.status);manifest=await r.json();if(!Array.isArray(manifest))throw Error("티커 목록 형식 오류");$("#count").textContent=manifest.length+"개 개발용 종목";$("#fetchStamp").textContent="페이지 데이터 요청 "+stamp()+" · 출처 수집시각과 다름";showHome('<div class="sub">개발용 자료이며 시장 실시간성이나 OOS 성과를 나타내지 않습니다.</div>')}catch(e){$("#count").textContent="목록을 불러오지 못했습니다";$("#view").innerHTML='<div class="empty error">'+esc(e.message)+'<br>저장소 Pages 경로 또는 네트워크를 확인하세요.</div>'}}
+async function openTicker(raw){var t=String(raw||"").trim().toUpperCase();if(!/^[A-Z0-9.-]{1,12}$/.test(t)){showHome('<div class="empty error">티커 형식을 확인해 주세요.</div>');return}if(!manifest.includes(t)){showHome('<div class="empty">등록되지 않은 개발용 티커입니다. 다른 티커를 검색해 주세요.</div>');return}activeTicker=t;history.replaceState(null,"","?ticker="+encodeURIComponent(t));$("#query").value=t;$("#view").innerHTML='<div class="empty loading">'+esc(t)+' 기록을 불러오는 중…</div>';try{var r=await fetch("../v2/data/stocks/"+encodeURIComponent(t)+".json",{cache:"no-store"});if(!r.ok)throw Error("종목 기록 HTTP "+r.status);var d=await r.json();render(d)}catch(e){$("#view").innerHTML='<div class="empty error">'+esc(e.message)+'</div>'}}
+function render(d){var sig=d.signal||{},short=d.short||{},source=short["데이터 출처"]||d.dataSource||"개별 원본 출처 미기재";var signalClass=sig.color==="red"?"red":sig.color==="green"?"green":"";var labels='<span class="pill warn">개발용 기존 기록</span><span class="pill">실시간 아님</span><span class="pill">OOS 아님</span>';var html='<section class="panel hero '+signalClass+'"><div class="heroTop"><div><div class="ticker">'+esc(d.ticker||activeTicker)+'</div><div class="company">'+esc(d.company||"회사명 확인 필요")+'</div></div><div class="score">'+(d.score==null?"—":esc(d.score))+'<small style="display:block;font-size:10px;color:#a4afc1;font-weight:600">기록 점수 · 수익확률 아님</small></div></div>'+labels+'<div class="sub" style="margin-top:10px">기록 기준일: '+esc(d.asOf||"미기록 · 확인 필요")+' · 페이지 요청시각: '+esc(stamp())+'</div><p class="summary"><b>'+esc(sig.text||"신호 요약 미기록")+'</b><br>'+esc(sig.summary||"요약 미기록 · 확인 필요")+'</p></section>';
+html+=section("출처와 최신성",'<div class="grid"><div class="metric"><small>기록에 적힌 데이터 출처</small><b class="'+(unclear(source)?"unclear":"")+'">'+esc(source)+'</b></div><div class="metric"><small>기록 기준일</small><b class="'+(unclear(d.asOf)?"unclear":"")+'">'+esc(d.asOf||"확인 필요")+'</b></div><div class="metric"><small>원본 수집시각</small><b class="unclear">기록에 없으면 확인 필요</b></div><div class="metric"><small>현재 시세 / 실시간 수급</small><b class="unclear">이 MVP에서 제공하지 않음</b></div></div><p class="sub">페이지 요청시각은 브라우저가 화면을 불러온 시간이며, 원본 데이터의 수집·갱신 시점이 아닙니다.</p>');
+if(d.structure)html+=section("주요 구조",pairs(d.structure));
+if(d.short)html+=section("수급 메모",pairs(short));
+if(d.cash)html+=section("현금·자금조달",pairs(d.cash));
+if(d.supplyMap&&d.supplyMap.items)html+=section("공급 지도",list(d.supplyMap.items.map(function(x){return x.name+" · "+x.shares+" · "+x.status+" — "+x.note})));
+if(d.dilution)html+=section("희석·공급 위험",list(d.dilution));
+if(d.priceLadder)html+=section("기록된 가격 참고점",'<p class="sub">아래 값은 기존 기록의 참고 가격입니다. 현재가나 실시간 가격으로 표시하지 않습니다.</p><div class="list">'+d.priceLadder.map(function(x){return '<div class="item priceItem"><div class="price">'+esc(x.price)+'</div><div><b>'+esc(x.label)+'</b><div class="sub">'+esc(x.note||x.distance||"")+'</div></div></div>'}).join("")+'</div>');
+if(d.events)html+=section("일정·이벤트",list(d.events));
+if(d.nextChecks)html+=section("추가 확인 항목",list(d.nextChecks));
+if(d.risks)html+=section("주요 위험",list(d.risks));
+if(d.conclusion)html+=section("기록된 결론",list(d.conclusion));
+if(d.memo)html+=section("메모용 요약",'<div class="item">'+esc(d.memo)+'</div>');
+html+='<section class="panel"><h2>확인 상태</h2><div class="sub">출처가 기재된 문장도 원문 확인이 끝났다는 뜻은 아닙니다. 기준일 이후 내용은 반영되지 않았을 수 있습니다. 모든 미확인 항목은 별도 검증 전까지 확인 필요로 취급하세요.</div></section>';
+$("#view").innerHTML=html}
+$("#searchForm").addEventListener("submit",function(e){e.preventDefault();openTicker($("#query").value)});
+$("#refresh").addEventListener("click",function(){boot();if(activeTicker)setTimeout(function(){openTicker(activeTicker)},0)});
+$("#view").addEventListener("click",function(e){var b=e.target.closest(".pick");if(b)openTicker(b.dataset.t)});
+var params=new URLSearchParams(location.search);boot().then(function(){var t=params.get("ticker");if(t)openTicker(t)});
+})();
+</script>
+</body>
+</html>
