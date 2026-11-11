@@ -1,7 +1,7 @@
 {
   "schema": "microcap-radar-v2-verification-state-v1",
-  "stateRecordedAt": "2026-11-10T09:01:19+09:00",
-  "latestCompletedUsRegularSession": "2026-11-09",
+  "stateRecordedAt": "2026-11-11T09:04:41+09:00",
+  "latestCompletedUsRegularSession": "2026-11-10",
   "policy": "Research progress ledger only; never use this file as a verified market-data source or UI asOf.",
   "universe": {
     "manifestPath": "v2/data/manifest.json",
@@ -410,8 +410,8 @@
     "patternMergesThisRun": 0,
     "newPatternsThisRun": 0,
     "reason": "No day-by-day complete verified candidate universe or synchronized dilution/short/float validation. Existing staging must be deduplicated first.",
-    "pendingThrough": "2026-11-09",
-    "lastCompletedUsSession": "2026-11-09",
+    "pendingThrough": "2026-11-10",
+    "lastCompletedUsSession": "2026-11-10",
     "backfillStatus": "PENDING",
     "lastVerifiedReviewDate": "2026-10-18"
   },
@@ -423,7 +423,11 @@
       "v2/data/verification-progress.json"
     ],
     "notes": "Checked ZBAO official 2026-10-08 SEC 6-K against stock detail. Verified historical RS mechanics only; no claim of latest filing sweep, reset result or market data. Confirmed closing.json 2026-11-06 intraday snapshot and piggy.json 2026-10-18 historical basis. No rankings or review promotion.",
-    "next": "Reconcile earliest staged review session and complete issuer filing sweeps; do not infer 11/03 reset or sellable shares."
+    "next": "Reconcile earliest staged review session and complete issuer filing sweeps; do not infer 11/03 reset or sellable shares.",
+    "lastRunDate": "2026-11-11",
+    "lastRunScope": "2026-11-10 completed US session index-close evidence only; per-ticker and review validation pending",
+    "newFullyVerifiedTickers": 0,
+    "newFullyVerifiedReviewSessions": 0
   },
   "marketSessionEvidence": {
     "date": "2026-11-09",
@@ -441,6 +445,30 @@
       "changePct": 3.15
     },
     "source": "https://www.reuters.com/business/wall-st-futures-rise-after-rough-week-nvidia-unsettles-investors-2026-11-09/",
-    "scope": "Broad indices only; does not establish any ticker's verified close, supply or short data."
+    "scope": "Broad indices only; does not establish any ticker's verified close, supply or short data.",
+    "2026-11-10": {
+      "status": "INDEX_CLOSE_VERIFIED_ONLY_NOT_MICROCAP_REVIEW",
+      "source": "https://apnews.com/article/a97eb31c415811065561f2c2ac552cd7",
+      "sourcePublishedDate": "2026-11-10",
+      "marketSession": "2026-11-10",
+      "indices": {
+        "sp500": {
+          "close": 7520.93,
+          "changePercent": -0.4
+        },
+        "nasdaq": {
+          "close": 25065.87,
+          "changePercent": -0.7
+        },
+        "russell2000": {
+          "close": 2821.38,
+          "changePercent": -0.7
+        }
+      },
+      "microcapCandidatesScreened": 0,
+      "filingAndFloatVerification": "NOT_PERFORMED",
+      "reviewCasesPromoted": 0,
+      "notes": "Index closes only. Do not infer any individual ticker change, rank or review case."
+    }
   }
 }
