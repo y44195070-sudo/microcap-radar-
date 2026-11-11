@@ -1,8 +1,8 @@
 {
-  "runAt": "2026-11-11 04:41 KST",
-  "session": "2026-11-10 미국 정규장 마감 직전(15:41 EST 전후) 공개 하락률 스냅샷",
-  "basis": "StockAnalysis Losers 2026-11-10 상위 15종목 공개 스냅샷, 확정 종가 아님; Nasdaq/NYSE/NYSE American 보통주 여부 전수 교차검증 미완료.",
-  "note": "15종목 시세 수집. LICN 1:100 역분할 승인, BMGL 600만주 RD+600만주 워런트, IHRT 실적/가이던스 악화, KPTI Chapter 11 확인. SEC 전수 검증·종가 수급·상장증권 종류 미완료. flow=null/flowKnown=false; 점수·등급 unverified, 보너스 미적용, fire 금지. 구조 점검이며 매수 추천 아님.",
+  "runAt": "2026-11-12 04:41 KST",
+  "session": "2026-11-11 미국 정규장 15:41 EST 전후 하락률 공개 스냅샷",
+  "basis": "StockAnalysis Losers 2026-11-11 상위 15종목, 공개 페이지 조회. 확정 종가 및 보통주·거래소 전수검증 미완료.",
+  "note": "15종목 하락률·가격·거래량 수집. ENGS NT 20-F, CHSN 과거 424B5, BMGL 10/29 6-K 600만주 무현금 워런트 행사 확인. 나머지 SEC 공급구조·5거래일 RD/공모·Float·수급 검증 미완료. flow=null/flowKnown=false; score=null/unverified; 보너스 0; fire 금지. 구조 점검이며 매수 추천 아님.",
   "scoreGuide": [
     "drop 15",
     "volume 20",
@@ -27,11 +27,11 @@
   "candidates": [
     {
       "rank": 1,
-      "ticker": "NXXT",
+      "ticker": "ENGS",
       "exchange": "확인 불가",
-      "dropPct": -89.78,
-      "price": 0.267,
-      "volume": 6208595,
+      "dropPct": -87.45,
+      "price": 0.623,
+      "volume": 27023752,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -50,20 +50,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
-      "shortVerdict": "확인 불가",
+      "supply": "2026-10-30 NT 20-F 제출 지연 공시; 11/09 Schedule 13D. 공급·실제 Float 확인 불가",
+      "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
       "float": "확인 불가",
-      "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+      "why": "2026-10-30 NT 20-F 제출 지연 공시; 11/09 Schedule 13D. 공급·실제 Float 확인 불가",
       "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
-      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+      "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
     },
     {
       "rank": 2,
-      "ticker": "LICN",
+      "ticker": "CHSN",
       "exchange": "확인 불가",
-      "dropPct": -85.93,
-      "price": 0.0429,
-      "volume": 36062022,
+      "dropPct": -70.21,
+      "price": 0.7,
+      "volume": 49492836,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -82,22 +82,22 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "2026-11-10 6-K: 1:100 역분할 승인, 11/19 발효 예정; 상장유지 위험. 최신 등록매도 잔량 미검증",
-      "shortVerdict": "확인 불가",
+      "supply": "기존 424B5(2026-01-07) 확인; 최신 잔여 등록 매도물량 확인 불가",
+      "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
       "float": "확인 불가",
-      "why": "2026-11-10 6-K: 1:100 역분할 승인, 11/19 발효 예정; 상장유지 위험. 최신 등록매도 잔량 미검증",
+      "why": "기존 424B5(2026-01-07) 확인; 최신 잔여 등록 매도물량 확인 불가",
       "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
-      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+      "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
     },
     {
       "rank": 3,
       "ticker": "BMGL",
       "exchange": "확인 불가",
-      "dropPct": -69.81,
-      "price": 1.63,
-      "volume": 12103642,
+      "dropPct": -65.91,
+      "price": 0.658,
+      "volume": 4317054,
       "score": null,
-      "grade": "unverified",
+      "grade": "pass",
       "flow": null,
       "flowKnown": false,
       "parts": {
@@ -114,20 +114,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "2026-10-09 RD 600만주 및 즉시 행사 가능한 무현금 워런트 600만주; 신규 자금조달 180일 제한은 동의 예외 존재",
-      "shortVerdict": "확인 불가",
+      "supply": "2026-10-09 RD 600만 유닛; 10/29 6-K에 600만 워런트 무현금 행사 및 신규 600만주 발행, O/S 13,582,111주 명시. 공급 열림; pass",
+      "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
       "float": "확인 불가",
-      "why": "2026-10-09 RD 600만주 및 즉시 행사 가능한 무현금 워런트 600만주; 신규 자금조달 180일 제한은 동의 예외 존재",
+      "why": "2026-10-09 RD 600만 유닛; 10/29 6-K에 600만 워런트 무현금 행사 및 신규 600만주 발행, O/S 13,582,111주 명시. 공급 열림; pass",
       "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
-      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+      "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
     },
     {
       "rank": 4,
-      "ticker": "IHRT",
+      "ticker": "STAK",
       "exchange": "확인 불가",
-      "dropPct": -66.15,
-      "price": 0.599,
-      "volume": 32494087,
+      "dropPct": -58.7,
+      "price": 2.03,
+      "volume": 6105573,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -146,20 +146,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "2026-11-09 Q3 실적 부진 및 연간 EBITDA 전망 하향; 대규모 발행주식/부채·유통량 검증 필요",
-      "shortVerdict": "확인 불가",
+      "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+      "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
       "float": "확인 불가",
-      "why": "2026-11-09 Q3 실적 부진 및 연간 EBITDA 전망 하향; 대규모 발행주식/부채·유통량 검증 필요",
+      "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
       "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
-      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+      "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
     },
     {
       "rank": 5,
-      "ticker": "MVST",
+      "ticker": "OMH",
       "exchange": "확인 불가",
-      "dropPct": -64.28,
-      "price": 0.221,
-      "volume": 31413813,
+      "dropPct": -36.8,
+      "price": 10.5,
+      "volume": 19594064,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -178,20 +178,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
-      "shortVerdict": "확인 불가",
+      "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+      "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
       "float": "확인 불가",
-      "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+      "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
       "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
-      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+      "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
     },
     {
       "rank": 6,
-      "ticker": "MNTK",
+      "ticker": "GENK",
       "exchange": "확인 불가",
-      "dropPct": -54.32,
-      "price": 1.27,
-      "volume": 1775685,
+      "dropPct": -35.72,
+      "price": 0.971,
+      "volume": 878654,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -210,20 +210,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "2026-11-10 공개 자료 발행주식 약 143.24M; 초저유통 부적합",
-      "shortVerdict": "확인 불가",
+      "supply": "실적·공급 구조 확인 불가",
+      "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
       "float": "확인 불가",
-      "why": "2026-11-10 공개 자료 발행주식 약 143.24M; 초저유통 부적합",
+      "why": "실적·공급 구조 확인 불가",
       "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
-      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+      "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
     },
     {
       "rank": 7,
-      "ticker": "KPTI",
+      "ticker": "SMX",
       "exchange": "확인 불가",
-      "dropPct": -51,
-      "price": 0.0196,
-      "volume": 15714869,
+      "dropPct": -34.55,
+      "price": 12.6,
+      "volume": 2538658,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -242,20 +242,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "2026-11-02 Chapter 11 신청 보도; 파산 위험으로 종배 제외",
-      "shortVerdict": "확인 불가",
+      "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+      "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
       "float": "확인 불가",
-      "why": "2026-11-02 Chapter 11 신청 보도; 파산 위험으로 종배 제외",
+      "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
       "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
-      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+      "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
     },
     {
       "rank": 8,
-      "ticker": "NCT",
+      "ticker": "ALPS",
       "exchange": "확인 불가",
-      "dropPct": -49.36,
-      "price": 0.436,
-      "volume": 971205,
+      "dropPct": -28.75,
+      "price": 1.14,
+      "volume": 115939,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -274,20 +274,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
-      "shortVerdict": "확인 불가",
+      "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+      "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
       "float": "확인 불가",
-      "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+      "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
       "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
-      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+      "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
     },
     {
       "rank": 9,
-      "ticker": "KNRX",
+      "ticker": "APVO",
       "exchange": "확인 불가",
-      "dropPct": -46.55,
-      "price": 0.0767,
-      "volume": 718559,
+      "dropPct": -27.79,
+      "price": 0.78,
+      "volume": 473927,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -306,20 +306,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
-      "shortVerdict": "확인 불가",
+      "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+      "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
       "float": "확인 불가",
-      "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+      "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
       "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
-      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+      "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
     },
     {
       "rank": 10,
-      "ticker": "ITP",
+      "ticker": "BYAH",
       "exchange": "확인 불가",
-      "dropPct": -44.83,
-      "price": 0.0614,
-      "volume": 1752903,
+      "dropPct": -25.64,
+      "price": 1.45,
+      "volume": 114924,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -338,20 +338,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
-      "shortVerdict": "확인 불가",
+      "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+      "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
       "float": "확인 불가",
-      "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+      "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
       "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
-      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+      "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
     },
     {
       "rank": 11,
-      "ticker": "EMAT",
+      "ticker": "SLBT",
       "exchange": "확인 불가",
-      "dropPct": -43.81,
-      "price": 1.225,
-      "volume": 2756907,
+      "dropPct": -24.36,
+      "price": 0.68,
+      "volume": 285639,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -370,20 +370,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
-      "shortVerdict": "확인 불가",
+      "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+      "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
       "float": "확인 불가",
-      "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+      "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
       "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
-      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+      "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
     },
     {
       "rank": 12,
-      "ticker": "YFOR",
+      "ticker": "MTNB",
       "exchange": "확인 불가",
-      "dropPct": -42.17,
-      "price": 0.05505,
-      "volume": 15804171,
+      "dropPct": -24.29,
+      "price": 0.931,
+      "volume": 69484,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -402,20 +402,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
-      "shortVerdict": "확인 불가",
+      "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+      "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
       "float": "확인 불가",
-      "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+      "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
       "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
-      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+      "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
     },
     {
       "rank": 13,
-      "ticker": "ARAI",
+      "ticker": "YYAI",
       "exchange": "확인 불가",
-      "dropPct": -41.47,
-      "price": 0.0556,
-      "volume": 5419780,
+      "dropPct": -23.03,
+      "price": 0.808,
+      "volume": 328257,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -434,20 +434,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
-      "shortVerdict": "확인 불가",
+      "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+      "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
       "float": "확인 불가",
-      "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+      "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
       "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
-      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+      "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
     },
     {
       "rank": 14,
-      "ticker": "FF",
+      "ticker": "OPNW",
       "exchange": "확인 불가",
-      "dropPct": -39.84,
-      "price": 3.05,
-      "volume": 5721931,
+      "dropPct": -21.36,
+      "price": 0.511,
+      "volume": 393212,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -466,20 +466,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
-      "shortVerdict": "확인 불가",
+      "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+      "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
       "float": "확인 불가",
-      "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+      "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
       "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
-      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+      "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
     },
     {
       "rank": 15,
-      "ticker": "HLSQ",
+      "ticker": "HUHU",
       "exchange": "확인 불가",
-      "dropPct": -39.79,
-      "price": 0.069,
-      "volume": 1730772,
+      "dropPct": -21.18,
+      "price": 0.314,
+      "volume": 81126964,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -498,15 +498,503 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "SEC 최신 등록·공모·전환·재판매 물량 전수검증 미완료",
-      "shortVerdict": "확인 불가",
+      "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+      "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
       "float": "확인 불가",
-      "why": "공급구조·거래소·보통주 여부 추가 확인 필요",
+      "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
       "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
-      "source": "StockAnalysis 2026-11-10 Losers; LICN 6-K; BMGL offering release; IHRT earnings reporting (verified subset only)"
+      "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
     }
   ],
   "history": [
+    {
+      "runAt": "2026-11-12 04:41 KST",
+      "session": "2026-11-11 미국 정규장 15:41 EST 전후 하락률 공개 스냅샷",
+      "basis": "StockAnalysis Losers 2026-11-11 상위 15종목, 공개 페이지 조회. 확정 종가 및 보통주·거래소 전수검증 미완료.",
+      "note": "15종목 하락률·가격·거래량 수집. ENGS NT 20-F, CHSN 과거 424B5, BMGL 10/29 6-K 600만주 무현금 워런트 행사 확인. 나머지 SEC 공급구조·5거래일 RD/공모·Float·수급 검증 미완료. flow=null/flowKnown=false; score=null/unverified; 보너스 0; fire 금지. 구조 점검이며 매수 추천 아님.",
+      "candidates": [
+        {
+          "rank": 1,
+          "ticker": "ENGS",
+          "exchange": "확인 불가",
+          "dropPct": -87.45,
+          "price": 0.623,
+          "volume": 27023752,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "2026-10-30 NT 20-F 제출 지연 공시; 11/09 Schedule 13D. 공급·실제 Float 확인 불가",
+          "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
+          "float": "확인 불가",
+          "why": "2026-10-30 NT 20-F 제출 지연 공시; 11/09 Schedule 13D. 공급·실제 Float 확인 불가",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
+        },
+        {
+          "rank": 2,
+          "ticker": "CHSN",
+          "exchange": "확인 불가",
+          "dropPct": -70.21,
+          "price": 0.7,
+          "volume": 49492836,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "기존 424B5(2026-01-07) 확인; 최신 잔여 등록 매도물량 확인 불가",
+          "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
+          "float": "확인 불가",
+          "why": "기존 424B5(2026-01-07) 확인; 최신 잔여 등록 매도물량 확인 불가",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
+        },
+        {
+          "rank": 3,
+          "ticker": "BMGL",
+          "exchange": "확인 불가",
+          "dropPct": -65.91,
+          "price": 0.658,
+          "volume": 4317054,
+          "score": null,
+          "grade": "pass",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "2026-10-09 RD 600만 유닛; 10/29 6-K에 600만 워런트 무현금 행사 및 신규 600만주 발행, O/S 13,582,111주 명시. 공급 열림; pass",
+          "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
+          "float": "확인 불가",
+          "why": "2026-10-09 RD 600만 유닛; 10/29 6-K에 600만 워런트 무현금 행사 및 신규 600만주 발행, O/S 13,582,111주 명시. 공급 열림; pass",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
+        },
+        {
+          "rank": 4,
+          "ticker": "STAK",
+          "exchange": "확인 불가",
+          "dropPct": -58.7,
+          "price": 2.03,
+          "volume": 6105573,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+          "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
+          "float": "확인 불가",
+          "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
+        },
+        {
+          "rank": 5,
+          "ticker": "OMH",
+          "exchange": "확인 불가",
+          "dropPct": -36.8,
+          "price": 10.5,
+          "volume": 19594064,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+          "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
+          "float": "확인 불가",
+          "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
+        },
+        {
+          "rank": 6,
+          "ticker": "GENK",
+          "exchange": "확인 불가",
+          "dropPct": -35.72,
+          "price": 0.971,
+          "volume": 878654,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "실적·공급 구조 확인 불가",
+          "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
+          "float": "확인 불가",
+          "why": "실적·공급 구조 확인 불가",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
+        },
+        {
+          "rank": 7,
+          "ticker": "SMX",
+          "exchange": "확인 불가",
+          "dropPct": -34.55,
+          "price": 12.6,
+          "volume": 2538658,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+          "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
+          "float": "확인 불가",
+          "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
+        },
+        {
+          "rank": 8,
+          "ticker": "ALPS",
+          "exchange": "확인 불가",
+          "dropPct": -28.75,
+          "price": 1.14,
+          "volume": 115939,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+          "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
+          "float": "확인 불가",
+          "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
+        },
+        {
+          "rank": 9,
+          "ticker": "APVO",
+          "exchange": "확인 불가",
+          "dropPct": -27.79,
+          "price": 0.78,
+          "volume": 473927,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+          "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
+          "float": "확인 불가",
+          "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
+        },
+        {
+          "rank": 10,
+          "ticker": "BYAH",
+          "exchange": "확인 불가",
+          "dropPct": -25.64,
+          "price": 1.45,
+          "volume": 114924,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+          "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
+          "float": "확인 불가",
+          "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
+        },
+        {
+          "rank": 11,
+          "ticker": "SLBT",
+          "exchange": "확인 불가",
+          "dropPct": -24.36,
+          "price": 0.68,
+          "volume": 285639,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+          "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
+          "float": "확인 불가",
+          "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
+        },
+        {
+          "rank": 12,
+          "ticker": "MTNB",
+          "exchange": "확인 불가",
+          "dropPct": -24.29,
+          "price": 0.931,
+          "volume": 69484,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+          "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
+          "float": "확인 불가",
+          "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
+        },
+        {
+          "rank": 13,
+          "ticker": "YYAI",
+          "exchange": "확인 불가",
+          "dropPct": -23.03,
+          "price": 0.808,
+          "volume": 328257,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+          "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
+          "float": "확인 불가",
+          "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
+        },
+        {
+          "rank": 14,
+          "ticker": "OPNW",
+          "exchange": "확인 불가",
+          "dropPct": -21.36,
+          "price": 0.511,
+          "volume": 393212,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+          "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
+          "float": "확인 불가",
+          "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
+        },
+        {
+          "rank": 15,
+          "ticker": "HUHU",
+          "exchange": "확인 불가",
+          "dropPct": -21.18,
+          "price": 0.314,
+          "volume": 81126964,
+          "score": null,
+          "grade": "unverified",
+          "flow": null,
+          "flowKnown": false,
+          "parts": {
+            "drop": null,
+            "volume": null,
+            "flow": null,
+            "dilution": null,
+            "short": null,
+            "float": null,
+            "risk": null
+          },
+          "bonuses": {
+            "dilutionGap": 0,
+            "closeLog": 0,
+            "piggy": 0
+          },
+          "supply": "SEC ATM/ELOC/Shelf/F-1/S-1/424B/PIPE/전환·워런트/재판매 물량 전수검증 미완료",
+          "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별개",
+          "float": "확인 불가",
+          "why": "거래소·증권종류·희석구조·급락 촉매 추가 확인 필요",
+          "risk": "VWAP·종가 수급·CTB·대차가능주식 확인 불가",
+          "source": "StockAnalysis Losers 2026-11-11; 일부 SEC/IR 자료"
+        }
+      ]
+    },
     {
       "runAt": "2026-11-11 04:41 KST",
       "session": "2026-11-10 미국 정규장 마감 직전(15:41 EST 전후) 공개 하락률 스냅샷",
@@ -1706,38 +2194,6 @@
         }
       ],
       "note": "flow 전 후보 확인 불가로 fire 없음. ok 이상 0개. PTHS/CLRO는 초저유통 장점이 있으나 각각 합병 주식대가와 pending unit financing/현금부족이 핵심 감점. ABOS는 Phase 2 실패로 pass, VIVK/SMTK는 변동가 CB·ELOC/대규모 equity line 때문에 pass."
-    },
-    {
-      "runAt": "2026-10-30 04:42 KST",
-      "session": "2026-10-29",
-      "top": [
-        {
-          "ticker": "XRX",
-          "score": 64,
-          "grade": "cond"
-        },
-        {
-          "ticker": "IOVA",
-          "score": 61,
-          "grade": "cond"
-        },
-        {
-          "ticker": "LVWR",
-          "score": 58,
-          "grade": "cond"
-        },
-        {
-          "ticker": "NOW",
-          "score": 57,
-          "grade": "cond"
-        },
-        {
-          "ticker": "TWI",
-          "score": 55,
-          "grade": "cond"
-        }
-      ],
-      "note": "flow 전 후보 확인 불가로 fire 없음. ok 이상 0개."
     }
   ]
 }
