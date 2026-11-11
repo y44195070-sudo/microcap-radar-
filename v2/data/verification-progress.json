@@ -1,7 +1,7 @@
 {
   "schema": "microcap-radar-v2-verification-state-v1",
-  "stateRecordedAt": "2026-11-11T09:04:41+09:00",
-  "latestCompletedUsRegularSession": "2026-11-10",
+  "stateRecordedAt": "2026-11-12T08:59:04+09:00",
+  "latestCompletedUsRegularSession": "2026-11-11",
   "policy": "Research progress ledger only; never use this file as a verified market-data source or UI asOf.",
   "universe": {
     "manifestPath": "v2/data/manifest.json",
@@ -404,28 +404,68 @@
       "v2/data/review-daily-2026-10-23.json",
       "v2/data/backfill-2026-10-30-to-2026-11-06.json"
     ],
-    "missingSessionRange": "2026-10-19..2026-11-06",
+    "missingSessionRange": "2026-10-19..2026-11-11",
     "completeSessionValidationCountThisRun": 0,
     "casePromotionsThisRun": 0,
     "patternMergesThisRun": 0,
     "newPatternsThisRun": 0,
     "reason": "No day-by-day complete verified candidate universe or synchronized dilution/short/float validation. Existing staging must be deduplicated first.",
-    "pendingThrough": "2026-11-10",
-    "lastCompletedUsSession": "2026-11-10",
+    "pendingThrough": "2026-11-11",
+    "lastCompletedUsSession": "2026-11-11",
     "backfillStatus": "PENDING",
-    "lastVerifiedReviewDate": "2026-10-18"
+    "lastVerifiedReviewDate": "2026-10-18",
+    "stagingAudit": {
+      "auditedAt": "2026-11-12T08:59:04+09:00",
+      "source": "GitHub main JSON contents",
+      "base": {
+        "asOf": "2026-10-18",
+        "caseCount": 42,
+        "latestCaseDate": "2026-10-15",
+        "masterPatternCount": 8
+      },
+      "staging": [
+        {
+          "path": "v2/data/review-latest.json",
+          "asOf": "2026-10-21",
+          "caseCount": 48,
+          "latestCaseDate": "2026-10-21",
+          "patternsAddCount": 11
+        },
+        {
+          "path": "v2/data/review-daily-2026-10-22.json",
+          "asOf": "2026-10-22",
+          "caseCount": 5,
+          "screened": 18,
+          "excludedCount": 5
+        },
+        {
+          "path": "v2/data/review-daily-2026-10-23.json",
+          "asOf": "2026-10-23",
+          "caseCount": 3,
+          "screened": 8,
+          "excludedCount": 5,
+          "unverifiedPriceTickers": [
+            "AIOK",
+            "LUCD",
+            "XXII"
+          ]
+        }
+      ],
+      "finding": "Base review asOf 2026-10-18 is later than its latest dated case 2026-10-15; asOf alone is NOT evidence that 10/16 session was fully reviewed. Staging counts overlap and cannot be summed. No case promotion without source/price/supply checks.",
+      "nextAction": "Resolve 10/16 coverage and deduplicate base vs 10/19-21 staging, then validate 10/22 and 10/23 source-level supply and price."
+    }
   },
   "run": {
     "newOfficialIssuerVerifications": 0,
-    "newPartialOfficialIssuerEvidenceChecks": 1,
+    "newPartialOfficialIssuerEvidenceChecks": 0,
     "newCompletedSessionVerifications": 0,
     "filesChanged": [
       "v2/data/verification-progress.json"
     ],
-    "notes": "Checked ZBAO official 2026-10-08 SEC 6-K against stock detail. Verified historical RS mechanics only; no claim of latest filing sweep, reset result or market data. Confirmed closing.json 2026-11-06 intraday snapshot and piggy.json 2026-10-18 historical basis. No rankings or review promotion.",
-    "next": "Reconcile earliest staged review session and complete issuer filing sweeps; do not infer 11/03 reset or sellable shares.",
-    "lastRunDate": "2026-11-11",
-    "lastRunScope": "2026-11-10 completed US session index-close evidence only; per-ticker and review validation pending",
+    "notes": "Source-level review reconciliation found base asOf 10/18 but latest dated case 10/15; staging 48 + 5 + 3 are not additive. 10/23 has three cases with missing numeric prices. No cases, scores or UI changed.",
+    "next": "Resolve earliest review coverage gap and validate staged cases against SEC/price/float.",
+    "lastRunDate": "2026-11-12",
+    "lastRunScope": "Audited original review and three staging JSONs; 2026-11-11 is latest completed US regular session by calendar, not a verified microcap dataset.",
     "newFullyVerifiedTickers": 0,
     "newFullyVerifiedReviewSessions": 0
   },
