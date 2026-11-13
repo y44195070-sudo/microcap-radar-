@@ -1,7 +1,7 @@
 {
   "schema": "microcap-radar-v2-verification-state-v1",
-  "stateRecordedAt": "2026-11-12T08:59:04+09:00",
-  "latestCompletedUsRegularSession": "2026-11-11",
+  "stateRecordedAt": "2026-11-13T09:02:19+09:00",
+  "latestCompletedUsRegularSession": "2026-11-12",
   "policy": "Research progress ledger only; never use this file as a verified market-data source or UI asOf.",
   "universe": {
     "manifestPath": "v2/data/manifest.json",
@@ -404,14 +404,14 @@
       "v2/data/review-daily-2026-10-23.json",
       "v2/data/backfill-2026-10-30-to-2026-11-06.json"
     ],
-    "missingSessionRange": "2026-10-19..2026-11-11",
+    "missingSessionRange": "2026-10-16..2026-11-12 (2026-10-16 gap requires verification; staging dates not promoted)",
     "completeSessionValidationCountThisRun": 0,
     "casePromotionsThisRun": 0,
     "patternMergesThisRun": 0,
     "newPatternsThisRun": 0,
-    "reason": "No day-by-day complete verified candidate universe or synchronized dilution/short/float validation. Existing staging must be deduplicated first.",
-    "pendingThrough": "2026-11-11",
-    "lastCompletedUsSession": "2026-11-11",
+    "reason": "Exact-key staging audit completed 2026-11-13, but independent SEC/market/supply verification and contiguous session coverage remain pending. No case promoted.",
+    "pendingThrough": "2026-11-12",
+    "lastCompletedUsSession": "2026-11-12",
     "backfillStatus": "PENDING",
     "lastVerifiedReviewDate": "2026-10-18",
     "stagingAudit": {
@@ -453,6 +453,76 @@
       ],
       "finding": "Base review asOf 2026-10-18 is later than its latest dated case 2026-10-15; asOf alone is NOT evidence that 10/16 session was fully reviewed. Staging counts overlap and cannot be summed. No case promotion without source/price/supply checks.",
       "nextAction": "Resolve 10/16 coverage and deduplicate base vs 10/19-21 staging, then validate 10/22 and 10/23 source-level supply and price."
+    },
+    "crossSourceDedupAudit": {
+      "auditedAt": "2026-11-13T09:02:19+09:00",
+      "method": "Exact date+ticker key comparison across GitHub main review sources; no SEC/market validation implied",
+      "baseCount": 42,
+      "latestCount": 48,
+      "baseLatestOverlapCount": 11,
+      "latestOnlyCount": 37,
+      "latestOnlyKeys": [
+        "2026-10-21|AHT",
+        "2026-10-21|XHLD",
+        "2026-10-21|SPHL",
+        "2026-10-21|OLOX",
+        "2026-10-21|SHFS",
+        "2026-10-21|INVE",
+        "2026-10-21|RBNE",
+        "2026-10-21|WORX",
+        "2026-10-21|PRSO",
+        "2026-10-21|NIVF",
+        "2026-10-20|SAIQ",
+        "2026-10-20|PRSO",
+        "2026-10-20|HOST",
+        "2026-10-20|FRTT",
+        "2026-10-20|MYGN",
+        "2026-10-20|CJMB",
+        "2026-10-19|WORX",
+        "2026-10-19|XLAB",
+        "2026-10-19|YMAT",
+        "2026-10-19|INLF",
+        "2026-10-14|NXGL",
+        "2026-10-14|WFF",
+        "2026-10-13|TCRT",
+        "2026-10-13|JBDI",
+        "2026-10-12|MNDR",
+        "2026-10-12|LNKS",
+        "2026-10-09|WFF",
+        "2026-10-08|SXTC",
+        "2026-10-08|SBFM",
+        "2026-10-07|PFAI",
+        "2026-10-06|OLB",
+        "2026-10-06|XHLD",
+        "2026-10-05|MI",
+        "2026-10-05|SAIQ",
+        "2026-09-28|KNRX",
+        "2026-09-17|DTSS",
+        "2026-09-17|DAIC"
+      ],
+      "baseOnlyCount": 31,
+      "duplicateKeysWithin": {
+        "base": 0,
+        "latest": 0
+      },
+      "daily20261022": {
+        "count": 5,
+        "overlapWithBaseOrLatest": [],
+        "missingPriceKeys": []
+      },
+      "daily20261023": {
+        "count": 3,
+        "overlapWithBaseOrLatest": [],
+        "missingPriceKeys": [
+          "2026-10-23|AIOK",
+          "2026-10-23|LUCD",
+          "2026-10-23|XXII"
+        ]
+      },
+      "allDistinctCaseKeys": 87,
+      "latestObservedCaseDate": "2026-10-23",
+      "unrepresentedSession20261016": true,
+      "promotableWithoutIndependentValidation": false
     }
   },
   "run": {
