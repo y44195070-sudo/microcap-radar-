@@ -1,7 +1,7 @@
 {
   "schema": "microcap-radar-v2-verification-state-v1",
-  "stateRecordedAt": "2026-11-13T09:02:19+09:00",
-  "latestCompletedUsRegularSession": "2026-11-12",
+  "stateRecordedAt": "2026-11-14T09:04:03+09:00",
+  "latestCompletedUsRegularSession": "2026-11-13",
   "policy": "Research progress ledger only; never use this file as a verified market-data source or UI asOf.",
   "universe": {
     "manifestPath": "v2/data/manifest.json",
@@ -404,14 +404,14 @@
       "v2/data/review-daily-2026-10-23.json",
       "v2/data/backfill-2026-10-30-to-2026-11-06.json"
     ],
-    "missingSessionRange": "2026-10-16..2026-11-12 (2026-10-16 gap requires verification; staging dates not promoted)",
+    "missingSessionRange": "2026-10-16..2026-11-13 (2026-10-16 coverage unverified; staging not promoted)",
     "completeSessionValidationCountThisRun": 0,
     "casePromotionsThisRun": 0,
     "patternMergesThisRun": 0,
     "newPatternsThisRun": 0,
     "reason": "Exact-key staging audit completed 2026-11-13, but independent SEC/market/supply verification and contiguous session coverage remain pending. No case promoted.",
-    "pendingThrough": "2026-11-12",
-    "lastCompletedUsSession": "2026-11-12",
+    "pendingThrough": "2026-11-13",
+    "lastCompletedUsSession": "2026-11-13",
     "backfillStatus": "PENDING",
     "lastVerifiedReviewDate": "2026-10-18",
     "stagingAudit": {
@@ -532,10 +532,10 @@
     "filesChanged": [
       "v2/data/verification-progress.json"
     ],
-    "notes": "Source-level review reconciliation found base asOf 10/18 but latest dated case 10/15; staging 48 + 5 + 3 are not additive. 10/23 has three cases with missing numeric prices. No cases, scores or UI changed.",
+    "notes": "AP broad-market closing levels dated 2026-11-13 independently checked; ledger-only market reference, NOT individual issuer verification. Previous 87 staging case keys remain unpromoted.",
     "next": "Resolve earliest review coverage gap and validate staged cases against SEC/price/float.",
-    "lastRunDate": "2026-11-12",
-    "lastRunScope": "Audited original review and three staging JSONs; 2026-11-11 is latest completed US regular session by calendar, not a verified microcap dataset.",
+    "lastRunDate": "2026-11-14",
+    "lastRunScope": "Verified 2026-11-13 US broad-market close against AP; no individual microcap case or supply review completed.",
     "newFullyVerifiedTickers": 0,
     "newFullyVerifiedReviewSessions": 0
   },
@@ -579,6 +579,33 @@
       "filingAndFloatVerification": "NOT_PERFORMED",
       "reviewCasesPromoted": 0,
       "notes": "Index closes only. Do not infer any individual ticker change, rank or review case."
+    },
+    "2026-11-13": {
+      "status": "INDEX_CLOSE_VERIFIED_ONLY_NOT_MICROCAP_REVIEW",
+      "marketSession": "2026-11-13",
+      "source": "https://apnews.com/article/12c1e8155fb85c3c7b09e058ed6d3c74",
+      "sourcePublishedDate": "2026-11-13",
+      "indices": {
+        "sp500": {
+          "close": 7561.67,
+          "changePercent": -0.4
+        },
+        "nasdaq": {
+          "close": 25136.27,
+          "changePercent": -0.9
+        },
+        "russell2000": {
+          "close": 2790.49,
+          "changePercent": -0.3
+        },
+        "dow": {
+          "close": 52347.55,
+          "changePercent": 0.1
+        }
+      },
+      "microcapCandidatesScreened": 0,
+      "filingAndFloatVerification": "NOT_PERFORMED",
+      "reviewCasesPromoted": 0
     }
   }
 }
