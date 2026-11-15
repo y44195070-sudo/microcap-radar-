@@ -1,6 +1,6 @@
 {
   "schema": "microcap-radar-v2-verification-state-v1",
-  "stateRecordedAt": "2026-11-14T09:04:03+09:00",
+  "stateRecordedAt": "2026-11-15T09:01:49+09:00",
   "latestCompletedUsRegularSession": "2026-11-13",
   "policy": "Research progress ledger only; never use this file as a verified market-data source or UI asOf.",
   "universe": {
@@ -370,7 +370,40 @@
       "sourceAsOf": "2026-10-18",
       "fullOfficialRevalidation": "PENDING",
       "uiBrowserTest": "PENDING",
-      "sourceSessionType": "HISTORICAL_USER_SUPPLIED_NOT_REVALIDATED"
+      "sourceSessionType": "HISTORICAL_USER_SUPPLIED_NOT_REVALIDATED",
+      "sourceFieldAudit": {
+        "auditedAt": "2026-11-15T09:01:49+09:00",
+        "method": "Direct GitHub main piggy.json structural and provenance audit; not a current SEC or market revalidation",
+        "sourceUpdated": "2026-10-18",
+        "sourcePriceDate": [
+          "2026-10-16"
+        ],
+        "itemCount": 11,
+        "missingNumericFields": [
+          {
+            "ticker": "SFWL",
+            "fields": [
+              "debt"
+            ]
+          },
+          {
+            "ticker": "CLPS",
+            "fields": [
+              "float"
+            ]
+          },
+          {
+            "ticker": "RMSG",
+            "fields": [
+              "float",
+              "cash"
+            ]
+          }
+        ],
+        "historicalPriceCount": 11,
+        "staleRisk": "All prices dated 2026-10-16, not live. Delisting-safe, no-offering, shelf and float claims are historical and require official recheck before trading use.",
+        "nextAction": "Revalidate CLWT and WAFU SEC filing history and Nasdaq listing notices, then price, O/S, float and financing; preserve historical entries until verified."
+      }
     }
   },
   "additionalTabs": {
