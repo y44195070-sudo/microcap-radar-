@@ -1,6 +1,6 @@
 {
   "schema": "microcap-radar-v2-verification-state-v1",
-  "stateRecordedAt": "2026-11-15T09:01:49+09:00",
+  "stateRecordedAt": "2026-11-16T09:01:13+09:00",
   "latestCompletedUsRegularSession": "2026-11-13",
   "policy": "Research progress ledger only; never use this file as a verified market-data source or UI asOf.",
   "universe": {
@@ -402,7 +402,16 @@
         ],
         "historicalPriceCount": 11,
         "staleRisk": "All prices dated 2026-10-16, not live. Delisting-safe, no-offering, shelf and float claims are historical and require official recheck before trading use.",
-        "nextAction": "Revalidate CLWT and WAFU SEC filing history and Nasdaq listing notices, then price, O/S, float and financing; preserve historical entries until verified."
+        "nextAction": "Revalidate CLWT and WAFU SEC filing history and Nasdaq listing notices, then price, O/S, float and financing; preserve historical entries until verified.",
+        "latestPartialEvent": {
+          "ticker": "CLWT",
+          "form": "6-K",
+          "filed": "2026-10-26",
+          "eventDate": "2026-11-19",
+          "source": "https://www.sec.gov/Archives/edgar/data/1026662/000165495426009144/clwt_6k.htm",
+          "scope": "Annual meeting event verified, NOT financial/float/dilution revalidation",
+          "recordedAt": "2026-11-16"
+        }
       }
     }
   },
@@ -559,18 +568,19 @@
     }
   },
   "run": {
+    "lastRunDate": "2026-11-16",
+    "lastRunScope": "Read GitHub piggy.json and verified CLWT 2026-10-26 6-K meeting announcement against SEC; added scoped event evidence to piggy source.",
     "newOfficialIssuerVerifications": 0,
-    "newPartialOfficialIssuerEvidenceChecks": 0,
+    "newPartialOfficialIssuerEvidenceChecks": 1,
+    "newFullyVerifiedTickers": 0,
+    "newFullyVerifiedReviewSessions": 0,
     "newCompletedSessionVerifications": 0,
+    "casePromotionsThisRun": 0,
     "filesChanged": [
+      "v2/data/piggy.json",
       "v2/data/verification-progress.json"
     ],
-    "notes": "AP broad-market closing levels dated 2026-11-13 independently checked; ledger-only market reference, NOT individual issuer verification. Previous 87 staging case keys remain unpromoted.",
-    "next": "Resolve earliest review coverage gap and validate staged cases against SEC/price/float.",
-    "lastRunDate": "2026-11-14",
-    "lastRunScope": "Verified 2026-11-13 US broad-market close against AP; no individual microcap case or supply review completed.",
-    "newFullyVerifiedTickers": 0,
-    "newFullyVerifiedReviewSessions": 0
+    "notes": "CLWT meeting is a calendar event, not evidence for existing financial, price, float, dilution or listing-safe claims. Existing piggy asOf 2026-10-18 retained. Review source unchanged."
   },
   "marketSessionEvidence": {
     "date": "2026-11-09",
