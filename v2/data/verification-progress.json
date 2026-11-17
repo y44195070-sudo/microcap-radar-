@@ -1,7 +1,7 @@
 {
   "schema": "microcap-radar-v2-verification-state-v1",
-  "stateRecordedAt": "2026-11-16T09:01:13+09:00",
-  "latestCompletedUsRegularSession": "2026-11-13",
+  "stateRecordedAt": "2026-11-17T09:01:15+09:00",
+  "latestCompletedUsRegularSession": "2026-11-16",
   "policy": "Research progress ledger only; never use this file as a verified market-data source or UI asOf.",
   "universe": {
     "manifestPath": "v2/data/manifest.json",
@@ -568,10 +568,10 @@
     }
   },
   "run": {
-    "lastRunDate": "2026-11-16",
-    "lastRunScope": "Read GitHub piggy.json and verified CLWT 2026-10-26 6-K meeting announcement against SEC; added scoped event evidence to piggy source.",
+    "lastRunDate": "2026-11-17",
+    "lastRunScope": "Verified CLWT 2026-11-06 adjusted close $1.18 and 25,921 shares in secondary historical table; persisted separate marketSnapshot without replacing older UI price or changing score. US Nov 16 session completed; no verified individual close for that date.",
     "newOfficialIssuerVerifications": 0,
-    "newPartialOfficialIssuerEvidenceChecks": 1,
+    "newPartialOfficialIssuerEvidenceChecks": 0,
     "newFullyVerifiedTickers": 0,
     "newFullyVerifiedReviewSessions": 0,
     "newCompletedSessionVerifications": 0,
@@ -580,7 +580,7 @@
       "v2/data/piggy.json",
       "v2/data/verification-progress.json"
     ],
-    "notes": "CLWT meeting is a calendar event, not evidence for existing financial, price, float, dilution or listing-safe claims. Existing piggy asOf 2026-10-18 retained. Review source unchanged."
+    "notes": "CLWT belongs to piggy list, not 37-ticker manifest. Historical market snapshot is not current market validation; no rankings, review asOf, pattern or UI changed."
   },
   "marketSessionEvidence": {
     "date": "2026-11-09",
@@ -650,5 +650,25 @@
       "filingAndFloatVerification": "NOT_PERFORMED",
       "reviewCasesPromoted": 0
     }
+  },
+  "piggyPartialPriceAudit": {
+    "ticker": "CLWT",
+    "session": "2026-11-06",
+    "adjustedCloseUsd": 1.18,
+    "volumeShares": 25921,
+    "source": "https://www.financecharts.com/stocks/CLWT/summary/volume-averages",
+    "verifiedOn": "2026-11-17",
+    "status": "SECONDARY_HISTORICAL_ONLY",
+    "latestMarketSession": "2026-11-16",
+    "latestSessionPrice": "UNVERIFIED",
+    "fieldsNotValidated": [
+      "2026-11-16 close",
+      "O/S",
+      "float",
+      "cash",
+      "dilution",
+      "short borrow",
+      "listing compliance"
+    ]
   }
 }
