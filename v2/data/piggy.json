@@ -43,7 +43,18 @@
           "scope": "Event only. Filing does not independently validate current O/S, float, financing absence, cash, price, listing compliance or borrow."
         }
       ],
-      "officialEventStatus": "PARTIAL_EVENT_VERIFIED_OTHER_FIELDS_HISTORICAL"
+      "officialEventStatus": "PARTIAL_EVENT_VERIFIED_OTHER_FIELDS_HISTORICAL",
+      "marketSnapshot": {
+        "session": "2026-11-06",
+        "adjustedCloseUsd": 1.18,
+        "volumeShares": 25921,
+        "source": "https://www.financecharts.com/stocks/CLWT/summary/volume-averages",
+        "sourceType": "secondary historical price table",
+        "verificationDate": "2026-11-17",
+        "status": "PARTIAL_HISTORICAL_NOT_LATEST",
+        "note": "2026-11-06 adjusted close and volume only; 2026-11-16 close and official exchange tape unverified. Do not treat the 2026-10-16 px, box, stop, grade, float, or dilution claims as current."
+      },
+      "marketDataStatus": "HISTORICAL_PRICE_STALE_2026-10-16_NEWER_2026-11-06_SNAPSHOT_AVAILABLE"
     },
     {
       "ticker": "WAFU",
