@@ -1,7 +1,7 @@
 {
   "schema": "microcap-radar-v2-verification-state-v1",
-  "stateRecordedAt": "2026-11-18T08:55:43+09:00",
-  "latestCompletedUsRegularSession": "2026-11-17",
+  "stateRecordedAt": "2026-11-19T09:04:38+09:00",
+  "latestCompletedUsRegularSession": "2026-11-18",
   "policy": "Research progress ledger only; never use this file as a verified market-data source or UI asOf.",
   "universe": {
     "manifestPath": "v2/data/manifest.json",
@@ -446,14 +446,14 @@
       "v2/data/review-daily-2026-10-23.json",
       "v2/data/backfill-2026-10-30-to-2026-11-06.json"
     ],
-    "missingSessionRange": "2026-10-16..2026-11-17 (2026-10-16 coverage unverified; staging not promoted)",
+    "missingSessionRange": "2026-10-16..2026-11-18 (2026-10-16 coverage unverified; staging not promoted)",
     "completeSessionValidationCountThisRun": 0,
     "casePromotionsThisRun": 0,
     "patternMergesThisRun": 0,
     "newPatternsThisRun": 0,
     "reason": "Exact-key staging audit completed 2026-11-13, but independent SEC/market/supply verification and contiguous session coverage remain pending. No case promoted.",
-    "pendingThrough": "2026-11-17",
-    "lastCompletedUsSession": "2026-11-17",
+    "pendingThrough": "2026-11-18",
+    "lastCompletedUsSession": "2026-11-18",
     "backfillStatus": "PENDING",
     "lastVerifiedReviewDate": "2026-10-18",
     "stagingAudit": {
@@ -570,39 +570,56 @@
       "2026-11-17": [
         {
           "ticker": "SLS",
-          "status": "SCREENING_ONLY_NOT_PROMOTED",
-          "source": "https://www.stocktitan.net/articles/stock-market-today-live-november-17-2026",
+          "status": "PARTIAL_PRIMARY_SOURCE_VERIFIED_NOT_PROMOTED",
+          "source": "https://ir.sellaslifesciences.com/news/News-Details/2026/SELLAS-Life-Sciences-Announces-Proposed-150-0-Million-Underwritten-Public-Offering/default.aspx",
           "reportedRegularSessionMovePercent": 156.36,
           "reportedAfterHoursOffering": "Proposed $150m common-stock public offering, requires issuer/SEC primary-source validation",
           "missing": [
-            "SEC filing accession",
+            "final pricing and completion/closing",
+            "final shares offered and underwriter option exercised",
             "split-adjusted OHLCV independent confirmation",
-            "O/S and actual float",
-            "registered resale and immediately saleable supply",
+            "current O/S and actual float",
+            "existing registered resale and immediately saleable supply deduplicated",
             "borrow/CTB/Reg SHO/FTD"
           ],
           "patternHypothesis": "catalyst then potential financing supply; not assigned to master pattern",
-          "notCountedAsVerifiedCase": true
+          "notCountedAsVerifiedCase": true,
+          "issuerOfferingEvidence": {
+            "announcementDate": "2026-11-17",
+            "proposedBaseOfferingUsd": 150000000,
+            "underwriterOptionUsd": 22500000,
+            "form": "preliminary 424B5",
+            "registrationNumber": "333-294504",
+            "status": "PROPOSED_NOT_CONFIRMED_CLOSED_OR_PRICED",
+            "evidenceUrl": "https://www.stocktitan.net/sec-filings/SLS/424b5-sellas-life-sciences-group-inc-prospectus-supplement-debt-secur-64dfd97f03af.html",
+            "priorOutstandingShares": {
+              "shares": 203527833,
+              "asOf": "2026-09-30",
+              "notCurrent": true
+            },
+            "classification": "POTENTIAL_NEW_ISSUANCE_NOT_ALREADY_IMMEDIATELY_SALEABLE; NO SHARE COUNT UNTIL PRICE KNOWN",
+            "issuerIRUrl": "https://ir.sellaslifesciences.com/news/News-Details/2026/SELLAS-Life-Sciences-Announces-Proposed-150-0-Million-Underwritten-Public-Offering/default.aspx"
+          }
         }
       ]
     }
   },
   "run": {
-    "lastRunDate": "2026-11-17",
-    "lastRunScope": "Verified CLWT 2026-11-06 adjusted close $1.18 and 25,921 shares in secondary historical table; persisted separate marketSnapshot without replacing older UI price or changing score. US Nov 16 session completed; no verified individual close for that date.",
-    "newOfficialIssuerVerifications": 0,
-    "newPartialOfficialIssuerEvidenceChecks": 0,
+    "lastRunDate": "2026-11-19",
+    "lastRunScope": "Primary issuer IR and preliminary 424B5 secondary filing text checked for SLS 2026-11-17 proposed $150m public offering and $22.5m option; recorded contingent issuance separately from immediately saleable shares. Broad index Nov 18 close confirmed.",
+    "newOfficialIssuerVerifications": 1,
+    "newPartialOfficialIssuerEvidenceChecks": 1,
     "newFullyVerifiedTickers": 0,
     "newFullyVerifiedReviewSessions": 0,
     "newCompletedSessionVerifications": 0,
+    "newReviewCandidatesScreened": 1,
     "casePromotionsThisRun": 0,
     "filesChanged": [
-      "v2/data/piggy.json",
       "v2/data/verification-progress.json"
     ],
-    "notes": "CLWT belongs to piggy list, not 37-ticker manifest. Historical market snapshot is not current market validation; no rankings, review asOf, pattern or UI changed.",
-    "latestMarketSessionCheck": "2026-11-17",
-    "latestOutcome": "Partial research ledger update only; no fully verified issuer or review day; deployment unverified."
+    "notes": "SLS is review candidate outside 37-stock manifest. No pricing, shares offered, close or actual float confirmed. Do not promote review case, alter review asOf, rank or UI.",
+    "latestMarketSessionCheck": "2026-11-18",
+    "latestOutcome": "Issuer financing evidence strengthened; all review session coverage still incomplete."
   },
   "marketSessionEvidence": {
     "date": "2026-11-09",
@@ -680,6 +697,17 @@
       "nasdaq": 24328.38,
       "russell2000": 2701.87,
       "scope": "Broad-market close only. No individual ticker verified and no review session promoted."
+    },
+    "2026-11-18": {
+      "status": "INDEX_CLOSE_VERIFIED_ONLY_NOT_MICROCAP_REVIEW",
+      "session": "2026-11-18",
+      "source": "https://apnews.com/article/990749d3d269f7ef05b9f6c089713a58",
+      "indices": {
+        "sp500": 7323.63,
+        "nasdaq": 24429.88,
+        "russell2000": 2714.31
+      },
+      "microcapFullReview": false
     }
   },
   "piggyPartialPriceAudit": {
