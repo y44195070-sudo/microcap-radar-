@@ -1,8 +1,8 @@
 {
-  "runAt": "2026-11-19 04:36 KST (공개자료 조회; 원천 시세 타임스탬프 미확인)",
-  "session": "2026-11-18 미국 정규장 공개자료 (15:40 ET 고정 스냅샷 미확인)",
-  "basis": "StockAnalysis Losers 2026-11-18 공개자료 상위권; SHFS 거래량 누락, JMIA ADS 제외. Nasdaq/NYSE/NYSE American 보통주 전수검증 미완료.",
-  "note": "2026-11-18 미국장 공개 하락률 자료. 15:40 ET 고정 스냅샷 아님. SHFS 거래량 누락, JMIA ADS(보통주 아님) 제외. 나머지 거래소·보통주 전수검증 미완료. CHSN 과거 증자, GDHG F-3/자문주식, TDTH 과거 공모, PRE 실적 손실 전망 확대 확인. SEC 최신 등록매도 잔량·최근 5거래일 공모/RD·VWAP·종가 수급·Short Interest·CTB·실제 Float 미확인. flow=null, flowKnown=false, score=null, 보너스 미적용. 구조 점검이며 매수 추천 아님.",
+  "runAt": "2026-11-20 04:43 KST (원천 시세 타임스탬프 미확인)",
+  "session": "2026-11-19 미국 정규장 공개자료 (15:40 ET 스냅샷 미확인)",
+  "basis": "StockAnalysis Losers 2026-11-19; Nasdaq/NYSE/NYSE American 보통주 전수검증 미완료",
+  "note": "2026-11-19 공개 하락률 15종목; 15:40 ET 고정 스냅샷 아님. SCKT 거래량 누락, ZOAR 증권종류 미검증 제외. 거래소·보통주 전수검증 미완료. NIVF 11/19 공모, AZI 11/17 변동가 CB RD, TDTH 11/19 PIPE 계약: 공급 열림 pass. 나머지 SEC 전수검증 미완료. flow=null, flowKnown=false, score=null. VWAP·종가 수급·SI·DSV·CTB·실제 Float 확인 불가. 구조 점검이며 매수 추천 아님.",
   "scoreGuide": [
     "drop 15",
     "volume 20",
@@ -27,11 +27,11 @@
   "candidates": [
     {
       "rank": 1,
-      "ticker": "CHSN",
+      "ticker": "FCHL",
       "exchange": "확인 불가",
-      "dropPct": -78.55,
-      "price": 0.101,
-      "volume": 214884784,
+      "dropPct": -89.1,
+      "price": 0.0616,
+      "volume": 49326842,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -50,22 +50,22 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "2026-09-18 6-K: 상반기 주식발행 대금 약 $12.95M 유입. 최근 신규 공급·등록매도 잔량 미확인.",
+      "supply": "Nasdaq 상장요건 미달 통지 이력; 현재 상태 미확인",
       "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별도; CTB·대차가능주식 확인 불가",
       "float": "확인 불가",
-      "why": "2026-09-18 6-K: 상반기 주식발행 대금 약 $12.95M 유입. 최근 신규 공급·등록매도 잔량 미확인.",
+      "why": "Nasdaq 상장요건 미달 통지 이력; 현재 상태 미확인",
       "risk": "VWAP·저점 반등·종가 수급·체결강도 확인 불가",
       "source": "https://stockanalysis.com/markets/losers/"
     },
     {
       "rank": 2,
-      "ticker": "GDHG",
+      "ticker": "NIVF",
       "exchange": "확인 불가",
-      "dropPct": -47.05,
-      "price": 0.154,
-      "volume": 22949198,
+      "dropPct": -79.77,
+      "price": 0.0345,
+      "volume": 24961466,
       "score": null,
-      "grade": "unverified",
+      "grade": "pass",
       "flow": null,
       "flowKnown": false,
       "parts": {
@@ -82,20 +82,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "2026-09-11 6-K: 자문대가 Class B 600만주 발행 및 12개월 양도제한(예외 존재). F-3 등록 이력. 최신 잔량 미확인.",
+      "supply": "11/19 $2.5M 공모: 71,428,570 Class A/프리펀디드 워런트; 11/12 F-3 효력 발생",
       "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별도; CTB·대차가능주식 확인 불가",
       "float": "확인 불가",
-      "why": "2026-09-11 6-K: 자문대가 Class B 600만주 발행 및 12개월 양도제한(예외 존재). F-3 등록 이력. 최신 잔량 미확인.",
+      "why": "11/19 $2.5M 공모: 71,428,570 Class A/프리펀디드 워런트; 11/12 F-3 효력 발생",
       "risk": "VWAP·저점 반등·종가 수급·체결강도 확인 불가",
       "source": "https://stockanalysis.com/markets/losers/"
     },
     {
       "rank": 3,
-      "ticker": "TDTH",
+      "ticker": "BOXL",
       "exchange": "확인 불가",
-      "dropPct": -45.24,
-      "price": 0.635,
-      "volume": 1488637,
+      "dropPct": -55.17,
+      "price": 0.854,
+      "volume": 427375,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -114,22 +114,22 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "2026-09-29 회사 발표: Class B 3,000만주 $15M 공모 완료, 9월 총 약 $23M 조달. 최근 5거래일 공모 여부 미확인.",
+      "supply": "공급구조 미검증",
       "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별도; CTB·대차가능주식 확인 불가",
       "float": "확인 불가",
-      "why": "2026-09-29 회사 발표: Class B 3,000만주 $15M 공모 완료, 9월 총 약 $23M 조달. 최근 5거래일 공모 여부 미확인.",
+      "why": "공급구조 미검증",
       "risk": "VWAP·저점 반등·종가 수급·체결강도 확인 불가",
       "source": "https://stockanalysis.com/markets/losers/"
     },
     {
       "rank": 4,
-      "ticker": "PRE",
+      "ticker": "AZI",
       "exchange": "확인 불가",
-      "dropPct": -37.94,
-      "price": 10.14,
-      "volume": 1025632,
+      "dropPct": -47.12,
+      "price": 0.55,
+      "volume": 2137722,
       "score": null,
-      "grade": "unverified",
+      "grade": "pass",
       "flow": null,
       "flowKnown": false,
       "parts": {
@@ -146,20 +146,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "2026-11-18 6-K 및 3분기 실적: 하반기 조정 EBITDA 손실 전망 확대($30~35M).",
+      "supply": "11/17 $12.75M 담보부 변동가 CB RD 완료; 추가 최대 $17.25M 가능",
       "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별도; CTB·대차가능주식 확인 불가",
       "float": "확인 불가",
-      "why": "2026-11-18 6-K 및 3분기 실적: 하반기 조정 EBITDA 손실 전망 확대($30~35M).",
+      "why": "11/17 $12.75M 담보부 변동가 CB RD 완료; 추가 최대 $17.25M 가능",
       "risk": "VWAP·저점 반등·종가 수급·체결강도 확인 불가",
       "source": "https://stockanalysis.com/markets/losers/"
     },
     {
       "rank": 5,
-      "ticker": "FNGR",
+      "ticker": "PARA",
       "exchange": "확인 불가",
-      "dropPct": -36.27,
-      "price": 0.0376,
-      "volume": 29523142,
+      "dropPct": -42.47,
+      "price": 0.0363,
+      "volume": 50219676,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -178,22 +178,22 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "SEC 공급구조 및 거래소·보통주 현재 상태 미검증.",
+      "supply": "상장폐지 통지 이력, 현 거래소 적격성 미검증",
       "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별도; CTB·대차가능주식 확인 불가",
       "float": "확인 불가",
-      "why": "SEC 공급구조 및 거래소·보통주 현재 상태 미검증.",
+      "why": "상장폐지 통지 이력, 현 거래소 적격성 미검증",
       "risk": "VWAP·저점 반등·종가 수급·체결강도 확인 불가",
       "source": "https://stockanalysis.com/markets/losers/"
     },
     {
       "rank": 6,
-      "ticker": "HY",
+      "ticker": "TDTH",
       "exchange": "확인 불가",
-      "dropPct": -35.73,
-      "price": 16.84,
-      "volume": 1452852,
+      "dropPct": -42.45,
+      "price": 0.42,
+      "volume": 4640098,
       "score": null,
-      "grade": "unverified",
+      "grade": "pass",
       "flow": null,
       "flowKnown": false,
       "parts": {
@@ -210,20 +210,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "당일 하락 원인 및 최신 공급구조 미검증.",
+      "supply": "11/19 $15M 사모발행 1,000만 Class B 계약 발표",
       "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별도; CTB·대차가능주식 확인 불가",
       "float": "확인 불가",
-      "why": "당일 하락 원인 및 최신 공급구조 미검증.",
+      "why": "11/19 $15M 사모발행 1,000만 Class B 계약 발표",
       "risk": "VWAP·저점 반등·종가 수급·체결강도 확인 불가",
       "source": "https://stockanalysis.com/markets/losers/"
     },
     {
       "rank": 7,
-      "ticker": "BRNX",
+      "ticker": "AUUD",
       "exchange": "확인 불가",
-      "dropPct": -33.34,
-      "price": 0.273,
-      "volume": 49324648,
+      "dropPct": -37.26,
+      "price": 0.192,
+      "volume": 1284357,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -242,20 +242,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "ATM/ELOC/Shelf/S-1/F-1/EFFECT/424B3/424B5/PIPE/전환증권/재판매 및 최근 5거래일 공모·RD 전수검증 미완료",
+      "supply": "공급구조 미검증",
       "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별도; CTB·대차가능주식 확인 불가",
       "float": "확인 불가",
-      "why": "SEC 공급구조 전수검증 미완료",
+      "why": "공급구조 미검증",
       "risk": "VWAP·저점 반등·종가 수급·체결강도 확인 불가",
       "source": "https://stockanalysis.com/markets/losers/"
     },
     {
       "rank": 8,
-      "ticker": "RIME",
+      "ticker": "MIRA",
       "exchange": "확인 불가",
-      "dropPct": -32.06,
-      "price": 0.0568,
-      "volume": 5815620,
+      "dropPct": -33.98,
+      "price": 0.39,
+      "volume": 361478,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -274,20 +274,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "ATM/ELOC/Shelf/S-1/F-1/EFFECT/424B3/424B5/PIPE/전환증권/재판매 및 최근 5거래일 공모·RD 전수검증 미완료",
+      "supply": "공급구조 미검증",
       "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별도; CTB·대차가능주식 확인 불가",
       "float": "확인 불가",
-      "why": "SEC 공급구조 전수검증 미완료",
+      "why": "공급구조 미검증",
       "risk": "VWAP·저점 반등·종가 수급·체결강도 확인 불가",
       "source": "https://stockanalysis.com/markets/losers/"
     },
     {
       "rank": 9,
-      "ticker": "LNKS",
+      "ticker": "SRTM",
       "exchange": "확인 불가",
-      "dropPct": -30.69,
-      "price": 0.7,
-      "volume": 96886,
+      "dropPct": -29.93,
+      "price": 0.0906,
+      "volume": 2694266,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -306,20 +306,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "ATM/ELOC/Shelf/S-1/F-1/EFFECT/424B3/424B5/PIPE/전환증권/재판매 및 최근 5거래일 공모·RD 전수검증 미완료",
+      "supply": "거래소·공급구조 미검증",
       "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별도; CTB·대차가능주식 확인 불가",
       "float": "확인 불가",
-      "why": "SEC 공급구조 전수검증 미완료",
+      "why": "거래소·공급구조 미검증",
       "risk": "VWAP·저점 반등·종가 수급·체결강도 확인 불가",
       "source": "https://stockanalysis.com/markets/losers/"
     },
     {
       "rank": 10,
-      "ticker": "LICN",
+      "ticker": "SNSC",
       "exchange": "확인 불가",
-      "dropPct": -30,
-      "price": 0.0154,
-      "volume": 320551244,
+      "dropPct": -29.04,
+      "price": 0.44,
+      "volume": 62120,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -338,20 +338,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "ATM/ELOC/Shelf/S-1/F-1/EFFECT/424B3/424B5/PIPE/전환증권/재판매 및 최근 5거래일 공모·RD 전수검증 미완료",
+      "supply": "거래소·공급구조 미검증",
       "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별도; CTB·대차가능주식 확인 불가",
       "float": "확인 불가",
-      "why": "SEC 공급구조 전수검증 미완료",
+      "why": "거래소·공급구조 미검증",
       "risk": "VWAP·저점 반등·종가 수급·체결강도 확인 불가",
       "source": "https://stockanalysis.com/markets/losers/"
     },
     {
       "rank": 11,
-      "ticker": "CISS",
+      "ticker": "SA",
       "exchange": "확인 불가",
-      "dropPct": -29.48,
-      "price": 1.22,
-      "volume": 446383,
+      "dropPct": -28.41,
+      "price": 18.29,
+      "volume": 5614271,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -370,20 +370,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "ATM/ELOC/Shelf/S-1/F-1/EFFECT/424B3/424B5/PIPE/전환증권/재판매 및 최근 5거래일 공모·RD 전수검증 미완료",
+      "supply": "공급구조 미검증",
       "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별도; CTB·대차가능주식 확인 불가",
       "float": "확인 불가",
-      "why": "SEC 공급구조 전수검증 미완료",
+      "why": "공급구조 미검증",
       "risk": "VWAP·저점 반등·종가 수급·체결강도 확인 불가",
       "source": "https://stockanalysis.com/markets/losers/"
     },
     {
       "rank": 12,
-      "ticker": "BYAH",
+      "ticker": "SNEX",
       "exchange": "확인 불가",
-      "dropPct": -28.03,
-      "price": 1.13,
-      "volume": 104573,
+      "dropPct": -25.75,
+      "price": 39.97,
+      "volume": 3573048,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -402,20 +402,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "ATM/ELOC/Shelf/S-1/F-1/EFFECT/424B3/424B5/PIPE/전환증권/재판매 및 최근 5거래일 공모·RD 전수검증 미완료",
+      "supply": "공급구조 미검증",
       "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별도; CTB·대차가능주식 확인 불가",
       "float": "확인 불가",
-      "why": "SEC 공급구조 전수검증 미완료",
+      "why": "공급구조 미검증",
       "risk": "VWAP·저점 반등·종가 수급·체결강도 확인 불가",
       "source": "https://stockanalysis.com/markets/losers/"
     },
     {
       "rank": 13,
-      "ticker": "QTRX",
+      "ticker": "PMEC",
       "exchange": "확인 불가",
-      "dropPct": -27.62,
-      "price": 2.07,
-      "volume": 2922293,
+      "dropPct": -25.58,
+      "price": 0.36,
+      "volume": 93480,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -434,20 +434,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "ATM/ELOC/Shelf/S-1/F-1/EFFECT/424B3/424B5/PIPE/전환증권/재판매 및 최근 5거래일 공모·RD 전수검증 미완료",
+      "supply": "공급구조 미검증",
       "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별도; CTB·대차가능주식 확인 불가",
       "float": "확인 불가",
-      "why": "SEC 공급구조 전수검증 미완료",
+      "why": "공급구조 미검증",
       "risk": "VWAP·저점 반등·종가 수급·체결강도 확인 불가",
       "source": "https://stockanalysis.com/markets/losers/"
     },
     {
       "rank": 14,
-      "ticker": "SKYQ",
+      "ticker": "OLB",
       "exchange": "확인 불가",
-      "dropPct": -26.97,
-      "price": 0.66,
-      "volume": 1005929,
+      "dropPct": -25.24,
+      "price": 0.117,
+      "volume": 818142,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -466,20 +466,20 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "ATM/ELOC/Shelf/S-1/F-1/EFFECT/424B3/424B5/PIPE/전환증권/재판매 및 최근 5거래일 공모·RD 전수검증 미완료",
+      "supply": "공급구조 미검증",
       "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별도; CTB·대차가능주식 확인 불가",
       "float": "확인 불가",
-      "why": "SEC 공급구조 전수검증 미완료",
+      "why": "공급구조 미검증",
       "risk": "VWAP·저점 반등·종가 수급·체결강도 확인 불가",
       "source": "https://stockanalysis.com/markets/losers/"
     },
     {
       "rank": 15,
-      "ticker": "SMTK",
+      "ticker": "CISO",
       "exchange": "확인 불가",
-      "dropPct": -26.5,
-      "price": 0.2,
-      "volume": 3534356,
+      "dropPct": -25.22,
+      "price": 0.135,
+      "volume": 1516449,
       "score": null,
       "grade": "unverified",
       "flow": null,
@@ -498,15 +498,47 @@
         "closeLog": 0,
         "piggy": 0
       },
-      "supply": "ATM/ELOC/Shelf/S-1/F-1/EFFECT/424B3/424B5/PIPE/전환증권/재판매 및 최근 5거래일 공모·RD 전수검증 미완료",
+      "supply": "공급구조 미검증",
       "shortVerdict": "Short Interest 확인 불가; Daily Short Volume 별도; CTB·대차가능주식 확인 불가",
       "float": "확인 불가",
-      "why": "SEC 공급구조 전수검증 미완료",
+      "why": "공급구조 미검증",
       "risk": "VWAP·저점 반등·종가 수급·체결강도 확인 불가",
       "source": "https://stockanalysis.com/markets/losers/"
     }
   ],
   "history": [
+    {
+      "runAt": "2026-11-20 04:43 KST (원천 시세 타임스탬프 미확인)",
+      "session": "2026-11-19",
+      "top": [
+        {
+          "ticker": "FCHL",
+          "score": null,
+          "grade": "unverified"
+        },
+        {
+          "ticker": "NIVF",
+          "score": null,
+          "grade": "pass"
+        },
+        {
+          "ticker": "BOXL",
+          "score": null,
+          "grade": "unverified"
+        },
+        {
+          "ticker": "AZI",
+          "score": null,
+          "grade": "pass"
+        },
+        {
+          "ticker": "PARA",
+          "score": null,
+          "grade": "unverified"
+        }
+      ],
+      "note": "2026-11-19 공개 하락률 15종목; 15:40 ET 고정 스냅샷 아님. SCKT 거래량 누락, ZOAR 증권종류 미검증 제외. 거래소·보통주 전수검증 미완료. NIVF 11/19 공모, AZI 11/17 변동가 CB RD, TDTH 11/19 PIPE 계약: 공급 열림 pass. 나머지 SEC 전수검증 미완료. flow=null, flowKnown=false, score=null. VWAP·종가 수급·SI·DSV·CTB·실제 Float 확인 불가. 구조 점검이며 매수 추천 아님."
+    },
     {
       "runAt": "2026-11-19 04:36 KST (공개자료 조회; 원천 시세 타임스탬프 미확인)",
       "session": "2026-11-18",
@@ -2162,38 +2194,6 @@
         }
       ],
       "note": "2026-11-09 미국 정규장 마감 전 공개 시세 스냅샷. 15종목 수집, 거래소/증권종류 전수 교차검증 및 SEC 공급 전수조사 미완료. ZURA 임상 2상 1차 평가변수 미충족, SOC 계속기업 불확실성, PLCE Chapter 11 확인. flow=null/flowKnown=false, VWAP/CTB/대차/최신 SI/실제 float 확인 불가. 점수/등급 unverified, 보너스 0(미검증), fire 금지. 구조 점검용이며 매수 추천 아님."
-    },
-    {
-      "runAt": "2026-11-07 04:40 KST",
-      "session": "2026-11-06",
-      "top": [
-        {
-          "ticker": "AIRS",
-          "score": null,
-          "grade": "unverified"
-        },
-        {
-          "ticker": "JDZG",
-          "score": null,
-          "grade": "unverified"
-        },
-        {
-          "ticker": "BDSX",
-          "score": null,
-          "grade": "unverified"
-        },
-        {
-          "ticker": "BDMD",
-          "score": null,
-          "grade": "unverified"
-        },
-        {
-          "ticker": "STLN",
-          "score": null,
-          "grade": "unverified"
-        }
-      ],
-      "note": "정규장 마감 전 15개 스냅샷; SEC/수급 전수검증 미완료로 점수 및 등급 보류."
     }
   ]
 }
