@@ -1,7 +1,7 @@
 {
   "schema": "microcap-radar-v2-verification-state-v1",
-  "stateRecordedAt": "2026-11-19T09:04:38+09:00",
-  "latestCompletedUsRegularSession": "2026-11-18",
+  "stateRecordedAt": "2026-11-20T09:04:10+09:00",
+  "latestCompletedUsRegularSession": "2026-11-19",
   "policy": "Research progress ledger only; never use this file as a verified market-data source or UI asOf.",
   "universe": {
     "manifestPath": "v2/data/manifest.json",
@@ -446,14 +446,14 @@
       "v2/data/review-daily-2026-10-23.json",
       "v2/data/backfill-2026-10-30-to-2026-11-06.json"
     ],
-    "missingSessionRange": "2026-10-16..2026-11-18 (2026-10-16 coverage unverified; staging not promoted)",
+    "missingSessionRange": "2026-10-16..2026-11-19 (2026-10-16 coverage unverified; staging not promoted)",
     "completeSessionValidationCountThisRun": 0,
     "casePromotionsThisRun": 0,
     "patternMergesThisRun": 0,
     "newPatternsThisRun": 0,
     "reason": "Exact-key staging audit completed 2026-11-13, but independent SEC/market/supply verification and contiguous session coverage remain pending. No case promoted.",
-    "pendingThrough": "2026-11-18",
-    "lastCompletedUsSession": "2026-11-18",
+    "pendingThrough": "2026-11-19",
+    "lastCompletedUsSession": "2026-11-19",
     "backfillStatus": "PENDING",
     "lastVerifiedReviewDate": "2026-10-18",
     "stagingAudit": {
@@ -570,16 +570,15 @@
       "2026-11-17": [
         {
           "ticker": "SLS",
-          "status": "PARTIAL_PRIMARY_SOURCE_VERIFIED_NOT_PROMOTED",
+          "status": "PRICED_PRIMARY_ISSUER_CONFIRMED_NOT_CLOSED_NOT_PROMOTED",
           "source": "https://ir.sellaslifesciences.com/news/News-Details/2026/SELLAS-Life-Sciences-Announces-Proposed-150-0-Million-Underwritten-Public-Offering/default.aspx",
           "reportedRegularSessionMovePercent": 156.36,
-          "reportedAfterHoursOffering": "Proposed $150m common-stock public offering, requires issuer/SEC primary-source validation",
+          "reportedAfterHoursOffering": "Issuer priced 11,538,462 new shares at $13 on 2026-11-18; optional 1,730,769 additional; expected close 2026-11-20, unconfirmed",
           "missing": [
-            "final pricing and completion/closing",
-            "final shares offered and underwriter option exercised",
+            "offering closing confirmation and option exercise",
             "split-adjusted OHLCV independent confirmation",
             "current O/S and actual float",
-            "existing registered resale and immediately saleable supply deduplicated",
+            "registered resale and immediately saleable supply deduplicated",
             "borrow/CTB/Reg SHO/FTD"
           ],
           "patternHypothesis": "catalyst then potential financing supply; not assigned to master pattern",
@@ -590,23 +589,33 @@
             "underwriterOptionUsd": 22500000,
             "form": "preliminary 424B5",
             "registrationNumber": "333-294504",
-            "status": "PROPOSED_NOT_CONFIRMED_CLOSED_OR_PRICED",
+            "status": "PRICED_2026-11-18_CLOSING_EXPECTED_2026-11-20_NOT_CONFIRMED",
             "evidenceUrl": "https://www.stocktitan.net/sec-filings/SLS/424b5-sellas-life-sciences-group-inc-prospectus-supplement-debt-secur-64dfd97f03af.html",
             "priorOutstandingShares": {
               "shares": 203527833,
               "asOf": "2026-09-30",
               "notCurrent": true
             },
-            "classification": "POTENTIAL_NEW_ISSUANCE_NOT_ALREADY_IMMEDIATELY_SALEABLE; NO SHARE COUNT UNTIL PRICE KNOWN",
-            "issuerIRUrl": "https://ir.sellaslifesciences.com/news/News-Details/2026/SELLAS-Life-Sciences-Announces-Proposed-150-0-Million-Underwritten-Public-Offering/default.aspx"
+            "classification": "PRICED_PRIMARY_ISSUANCE_NOT_CONFIRMED_CLOSED; OPTION_CONDITIONAL; DO_NOT_COUNT_AS_EXISTING_FLOAT_OR_DOUBLE_COUNT_WITH_SHELF",
+            "issuerIRUrl": "https://ir.sellaslifesciences.com/news/News-Details/2026/SELLAS-Life-Sciences-Announces-Proposed-150-0-Million-Underwritten-Public-Offering/default.aspx",
+            "pricingAnnouncementDate": "2026-11-18",
+            "offerPriceUsdPerShare": 13,
+            "baseNewShares": 11538462,
+            "optionAdditionalSharesMaximum": 1730769,
+            "maximumSharesIfOptionFullyExercised": 13269231,
+            "baseGrossProceedsUsd": 150000000,
+            "expectedClosingDate": "2026-11-20",
+            "closingConfirmed": false,
+            "optionExercisedConfirmed": false,
+            "pricingSource": "https://ir.sellaslifesciences.com/news/News-Details/2026/SELLAS-Life-Sciences-Announces-Pricing-of-150-0-Million-Underwritten-Public-Offering/default.aspx"
           }
         }
       ]
     }
   },
   "run": {
-    "lastRunDate": "2026-11-19",
-    "lastRunScope": "Primary issuer IR and preliminary 424B5 secondary filing text checked for SLS 2026-11-17 proposed $150m public offering and $22.5m option; recorded contingent issuance separately from immediately saleable shares. Broad index Nov 18 close confirmed.",
+    "lastRunDate": "2026-11-20",
+    "lastRunScope": "SLS primary issuer IR offering pricing verified: $13/share, 11,538,462 base shares, 1,730,769 optional; expected close Nov 20 unconfirmed. Nov 19 broad-market session recorded separately.",
     "newOfficialIssuerVerifications": 1,
     "newPartialOfficialIssuerEvidenceChecks": 1,
     "newFullyVerifiedTickers": 0,
@@ -614,12 +623,14 @@
     "newCompletedSessionVerifications": 0,
     "newReviewCandidatesScreened": 1,
     "casePromotionsThisRun": 0,
+    "patternMergesThisRun": 0,
+    "newPatternsThisRun": 0,
     "filesChanged": [
       "v2/data/verification-progress.json"
     ],
-    "notes": "SLS is review candidate outside 37-stock manifest. No pricing, shares offered, close or actual float confirmed. Do not promote review case, alter review asOf, rank or UI.",
-    "latestMarketSessionCheck": "2026-11-18",
-    "latestOutcome": "Issuer financing evidence strengthened; all review session coverage still incomplete."
+    "notes": "SLS outside 37-ticker manifest; not promoted. No O/S, float, borrow, completed issuance or ranking changes inferred.",
+    "latestMarketSessionCheck": "2026-11-19",
+    "latestOutcome": "Official SLS offering price and share count verified, actual closing not confirmed; backfill remains pending."
   },
   "marketSessionEvidence": {
     "date": "2026-11-09",
@@ -708,6 +719,18 @@
         "russell2000": 2714.31
       },
       "microcapFullReview": false
+    },
+    "2026-11-19": {
+      "status": "BROAD_MARKET_CLOSE_ONLY_NOT_MICROCAP_REVIEW",
+      "session": "2026-11-19",
+      "source": "https://portfolio-terminal.com/markets/stock-market-close",
+      "indices": {
+        "sp500": 7175.83,
+        "nasdaq": 23879.2,
+        "russell2000": 2655.11
+      },
+      "microcapFullReview": false,
+      "notes": "Do not treat broad index verification as individual ticker review"
     }
   },
   "piggyPartialPriceAudit": {
