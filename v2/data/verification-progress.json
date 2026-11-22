@@ -1,6 +1,6 @@
 {
   "schema": "microcap-radar-v2-verification-state-v1",
-  "stateRecordedAt": "2026-11-21T08:58:39+09:00",
+  "stateRecordedAt": "2026-11-22T09:03:21+09:00",
   "latestCompletedUsRegularSession": "2026-11-20",
   "policy": "Research progress ledger only; never use this file as a verified market-data source or UI asOf.",
   "universe": {
@@ -610,7 +610,22 @@
             "actualIssuedShares": 13269231,
             "actualGrossProceedsUsd": 172500000,
             "closingDate": "2026-11-20",
-            "closingSource": "https://ir.sellaslifesciences.com/news/News-Details/2026/SELLAS-Life-Sciences-Announces-Closing-of-Underwritten-Public-Offering-and-Full-Exercise-of-the-Underwriters-Option-to-Purchase-Additional-Shares/default.aspx"
+            "closingSource": "https://ir.sellaslifesciences.com/news/News-Details/2026/SELLAS-Life-Sciences-Announces-Closing-of-Underwritten-Public-Offering-and-Full-Exercise-of-the-Underwriters-Option-to-Purchase-Additional-Shares/default.aspx",
+            "secUnderwritingAgreement": {
+              "form": "8-K",
+              "filed": "2026-11-20",
+              "eventDate": "2026-11-18",
+              "accession": "0001104659-26-130331",
+              "url": "https://www.sec.gov/Archives/edgar/data/1390478/000110465926130331/tm2630303d1_8k.htm",
+              "baseShares": 11538462,
+              "optionShares": 1730769,
+              "pricePerShareUsd": 13,
+              "estimatedNetProceedsUsdIncludingFullOption": 161800000,
+              "netProceedsStatus": "ESTIMATE_IN_8K_NOT_FINAL_CASH_BALANCE",
+              "underwritingAgreementExhibit": "1.1",
+              "verificationDate": "2026-11-22",
+              "classification": "CONFIRMED_AGREEMENT_AND_ISSUER_CLOSING; NO_DOUBLE_COUNT_WITH_S3_SHELF_OR_ISSUED_SHARES; FLOAT_AND_CURRENT_OS_PENDING"
+            }
           }
         }
       ]
@@ -633,7 +648,11 @@
       "v2/data/verification-progress.json"
     ],
     "latestMarketSessionCheck": "2026-11-20",
-    "notes": "SLS outside manifest. Gross proceeds are not net cash. Do not double-count with shelf or assert updated O/S/float. Backfill still pending."
+    "notes": "SLS outside manifest. Gross proceeds are not net cash. Do not double-count with shelf or assert updated O/S/float. Backfill still pending.",
+    "lastAction": "SLS 2026-11-20 SEC 8-K primary underwriting agreement cross-check; estimated net proceeds separately recorded; no review promotion or ranking change",
+    "officialFilingPartialVerifiedThisRun": 1,
+    "completeTickerVerificationsThisRun": 0,
+    "completeReviewSessionsThisRun": 0
   },
   "marketSessionEvidence": {
     "date": "2026-11-09",
