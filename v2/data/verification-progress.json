@@ -1,6 +1,6 @@
 {
   "schema": "microcap-radar-v2-verification-state-v1",
-  "stateRecordedAt": "2026-11-22T09:03:21+09:00",
+  "stateRecordedAt": "2026-11-23T09:02:20+09:00",
   "latestCompletedUsRegularSession": "2026-11-20",
   "policy": "Research progress ledger only; never use this file as a verified market-data source or UI asOf.",
   "universe": {
@@ -299,7 +299,7 @@
         "lastVerifiedMarketSession": null
       },
       "ZBAO": {
-        "currentOfficialFilingReview": "PARTIAL_VERIFIED_2026-10-08_6K_RS_TERMS_ONLY",
+        "currentOfficialFilingReview": "PARTIAL_VERIFIED_THROUGH_2026-11-17_6K_AND_2026-11-13_20F_NOT_FULL_SWEEP",
         "marketDataReview": "PENDING",
         "dilutionReview": "PENDING",
         "shortBorrowReview": "PENDING",
@@ -314,9 +314,21 @@
               "Convertible notes and warrants subject to split adjustments; market-based conversion prices not assumed fixed"
             ],
             "verificationScope": "Historical corporate-action terms only. NOT a complete filing sweep through 2026-11-09."
+          },
+          {
+            "filed": "2026-11-17",
+            "form": "6-K",
+            "url": "https://www.sec.gov/Archives/edgar/data/1966750/000121390026121434/ea0309871-01.htm",
+            "exhibit": "https://www.sec.gov/Archives/edgar/data/1966750/000121390026121434/ea030987101ex99-1.htm",
+            "verifiedFacts": [
+              "December 7 shareholder meeting proposed authorized capital increase from 40M to 2B shares, NOT issued",
+              "Proposed conditional additional 1:5/1:15/1:30 reverse split, mutually exclusive, not executed",
+              "Record date October 21 Class A O/S 8,994,691, not latest float"
+            ],
+            "verificationScope": "Primary 6-K and exhibit only; full filing sweep, Nasdaq status, vote outcome, actual float and current borrow pending"
           }
         ],
-        "lastOfficialEvidenceDate": "2026-10-08",
+        "lastOfficialEvidenceDate": "2026-11-17",
         "unresolved": [
           "2026-11-03 event market price/reset calculation",
           "post-reset conversion price and outstanding note principal",
@@ -632,27 +644,22 @@
     }
   },
   "run": {
-    "lastRunDate": "2026-11-21",
-    "lastRunScope": "Confirmed SELLAS Nov 20 offering closing and full underwriter option exercise via issuer IR. Recorded Nov 20 broad market close separately.",
+    "lastRunDate": "2026-11-23",
+    "lastRunScope": "Verified ZBAO Nov 17 SEC 6-K and Exhibit 99.1 conditional capital and RS proposals; updated stock detail without changing historic asOf, scores or rankings",
     "newOfficialIssuerVerifications": 1,
-    "newPartialOfficialIssuerEvidenceChecks": 1,
     "newFullyVerifiedTickers": 0,
     "newFullyVerifiedReviewSessions": 0,
-    "newCompletedSessionVerifications": 0,
     "newReviewCandidatesScreened": 0,
     "casePromotionsThisRun": 0,
     "caseExclusionsThisRun": 0,
     "patternMergesThisRun": 0,
     "newPatternsThisRun": 0,
     "filesChanged": [
+      "v2/data/stocks/ZBAO.json",
       "v2/data/verification-progress.json"
     ],
     "latestMarketSessionCheck": "2026-11-20",
-    "notes": "SLS outside manifest. Gross proceeds are not net cash. Do not double-count with shelf or assert updated O/S/float. Backfill still pending.",
-    "lastAction": "SLS 2026-11-20 SEC 8-K primary underwriting agreement cross-check; estimated net proceeds separately recorded; no review promotion or ranking change",
-    "officialFilingPartialVerifiedThisRun": 1,
-    "completeTickerVerificationsThisRun": 0,
-    "completeReviewSessionsThisRun": 0
+    "notes": "Nov 23 Monday 09:02 KST; latest completed US regular session Friday Nov 20. Review base 42 cases, 8 patterns, asOf 2026-10-18 unchanged. Proposed authorized shares and RS are NOT outstanding shares or completed corporate actions."
   },
   "marketSessionEvidence": {
     "date": "2026-11-09",
