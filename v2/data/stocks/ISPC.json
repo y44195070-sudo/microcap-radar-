@@ -16,7 +16,7 @@
     "인수가격": "총 $4.5M · Closing 현금 $750K + 조건부 milestone $625K×2 + 11/05 발행 보통주 2,907,977주($2.5M, VWAP $0.8597)",
     "인수주식 제한": "Foldlab 2,907,977주 5년 lock-up/no leak-out · 미등록 제한증권 · 단기 매도 가능 Float로 합산 금지",
     "RS": "1:10~1:100 권한 10/30 주주승인 · 정확한 비율/시행시점 Board 결정 대기",
-    "Nasdaq": "Stockholders’ Equity 요건 회복 입증기한 2026-11-25",
+    "Nasdaq": "11/24 SEC 8-K: 회사는 9/30 주주자본 $4,068,439로 $2.5M 요건을 회복했다고 판단. 11/25 입증기한; Nasdaq 독립 확인 미확인, 다음 정기보고서까지 지속 감시.",
     "핵심": "Foldlab 인수 종결·2.908M 신주 발행 확정, 5년 lock-up. 실제 Float 증가와 구분. RS는 승인만, PFW/할인 financing 위험 지속.",
     "Series D 전환우선주": "11/06 closing: 500주 × $800=$400K gross, stated value $1,000/주(총 $500K), 8% 누적배당. 전환가=max(직전 거래일 종가×85%, $0.1616 floor); 주주승인 전 common issuance cap 1,157,223주(19.99%). 미등록·resale 등록 예정. 실제 전환/유통 미확인."
   },
@@ -109,7 +109,8 @@
     "11월 Series D financing": "2026-11-06 500주 × $800 = $400K gross 조달 완료; stated value $500K, 수수료/비용 차감 전",
     "2026-09-30 Cash": "$5,556,914",
     "2026-09-30 Working Capital": "+$870,936",
-    "9개월 Operating Cash Burn": "약 -$6.752M"
+    "9개월 Operating Cash Burn": "약 -$6.752M",
+    "2026-09-30 Stockholders Equity": "$4,068,439"
   },
   "dilution": [
     "8월 PFW 2,849,923주 @ $0.0001",
@@ -128,6 +129,7 @@
     "해석": "현재 핵심은 숏스퀴즈보다 인수종결 이벤트와 공급구조. RS 시행 전후 수치 직접 비교 금지."
   },
   "events": [
+    "2026-11-24 8-K: 회사가 Nasdaq 주주자본 요건 회복 판단 발표; 거래소 공식 확인 별도 필요",
     "2026-11-09 8-K: 11/06 Series D convertible preferred 500주 발행, $400K gross, resale registration 의무",
     "2026-11-02 Foldlab AI 인수 종결 · 11/05 8-K 및 2,907,977주 발행 확정",
     "2026-10-30 1:10~1:100 Reverse Split 권한 주주승인 · Board 비율/시점 결정 대기",
@@ -164,7 +166,8 @@
     "11/25 전 Nasdaq equity compliance 제출/결과",
     "향후 80% 할인 financing 실제 계약·상대방·수량",
     "최신 O/S·Float·CTB·Borrow·Short Float·Reg SHO",
-    "Foldlab 5년 lock-up 유지/예외 및 지분·의결권 변화; 11/05 이후 최신 O/S와 실제 Float 구분"
+    "Foldlab 5년 lock-up 유지/예외 및 지분·의결권 변화; 11/05 이후 최신 O/S와 실제 Float 구분",
+    "Nasdaq 공식 준수 확인 및 다음 정기보고서 주주자본 $2.5M 유지 여부"
   ],
   "memo": "ISPC | 11/09 8-K: 11/06 Series D 전환우선주 500주 발행, $400K gross/$500K stated, 전환가=max(전일 종가×85%, $0.1616 floor), 8% 누적배당. 주주승인 전 common issuance cap 1,157,223주(배당주 포함). 11/06 계약 직전 O/S 5,789,013주 공식 확인, 실제 Float/전환주 매도 미확인. 11/05 Foldlab 2,907,977주 5년 락업 별개. PFW·추가 희석·11/25 Nasdaq equity 기한 감시.",
   "sources": [
@@ -179,6 +182,12 @@
       "type": "SEC 8-K",
       "url": "https://www.sec.gov/Archives/edgar/data/1558569/000121390026117610/ea0311416-8k_ispecimen.htm",
       "note": "Series D 500 preferred shares, $400K proceeds, conversion floor and discount, 8% dividend, 5,789,013 O/S, exchange cap, resale registration obligations"
+    },
+    {
+      "date": "2026-11-24",
+      "type": "SEC 8-K",
+      "url": "https://www.sec.gov/Archives/edgar/data/1558569/000121390026123752/ea0313458-8k_ispecimen.htm",
+      "note": "Company believes equity compliance regained; Nasdaq monitoring continues"
     }
   ],
   "filingUpdates": [
@@ -194,6 +203,18 @@
         "9개월 영업현금유출 약 $6.752M; 계속기업 불확실성 지속"
       ],
       "interpretation": "6월 대비 유동성 개선이나 9월 이후 지출 반영 전 수치. 현재 현금/Float 및 Nasdaq 준수 결과 미확인."
+    },
+    {
+      "accession": "0001213900-26-123752",
+      "form": "8-K",
+      "checked": "2026-11-25",
+      "source": "https://www.sec.gov/Archives/edgar/data/1558569/000121390026123752/ea0313458-8k_ispecimen.htm",
+      "facts": [
+        "9/30 주주자본 $4,068,439; 기준 $2,500,000",
+        "회사 자체 판단으로 요건 회복; 8/5 $5M 조달이 주요 원인",
+        "다음 정기보고서에서 미충족 시 상장폐지 가능"
+      ],
+      "interpretation": "회사 발표 확인, Nasdaq 독립 확인 아님. 희석 위험 및 다른 상장요건은 별개."
     }
   ]
 }
