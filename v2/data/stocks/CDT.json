@@ -11,7 +11,7 @@
   },
   "structure": {
     "기준가격": "$0.2351 (10/16)",
-    "O/S": "최신 post-RS 수치 재확인 필요",
+    "O/S": "1,900,144주 (2026-11-16 SEC 10-Q, 11/05 1:20 병합 이후; 이후 변동 미확인)",
     "실제 Float": "제3자 약 0.75M 표시 — SEC 기준 재검증 필요",
     "최근 RS": "2026-09 말 1:25",
     "거래량": "10/16 약 11.87M",
@@ -21,7 +21,9 @@
     "Astor secured convertible note": "총 $6.75M",
     "1차 funding": "$3M (순유입 약 $2.87M)",
     "추가 funding": "$2M tranche는 가격·등록·승인 조건부",
-    "판단": "자금조달 의존도가 높아 financing pressure 높음"
+    "판단": "자금조달 의존도가 높아 financing pressure 높음",
+    "Sarborg 미지급 대가": "2026-09-30 현금 $5.4M 및 주식 대가 $0.7M 잔여; 현금 잔액과 구분",
+    "계속기업 위험": "2026-11-16 10-Q 경영진 계속기업 존속 중대한 의문 명시"
   },
   "priceLadder": [
     {
@@ -71,7 +73,8 @@
     "[F] Astor secured convertible note가 존재 — 전환 조건과 실제 전환/매도 추적 필요",
     "[F] Astor 관련 225,000 warrant, exercise price $0.9177",
     "[F] 재판매 등록 통로 존재 — EFFECT 및 실제 시장 공급 여부 추적",
-    "[S] 급등 시 자금조달·전환 물량의 출구가 열릴 수 있어 공급 공백 여부가 핵심"
+    "[S] 급등 시 자금조달·전환 물량의 출구가 열릴 수 있어 공급 공백 여부가 핵심",
+    "[F] 2026-11-16 10-Q: 9개월간 ATM 46,801주 매각, 순조달 $5.6M (병합 소급조정); 이미 발행된 물량으로 O/S에 추가 합산 금지."
   ],
   "events": [
     "$1: Nasdaq/계약상 가격 기준 핵심 구간",
@@ -102,7 +105,7 @@
   ],
   "nextChecks": [
     "RS notice·ratio·effective date",
-    "post-RS O/S와 실제 Float",
+    "11/16 이후 O/S 변동 및 실제 Float",
     "Astor conversion 및 resale EFFECT",
     "warrant 조정 여부",
     "$3 이상 5거래일 충족 여부",
@@ -122,6 +125,20 @@
         "재무제표 주식수 및 주당 수치는 해당 병합까지 소급조정"
       ],
       "interpretation": "기존 10/16 가격·Float·워런트 수량은 최신 병합 후 수치가 아님. 실제 잔량 및 최신 O/S 별도 확인."
+    },
+    {
+      "accession": "0001493152-26-052618",
+      "form": "10-Q",
+      "filed": "2026-11-16",
+      "checked": "2026-11-25",
+      "source": "https://www.sec.gov/Archives/edgar/data/1896212/000149315226052618/form10-q.htm",
+      "facts": [
+        "11/16 O/S 1,900,144",
+        "9/30 Sarborg 미지급 현금 $5.4M 및 주식 대가 $0.7M",
+        "계속기업 위험 명시"
+      ],
+      "supplementalSource": "https://www.sec.gov/Archives/edgar/data/1896212/000149315226052618/R19.htm",
+      "scope": "부분 검증; 최신 Float, 잔여 ATM, 워런트 및 전환 잔액 미확인"
     }
   ]
 }
